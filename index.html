@@ -2,214 +2,246 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>Flashcards</title>
 
 <style>
-:root {
-  --bg: #0f0f10;
-  --card-bg: #1a1a1c;
-  --text: #ffffff;
-  --muted: #8e8e93;
-  --radius: 18px;
-  --transition: 0.4s cubic-bezier(.4,0,.2,1);
+:root{
+  --bg:#0c0c0e;
+  --card:#18181b;
+  --text:#ffffff;
+  --muted:#8e8e93;
+  --radius:22px;
+  --transition:.35s cubic-bezier(.4,0,.2,1);
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  -webkit-tap-highlight-color:transparent;
 }
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  height: 100vh;
-  overflow: hidden;
+body{
+  background:var(--bg);
+  color:var(--text);
+  height:100vh;
+  overflow:hidden;
 }
 
-/* Shared Layout */
+/* SCREENS */
 
-.screen {
-  position: absolute;
-  inset: 0;
-  padding: 28px 20px;
-  display: flex;
-  flex-direction: column;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(10px);
-  transition: var(--transition);
+.screen{
+  position:absolute;
+  inset:0;
+  padding:28px 22px;
+  display:flex;
+  flex-direction:column;
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(8px);
+  transition:var(--transition);
 }
 
-.screen.active {
-  opacity: 1;
-  pointer-events: all;
-  transform: translateY(0);
+.screen.active{
+  opacity:1;
+  pointer-events:auto;
+  transform:translateY(0);
 }
 
-/* Splash */
+/* SPLASH */
 
-#splash {
-  justify-content: center;
-  align-items: center;
-  background: #000;
+#splash{
+  background:#000;
+  justify-content:center;
+  align-items:center;
 }
 
-.logo {
-  font-size: 28px;
-  font-weight: 600;
-  letter-spacing: -0.5px;
-  animation: fadeIn 1.2s ease forwards;
-  opacity: 0;
+.logo{
+  font-size:26px;
+  font-weight:600;
+  letter-spacing:-.5px;
+  opacity:0;
+  animation:fadeIn 1.2s ease forwards;
 }
 
-@keyframes fadeIn {
-  to { opacity: 1; }
+@keyframes fadeIn{
+  to{opacity:1}
 }
 
-/* Header */
+/* HEADERS */
 
-.header {
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 28px;
+.header{
+  font-size:22px;
+  font-weight:600;
+  margin-bottom:24px;
 }
 
-/* Deck Grid */
+/* DECK LIST */
 
-.deck-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  overflow-y: auto;
+.deck-list{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  overflow-y:auto;
+  flex:1;
 }
 
-.deck {
-  background: var(--card-bg);
-  padding: 20px;
-  border-radius: var(--radius);
-  transition: var(--transition);
-  cursor: pointer;
+.deck{
+  padding:22px;
+  border-radius:var(--radius);
+  cursor:pointer;
+  transition:var(--transition);
 }
 
-.deck:hover {
-  transform: scale(0.98);
+.deck-title{
+  font-size:18px;
+  font-weight:500;
 }
 
-.deck-title {
-  font-size: 18px;
-  font-weight: 500;
+.deck-meta{
+  font-size:14px;
+  margin-top:4px;
+  opacity:.8;
 }
 
-.deck-count {
-  font-size: 14px;
-  color: var(--muted);
-  margin-top: 4px;
+/* CREATE DECK */
+
+input{
+  background:var(--card);
+  border:none;
+  padding:16px;
+  border-radius:14px;
+  color:white;
+  font-size:16px;
+  outline:none;
 }
 
-/* Color Picker */
-
-.color-picker {
-  display: flex;
-  gap: 12px;
-  margin-top: 14px;
+.color-picker{
+  display:flex;
+  gap:14px;
+  margin-top:16px;
 }
 
-.color-option {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: var(--transition);
+.color{
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  border:2px solid transparent;
+  cursor:pointer;
+  transition:var(--transition);
 }
 
-.color-option.selected {
-  border-color: #fff;
+.color.selected{
+  border-color:white;
 }
 
-/* Button */
-
-.button {
-  margin-top: auto;
-  background: #fff;
-  color: #000;
-  padding: 16px;
-  border-radius: 14px;
-  text-align: center;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
+.button{
+  margin-top:22px;
+  background:white;
+  color:black;
+  padding:16px;
+  border-radius:14px;
+  text-align:center;
+  font-weight:600;
+  cursor:pointer;
+  transition:var(--transition);
 }
 
-.button:active {
-  transform: scale(0.97);
+.button:active{
+  transform:scale(.97);
 }
 
-/* Flashcard */
+/* FLASHCARD */
 
-.card-container {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.card-wrapper{
+  flex:1;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  perspective:1200px;
 }
 
-.card {
-  width: 100%;
-  padding: 40px 28px;
-  border-radius: var(--radius);
-  text-align: center;
-  font-size: 18px;
-  line-height: 1.4;
-  transition: var(--transition);
-  cursor: pointer;
+.card{
+  width:100%;
+  max-width:340px;
+  height:520px;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:transform .6s cubic-bezier(.4,0,.2,1);
 }
 
-.card.flip {
-  transform: rotateY(180deg);
+.card.flipped{
+  transform:rotateY(180deg);
 }
 
-.footer-controls {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
+.card-face{
+  position:absolute;
+  inset:0;
+  border-radius:var(--radius);
+  padding:32px 24px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:20px;
+  line-height:1.4;
+  backface-visibility:hidden;
 }
 
-.control-btn {
-  background: var(--card-bg);
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  cursor: pointer;
-  transition: var(--transition);
+.card-face.back{
+  transform:rotateY(180deg);
 }
 
-.control-btn:active {
-  transform: scale(0.9);
+.card-label{
+  position:absolute;
+  top:16px;
+  left:20px;
+  font-size:12px;
+  opacity:.7;
+  letter-spacing:.5px;
 }
 
-/* Responsive */
+/* CONTROLS */
 
-@media (min-width: 600px) {
-  body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.controls{
+  display:flex;
+  justify-content:space-between;
+  margin-top:20px;
+}
+
+.arrow{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  background:var(--card);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  cursor:pointer;
+  transition:var(--transition);
+}
+
+.arrow:active{
+  transform:scale(.9);
+}
+
+/* RESPONSIVE CENTER ON DESKTOP */
+
+@media(min-width:600px){
+  body{
+    display:flex;
+    justify-content:center;
+    align-items:center;
   }
-
-  .screen {
-    max-width: 420px;
-    margin: auto;
-    border-radius: 24px;
-    overflow: hidden;
-    background: var(--bg);
+  .screen{
+    max-width:420px;
+    margin:auto;
+    border-radius:30px;
+    overflow:hidden;
+    background:var(--bg);
   }
 }
 </style>
@@ -217,142 +249,164 @@ body {
 
 <body>
 
-<!-- Splash -->
+<!-- SPLASH -->
 <div id="splash" class="screen active">
   <div class="logo">Flashcards</div>
 </div>
 
-<!-- Deck Screen -->
+<!-- DECK SCREEN -->
 <div id="deckScreen" class="screen">
-  <div class="header">Your Decks</div>
+  <div class="header">Decks</div>
   <div class="deck-list" id="deckList"></div>
 
-  <div class="deck">
-    <div class="deck-title">Create New Deck</div>
-    <div class="color-picker" id="colorPicker">
-      <div class="color-option selected" style="background:#ffb703"></div>
-      <div class="color-option" style="background:#219ebc"></div>
-      <div class="color-option" style="background:#e63946"></div>
-      <div class="color-option" style="background:#2a9d8f"></div>
-    </div>
+  <input id="deckTitleInput" placeholder="New deck title" />
+  <div class="color-picker">
+    <div class="color selected" style="background:#ffb703"></div>
+    <div class="color" style="background:#219ebc"></div>
+    <div class="color" style="background:#e63946"></div>
+    <div class="color" style="background:#2a9d8f"></div>
   </div>
 
   <div class="button" onclick="createDeck()">Create Deck</div>
 </div>
 
-<!-- Flashcard Screen -->
+<!-- CARD SCREEN -->
 <div id="cardScreen" class="screen">
-  <div class="header" id="deckTitle"></div>
+  <div class="header" id="deckTitleDisplay"></div>
 
-  <div class="card-container">
-    <div class="card" id="flashcard" onclick="flipCard()"></div>
+  <div class="card-wrapper">
+    <div class="card" id="card">
+      <div class="card-face front" id="frontFace">
+        <div class="card-label">Question</div>
+        <div id="questionText"></div>
+      </div>
+      <div class="card-face back" id="backFace">
+        <div class="card-label">Answer</div>
+        <div id="answerText"></div>
+      </div>
+    </div>
   </div>
 
-  <div class="footer-controls">
-    <div class="control-btn" onclick="prevCard()">←</div>
-    <div class="control-btn" onclick="nextCard()">→</div>
+  <div class="controls">
+    <div class="arrow" onclick="prevCard()">←</div>
+    <div class="arrow" onclick="nextCard()">→</div>
   </div>
-
-  <div class="button" onclick="goBack()">Back</div>
 </div>
 
 <script>
-let decks = [];
+let decks = JSON.parse(localStorage.getItem("flashDecks")) || [];
 let selectedColor = "#ffb703";
 let currentDeck = null;
 let currentIndex = 0;
-let showingFront = true;
 
 const splash = document.getElementById("splash");
 const deckScreen = document.getElementById("deckScreen");
 const cardScreen = document.getElementById("cardScreen");
 const deckList = document.getElementById("deckList");
-const flashcard = document.getElementById("flashcard");
+const card = document.getElementById("card");
 
-setTimeout(() => {
+setTimeout(()=>{
   splash.classList.remove("active");
   deckScreen.classList.add("active");
-}, 2000);
+},1500);
 
-/* Color Picker */
-document.querySelectorAll(".color-option").forEach(option => {
-  option.addEventListener("click", () => {
-    document.querySelectorAll(".color-option").forEach(o => o.classList.remove("selected"));
-    option.classList.add("selected");
-    selectedColor = option.style.background;
+/* COLOR PICKER */
+document.querySelectorAll(".color").forEach(c=>{
+  c.addEventListener("click",()=>{
+    document.querySelectorAll(".color").forEach(x=>x.classList.remove("selected"));
+    c.classList.add("selected");
+    selectedColor=c.style.background;
   });
 });
 
-/* Create Deck */
-function createDeck() {
-  const deck = {
-    title: "New Deck " + (decks.length + 1),
-    color: selectedColor,
-    cards: [
-      { q: "Sample Question 1", a: "Sample Answer 1" },
-      { q: "Sample Question 2", a: "Sample Answer 2" }
+/* CREATE DECK */
+function createDeck(){
+  const title=document.getElementById("deckTitleInput").value.trim();
+  if(!title) return;
+
+  const newDeck={
+    title,
+    color:selectedColor,
+    cards:[
+      {q:"Tap to flip card",a:"This is the answer"},
+      {q:"Swipe for next",a:"Or use arrows below"}
     ]
   };
-  decks.push(deck);
+
+  decks.push(newDeck);
+  save();
   renderDecks();
+  document.getElementById("deckTitleInput").value="";
 }
 
-function renderDecks() {
-  deckList.innerHTML = "";
-  decks.forEach((deck, index) => {
-    const div = document.createElement("div");
-    div.className = "deck";
-    div.style.background = deck.color;
-    div.innerHTML = `
+function renderDecks(){
+  deckList.innerHTML="";
+  decks.forEach((deck,i)=>{
+    const d=document.createElement("div");
+    d.className="deck";
+    d.style.background=deck.color;
+    d.innerHTML=`
       <div class="deck-title">${deck.title}</div>
-      <div class="deck-count">${deck.cards.length} cards</div>
+      <div class="deck-meta">${deck.cards.length} cards</div>
     `;
-    div.onclick = () => openDeck(index);
-    deckList.appendChild(div);
+    d.onclick=()=>openDeck(i);
+    deckList.appendChild(d);
   });
 }
 
-function openDeck(index) {
-  currentDeck = decks[index];
-  currentIndex = 0;
-  showingFront = true;
+function openDeck(i){
+  currentDeck=decks[i];
+  currentIndex=0;
   deckScreen.classList.remove("active");
   cardScreen.classList.add("active");
-  document.getElementById("deckTitle").innerText = currentDeck.title;
+  document.getElementById("deckTitleDisplay").innerText=currentDeck.title;
   updateCard();
 }
 
-function updateCard() {
-  const card = currentDeck.cards[currentIndex];
-  flashcard.style.background = currentDeck.color;
-  flashcard.innerText = showingFront ? card.q : card.a;
+function updateCard(){
+  card.classList.remove("flipped");
+  const c=currentDeck.cards[currentIndex];
+  document.getElementById("questionText").innerText=c.q;
+  document.getElementById("answerText").innerText=c.a;
+  document.querySelectorAll(".card-face").forEach(face=>{
+    face.style.background=currentDeck.color;
+  });
 }
 
-function flipCard() {
-  showingFront = !showingFront;
-  updateCard();
-}
-
-function nextCard() {
-  if (currentIndex < currentDeck.cards.length - 1) {
+function nextCard(){
+  if(currentIndex<currentDeck.cards.length-1){
     currentIndex++;
-    showingFront = true;
     updateCard();
   }
 }
 
-function prevCard() {
-  if (currentIndex > 0) {
+function prevCard(){
+  if(currentIndex>0){
     currentIndex--;
-    showingFront = true;
     updateCard();
   }
 }
 
-function goBack() {
-  cardScreen.classList.remove("active");
-  deckScreen.classList.add("active");
+card.addEventListener("click",()=>{
+  card.classList.toggle("flipped");
+});
+
+/* SWIPE SUPPORT */
+let startX=0;
+card.addEventListener("touchstart",e=>{
+  startX=e.touches[0].clientX;
+});
+card.addEventListener("touchend",e=>{
+  let diff=e.changedTouches[0].clientX-startX;
+  if(diff>60) prevCard();
+  if(diff<-60) nextCard();
+});
+
+function save(){
+  localStorage.setItem("flashDecks",JSON.stringify(decks));
 }
+
+renderDecks();
 </script>
 
 </body>
