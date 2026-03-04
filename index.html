@@ -7,225 +7,212 @@
 
 <style>
 :root{
---bg:#0b0b0d;
---card:#161618;
---text:#fff;
---muted:#8e8e93;
---radius:22px;
---t:.35s cubic-bezier(.4,0,.2,1);
+  --bg:#0b0b0d;
+  --card:#161618;
+  --text:#fff;
+  --muted:#8e8e93;
+  --radius:22px;
+  --t:.35s cubic-bezier(.4,0,.2,1);
 }
 
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
--webkit-tap-highlight-color:transparent;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  -webkit-tap-highlight-color:transparent;
 }
 
 body{
-background:var(--bg);
-color:var(--text);
-height:100vh;
-overflow:hidden;
+  background:var(--bg);
+  color:var(--text);
+  height:100vh;
+  overflow:hidden;
 }
 
 /* Screens */
-
 .screen{
-position:absolute;
-inset:0;
-padding:28px 22px;
-display:flex;
-flex-direction:column;
-opacity:0;
-pointer-events:none;
-transform:translateY(8px);
-transition:var(--t);
+  position:absolute;
+  inset:0;
+  padding:28px 22px;
+  display:flex;
+  flex-direction:column;
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(8px);
+  transition:var(--t);
 }
-
 .screen.active{
-opacity:1;
-pointer-events:auto;
-transform:translateY(0);
+  opacity:1;
+  pointer-events:auto;
+  transform:translateY(0);
 }
 
 /* Splash */
-
 #splash{
-background:#000;
-justify-content:center;
-align-items:center;
+  background:#000;
+  justify-content:center;
+  align-items:center;
 }
-
 .logo{
-font-size:26px;
-font-weight:600;
-opacity:0;
-animation:fade 1.2s forwards;
+  font-size:26px;
+  font-weight:600;
+  opacity:0;
+  animation:fade 1.2s forwards;
 }
-
-@keyframes fade{
-to{opacity:1}
-}
+@keyframes fade{ to{opacity:1} }
 
 /* Header */
-
 .header{
-font-size:22px;
-font-weight:600;
-margin-bottom:20px;
-display:flex;
-justify-content:space-between;
-align-items:center;
+  font-size:22px;
+  font-weight:600;
+  margin-bottom:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
 /* Deck List */
-
 .deck-list{
-flex:1;
-display:flex;
-flex-direction:column;
-gap:16px;
-overflow-y:auto;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  overflow-y:auto;
 }
-
 .deck{
-padding:22px;
-border-radius:var(--radius);
-cursor:pointer;
-transition:var(--t);
-position:relative;
+  padding:22px;
+  border-radius:var(--radius);
+  cursor:pointer;
+  transition:var(--t);
+  position:relative;
 }
-
 .deck-title{font-size:18px}
 .deck-meta{font-size:14px;opacity:.8;margin-top:4px}
 
 /* Inputs */
-
 input, textarea{
-background:var(--card);
-border:none;
-padding:16px;
-border-radius:14px;
-color:white;
-font-size:16px;
-outline:none;
-margin-bottom:14px;
+  background:var(--card);
+  border:none;
+  padding:16px;
+  border-radius:14px;
+  color:white;
+  font-size:16px;
+  outline:none;
+  margin-bottom:14px;
 }
-
 textarea{resize:none;height:100px}
-
 .button{
-background:white;
-color:black;
-padding:16px;
-border-radius:14px;
-text-align:center;
-font-weight:600;
-cursor:pointer;
-transition:var(--t);
+  background:white;
+  color:black;
+  padding:16px;
+  border-radius:14px;
+  text-align:center;
+  font-weight:600;
+  cursor:pointer;
+  transition:var(--t);
 }
-
 .button:active{transform:scale(.97)}
-
 .muted-btn{
-background:var(--card);
-color:white;
+  background:var(--card);
+  color:white;
 }
+
+/* Color Picker */
+#colorPalette{
+  display:flex;
+  gap:8px;
+  margin-bottom:12px;
+}
+.color{
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  cursor:pointer;
+  border:2px solid transparent;
+  transition:0.2s;
+}
+.color.selected{ border-color:#fff; }
 
 /* Flashcard */
-
 .card-wrapper{
-flex:1;
-display:flex;
-align-items:center;
-justify-content:center;
-perspective:1200px;
-touch-action:none;
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  perspective:1200px;
+  touch-action:none;
 }
-
 .card{
-width:100%;
-max-width:340px;
-height:520px;
-position:relative;
-transform-style:preserve-3d;
-transition:transform .6s cubic-bezier(.4,0,.2,1);
+  width:100%;
+  max-width:340px;
+  height:520px;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:transform .6s cubic-bezier(.4,0,.2,1);
 }
-
-.card.flipped{
-transform:rotateY(180deg);
-}
-
+.card.flipped{ transform:rotateY(180deg); }
 .face{
-position:absolute;
-inset:0;
-border-radius:var(--radius);
-padding:32px 24px;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
-font-size:20px;
-backface-visibility:hidden;
+  position:absolute;
+  inset:0;
+  border-radius:var(--radius);
+  padding:32px 24px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  font-size:20px;
+  backface-visibility:hidden;
 }
-
-.face.back{transform:rotateY(180deg)}
-
+.face.back{ transform:rotateY(180deg); }
 .label{
-position:absolute;
-top:14px;
-left:18px;
-font-size:12px;
-opacity:.7;
+  position:absolute;
+  top:14px;
+  left:18px;
+  font-size:12px;
+  opacity:.7;
 }
 
 /* Controls */
-
 .controls{
-display:flex;
-justify-content:space-between;
-margin-top:16px;
+  display:flex;
+  justify-content:space-between;
+  margin-top:16px;
 }
-
 .arrow{
-width:48px;
-height:48px;
-border-radius:50%;
-background:var(--card);
-display:flex;
-align-items:center;
-justify-content:center;
-cursor:pointer;
-transition:var(--t);
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  background:var(--card);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:var(--t);
 }
-
 .arrow:active{transform:scale(.9)}
-
 .progress{
-text-align:center;
-font-size:14px;
-opacity:.7;
-margin-top:8px;
+  text-align:center;
+  font-size:14px;
+  opacity:.7;
+  margin-top:8px;
 }
 
 /* Desktop Center */
-
 @media(min-width:600px){
-body{
-display:flex;
-justify-content:center;
-align-items:center;
-}
-.screen{
-max-width:420px;
-margin:auto;
-border-radius:30px;
-overflow:hidden;
-background:var(--bg);
-}
+  body{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+  }
+  .screen{
+    max-width:420px;
+    margin:auto;
+    border-radius:30px;
+    overflow:hidden;
+    background:var(--bg);
+  }
 }
 </style>
 </head>
@@ -233,59 +220,67 @@ background:var(--bg);
 
 <!-- Splash -->
 <div id="splash" class="screen active">
-<div class="logo">Flashcards</div>
+  <div class="logo">Flashcards</div>
 </div>
 
 <!-- Deck Screen -->
 <div id="deckScreen" class="screen">
-<div class="header">Decks</div>
-<div class="deck-list" id="deckList"></div>
+  <div class="header">Decks</div>
+  <div class="deck-list" id="deckList"></div>
 
-<input id="deckTitleInput" placeholder="Deck title"/>
+  <input id="deckTitleInput" placeholder="Deck title"/>
+  
+  <!-- Color Picker -->
+  <div id="colorPalette">
+    <div class="color selected" style="background:#ffb703" data-color="#ffb703"></div>
+    <div class="color" style="background:#219ebc" data-color="#219ebc"></div>
+    <div class="color" style="background:#e63946" data-color="#e63946"></div>
+    <div class="color" style="background:#2a9d8f" data-color="#2a9d8f"></div>
+  </div>
 
-<div class="button" onclick="createDeck()">Create Deck</div>
+  <div class="button" onclick="createDeck()">Create Deck</div>
 </div>
 
 <!-- Card Screen -->
 <div id="cardScreen" class="screen">
-<div class="header">
-<span id="deckTitleDisplay"></span>
-<span onclick="openEditor()">Edit</span>
-</div>
+  <div class="header">
+    <span id="deckTitleDisplay"></span>
+    <span onclick="openEditor()">Edit</span>
+  </div>
 
-<div class="card-wrapper" id="cardWrapper">
-<div class="card" id="card">
-<div class="face front">
-<div class="label">Question</div>
-<div id="questionText"></div>
-</div>
-<div class="face back">
-<div class="label">Answer</div>
-<div id="answerText"></div>
-</div>
-</div>
-</div>
+  <div class="card-wrapper" id="cardWrapper">
+    <div class="card" id="card">
+      <div class="face front">
+        <div class="label">Question</div>
+        <div id="questionText"></div>
+      </div>
+      <div class="face back">
+        <div class="label">Answer</div>
+        <div id="answerText"></div>
+      </div>
+    </div>
+  </div>
 
-<div class="controls">
-<div class="arrow" onclick="prevCard()">←</div>
-<div class="arrow" onclick="rateCard(5)">✓</div>
-<div class="arrow" onclick="nextCard()">→</div>
-</div>
+  <div class="controls">
+    <div class="arrow" onclick="prevCard()">←</div>
+    <div class="arrow" onclick="rateCard(5)">✓</div>
+    <div class="arrow" onclick="nextCard()">→</div>
+  </div>
 
-<div class="progress" id="progress"></div>
+  <div class="progress" id="progress"></div>
 </div>
 
 <!-- Editor Screen -->
 <div id="editorScreen" class="screen">
-<div class="header">Edit Cards</div>
+  <div class="header">Edit Cards</div>
 
-<div id="editorList" style="flex:1; overflow-y:auto;"></div>
+  <div id="editorList" style="flex:1; overflow-y:auto;"></div>
 
-<textarea id="newQ" placeholder="Question"></textarea>
-<textarea id="newA" placeholder="Answer"></textarea>
+  <textarea id="newQ" placeholder="Question"></textarea>
+  <textarea id="newA" placeholder="Answer"></textarea>
 
-<div class="button" onclick="addCard()">Add Card</div>
-<div class="button muted-btn" onclick="backToDeck()">Done</div>
+  <div class="button" onclick="addCard()">Add Card</div>
+  <div class="button muted-btn" onclick="backToDeck()">Done</div>
 </div>
 
 <script>
@@ -302,165 +297,159 @@ const deckList=document.getElementById("deckList");
 const card=document.getElementById("card");
 
 setTimeout(()=>{
-splash.classList.remove("active");
-deckScreen.classList.add("active");
+  splash.classList.remove("active");
+  deckScreen.classList.add("active");
 },1200);
 
 /* HAPTIC */
-function haptic(){
-if(navigator.vibrate) navigator.vibrate(10);
-}
+function haptic(){ if(navigator.vibrate) navigator.vibrate(10); }
 
 /* Save */
-function save(){
-localStorage.setItem("flashDecks",JSON.stringify(decks));
-}
+function save(){ localStorage.setItem("flashDecks",JSON.stringify(decks)); }
+
+/* Color Picker Logic */
+const colorDivs = document.querySelectorAll("#colorPalette .color");
+colorDivs.forEach(div => {
+  div.addEventListener("click", ()=>{
+    colorDivs.forEach(d=>d.classList.remove("selected"));
+    div.classList.add("selected");
+  });
+});
 
 /* Create Deck */
 function createDeck(){
-const title=document.getElementById("deckTitleInput").value.trim();
-if(!title) return;
-decks.push({title,cards:[]});
-save();
-renderDecks();
-document.getElementById("deckTitleInput").value="";
+  const title = document.getElementById("deckTitleInput").value.trim();
+  if (!title) return;
+
+  const selectedDiv = document.querySelector("#colorPalette .color.selected");
+  const color = selectedDiv ? selectedDiv.dataset.color : "#1c1c1f";
+
+  decks.push({ title, cards: [], color });
+  save();
+  renderDecks();
+  document.getElementById("deckTitleInput").value="";
 }
 
 /* Render Decks */
 function renderDecks(){
-deckList.innerHTML="";
-decks.forEach((deck,i)=>{
-const d=document.createElement("div");
-d.className="deck";
-d.style.background="#1c1c1f";
-d.innerHTML=`
-<div class="deck-title">${deck.title}</div>
-<div class="deck-meta">${deck.cards.length} cards</div>
-`;
-let pressTimer;
-d.onmousedown=d.ontouchstart=()=>{
-pressTimer=setTimeout(()=>{
-if(confirm("Delete deck?")){
-decks.splice(i,1);
-save();
-renderDecks();
-}
-},700);
-};
-d.onmouseup=d.ontouchend=()=>clearTimeout(pressTimer);
-d.onclick=()=>openDeck(i);
-deckList.appendChild(d);
-});
+  deckList.innerHTML="";
+  decks.forEach((deck,i)=>{
+    const d=document.createElement("div");
+    d.className="deck";
+    d.style.background = deck.color || "#1c1c1f";
+    d.innerHTML=`
+      <div class="deck-title">${deck.title}</div>
+      <div class="deck-meta">${deck.cards.length} cards</div>
+    `;
+    let pressTimer;
+    d.onmousedown=d.ontouchstart=()=>{
+      pressTimer=setTimeout(()=>{
+        if(confirm("Delete deck?")){
+          decks.splice(i,1);
+          save();
+          renderDecks();
+        }
+      },700);
+    };
+    d.onmouseup=d.ontouchend=()=>clearTimeout(pressTimer);
+    d.onclick=()=>openDeck(i);
+    deckList.appendChild(d);
+  });
 }
 
 /* Open Deck */
 function openDeck(i){
-currentDeck=decks[i];
-currentIndex=0;
-deckScreen.classList.remove("active");
-cardScreen.classList.add("active");
-document.getElementById("deckTitleDisplay").innerText=currentDeck.title;
-updateCard();
+  currentDeck = decks[i];
+  currentIndex = 0;
+  deckScreen.classList.remove("active");
+  cardScreen.classList.add("active");
+  document.getElementById("deckTitleDisplay").innerText = currentDeck.title;
+
+  // front/back colors
+  const frontColor = currentDeck.color || "#161618";
+  const backColor = lightenColor(frontColor,0.5);
+  document.querySelector(".card .face.front").style.background = frontColor;
+  document.querySelector(".card .face.back").style.background = backColor;
+
+  updateCard();
 }
 
 /* Update Card */
 function updateCard(){
-if(!currentDeck.cards.length){
-document.getElementById("questionText").innerText="No cards yet";
-document.getElementById("answerText").innerText="";
-return;
-}
-card.classList.remove("flipped");
-const c=currentDeck.cards[currentIndex];
-document.getElementById("questionText").innerText=c.q;
-document.getElementById("answerText").innerText=c.a;
-document.getElementById("progress").innerText=`${currentIndex+1} / ${currentDeck.cards.length}`;
+  if(!currentDeck.cards.length){
+    document.getElementById("questionText").innerText="No cards yet";
+    document.getElementById("answerText").innerText="";
+    return;
+  }
+  card.classList.remove("flipped");
+  const c=currentDeck.cards[currentIndex];
+  document.getElementById("questionText").innerText=c.q;
+  document.getElementById("answerText").innerText=c.a;
+  document.getElementById("progress").innerText=`${currentIndex+1} / ${currentDeck.cards.length}`;
 }
 
 /* Flip */
-card.onclick=()=>{
-card.classList.toggle("flipped");
-haptic();
-};
+card.onclick=()=>{ card.classList.toggle("flipped"); haptic(); };
 
 /* Swipe */
 card.addEventListener("touchstart",e=>{
-touchStartX=e.touches[0].clientX;
-touchStartY=e.touches[0].clientY;
+  touchStartX=e.touches[0].clientX;
+  touchStartY=e.touches[0].clientY;
 });
-
 card.addEventListener("touchend",e=>{
-let dx=e.changedTouches[0].clientX-touchStartX;
-let dy=e.changedTouches[0].clientY-touchStartY;
-if(Math.abs(dx)>60){
-dx<0?nextCard():prevCard();
-}
-if(dy>100){ // drag down dismiss
-backToDeck();
-}
+  let dx=e.changedTouches[0].clientX-touchStartX;
+  let dy=e.changedTouches[0].clientY-touchStartY;
+  if(Math.abs(dx)>60){ dx<0?nextCard():prevCard(); }
+  if(dy>100){ backToDeck(); }
 });
 
 /* Navigation */
-function nextCard(){
-if(currentIndex<currentDeck.cards.length-1){
-currentIndex++;
-updateCard();
-haptic();
-}
-}
+function nextCard(){ if(currentIndex<currentDeck.cards.length-1){ currentIndex++; updateCard(); haptic(); } }
+function prevCard(){ if(currentIndex>0){ currentIndex--; updateCard(); haptic(); } }
 
-function prevCard(){
-if(currentIndex>0){
-currentIndex--;
-updateCard();
-haptic();
-}
-}
-
-/* Spaced Repetition (light SM2) */
+/* Spaced Repetition */
 function rateCard(score){
-const cardObj=currentDeck.cards[currentIndex];
-cardObj.interval=cardObj.interval||1;
-cardObj.ease=cardObj.ease||2.5;
-cardObj.interval=Math.round(cardObj.interval*cardObj.ease);
-cardObj.ease=Math.max(1.3,cardObj.ease+(.1-(5-score)*(0.08+(5-score)*0.02)));
-save();
-nextCard();
+  const cardObj=currentDeck.cards[currentIndex];
+  cardObj.interval=cardObj.interval||1;
+  cardObj.ease=cardObj.ease||2.5;
+  cardObj.interval=Math.round(cardObj.interval*cardObj.ease);
+  cardObj.ease=Math.max(1.3,cardObj.ease+(.1-(5-score)*(0.08+(5-score)*0.02)));
+  save();
+  nextCard();
 }
 
 /* Editor */
-function openEditor(){
-cardScreen.classList.remove("active");
-editorScreen.classList.add("active");
-renderEditor();
-}
-
+function openEditor(){ cardScreen.classList.remove("active"); editorScreen.classList.add("active"); renderEditor(); }
 function renderEditor(){
-const list=document.getElementById("editorList");
-list.innerHTML="";
-currentDeck.cards.forEach((c,i)=>{
-const div=document.createElement("div");
-div.style.marginBottom="12px";
-div.innerHTML=`<div style="opacity:.7">${i+1}. ${c.q}</div>`;
-list.appendChild(div);
-});
+  const list=document.getElementById("editorList");
+  list.innerHTML="";
+  currentDeck.cards.forEach((c,i)=>{
+    const div=document.createElement("div");
+    div.style.marginBottom="12px";
+    div.innerHTML=`<div style="opacity:.7">${i+1}. ${c.q}</div>`;
+    list.appendChild(div);
+  });
 }
-
 function addCard(){
-const q=document.getElementById("newQ").value.trim();
-const a=document.getElementById("newA").value.trim();
-if(!q||!a) return;
-currentDeck.cards.push({q,a});
-document.getElementById("newQ").value="";
-document.getElementById("newA").value="";
-save();
-renderEditor();
+  const q=document.getElementById("newQ").value.trim();
+  const a=document.getElementById("newA").value.trim();
+  if(!q||!a) return;
+  currentDeck.cards.push({q,a});
+  document.getElementById("newQ").value="";
+  document.getElementById("newA").value="";
+  save();
+  renderEditor();
 }
+function backToDeck(){ editorScreen.classList.remove("active"); cardScreen.classList.add("active"); updateCard(); }
 
-function backToDeck(){
-editorScreen.classList.remove("active");
-cardScreen.classList.add("active");
-updateCard();
+/* Color Helper */
+function lightenColor(hex, percent){
+  const num = parseInt(hex.replace("#",""),16);
+  let r = (num >> 16) + Math.round((255-(num >> 16)) * percent);
+  let g = ((num >> 8) & 0x00FF) + Math.round((255-((num >> 8)&0x00FF)) * percent);
+  let b = (num & 0x0000FF) + Math.round((255&(num & 0x0000FF)) * percent);
+  r = r>255?255:r; g = g>255?255:g; b = b>255?255:b;
+  return `rgb(${r},${g},${b})`;
 }
 
 /* Init */
