@@ -1,518 +1,359 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>Memora — Dark Minimal</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flashcards</title>
+
 <style>
-  :root{
-    --bg: #0b0b0c;
-    --panel: #0f1113;
-    --muted: #9aa4b2;
-    --text: #e6eef8;
-    --accent: #e0ac2f; /* warm mustard */
-    --glass: rgba(255,255,255,0.03);
-    --radius: 18px;
-    --gap: 16px;
-    --phone-w: 360px;
+:root {
+  --bg: #0f0f10;
+  --card-bg: #1a1a1c;
+  --text: #ffffff;
+  --muted: #8e8e93;
+  --radius: 18px;
+  --transition: 0.4s cubic-bezier(.4,0,.2,1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Shared Layout */
+
+.screen {
+  position: absolute;
+  inset: 0;
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: var(--transition);
+}
+
+.screen.active {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+
+/* Splash */
+
+#splash {
+  justify-content: center;
+  align-items: center;
+  background: #000;
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  animation: fadeIn 1.2s ease forwards;
+  opacity: 0;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* Header */
+
+.header {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 28px;
+}
+
+/* Deck Grid */
+
+.deck-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+}
+
+.deck {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: var(--radius);
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.deck:hover {
+  transform: scale(0.98);
+}
+
+.deck-title {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.deck-count {
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* Color Picker */
+
+.color-picker {
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.color-option {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: var(--transition);
+}
+
+.color-option.selected {
+  border-color: #fff;
+}
+
+/* Button */
+
+.button {
+  margin-top: auto;
+  background: #fff;
+  color: #000;
+  padding: 16px;
+  border-radius: 14px;
+  text-align: center;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.button:active {
+  transform: scale(0.97);
+}
+
+/* Flashcard */
+
+.card-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  width: 100%;
+  padding: 40px 28px;
+  border-radius: var(--radius);
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.4;
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.card.flip {
+  transform: rotateY(180deg);
+}
+
+.footer-controls {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.control-btn {
+  background: var(--card-bg);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.control-btn:active {
+  transform: scale(0.9);
+}
+
+/* Responsive */
+
+@media (min-width: 600px) {
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
-  *{box-sizing:border-box}
-  html,body{height:100%;margin:0;background:linear-gradient(180deg,#070708 0%, #0b0b0c 100%);font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--text);-webkit-font-smoothing:antialiased}
-  .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:36px}
-
-  /* phone frame (visual only) */
-  .phone {
-    width:var(--phone-w);
-    border-radius:34px;
-    background:linear-gradient(180deg,#050505,#0b0b0c);
-    padding:22px 18px;
-    box-shadow: 0 40px 90px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
-    position:relative;
+  .screen {
+    max-width: 420px;
+    margin: auto;
+    border-radius: 24px;
+    overflow: hidden;
+    background: var(--bg);
   }
-
-  /* notch/indicator */
-  .phone::before{content:'';position:absolute;left:50%;transform:translateX(-50%);top:8px;width:120px;height:5px;border-radius:999px;background:linear-gradient(90deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02));opacity:.6}
-
-  /* app area */
-  .app {
-    background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
-    border-radius:22px;
-    padding:18px;
-    min-height:640px;
-    display:flex;
-    flex-direction:column;
-    gap:14px;
-    border:1px solid rgba(255,255,255,0.03);
-  }
-
-  header {
-    display:flex;
-    align-items:center;
-    gap:12px;
-    justify-content:space-between;
-  }
-  .title {font-weight:600;font-size:16px;opacity:0.95}
-  .small {font-size:13px;color:var(--muted)}
-
-  /* card stage */
-  .stage { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; flex:1; }
-
-  .stack {
-    width:100%;
-    max-width:300px;
-    height:420px;
-    position:relative;
-    perspective:1200px;
-    display:grid;
-    place-items:center;
-  }
-
-  /* single card */
-  .card {
-    width:100%;
-    height:100%;
-    border-radius:18px;
-    position:absolute;
-    top:0;left:0;
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-    padding:28px;
-    background:linear-gradient(180deg, rgba(224,172,47,0.96), rgba(224,172,47,0.96)); /* mustard front */
-    color:#061014;
-    transform-origin:center center;
-    box-shadow: 0 30px 60px rgba(2,6,23,0.55);
-    transition:transform .36s cubic-bezier(.2,.9,.3,1),opacity .28s ease;
-    will-change:transform,opacity;
-    user-select:none;
-    -webkit-user-select:none;
-    touch-action:none;
-    border: 1px solid rgba(0,0,0,0.05);
-  }
-
-  /* slight stack depth for next cards */
-  .card.next {
-    transform: translateY(18px) scale(.96);
-    opacity:.9;
-  }
-  .card.next-2 {
-    transform: translateY(36px) scale(.92);
-    opacity:.75;
-  }
-
-  /* flip inner */
-  .card-inner {
-    width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .42s cubic-bezier(.2,.9,.3,1);
-  }
-  .card.flipped .card-inner{ transform: rotateY(180deg); }
-
-  .face {
-    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;backface-visibility:hidden;border-radius:12px;
-  }
-  .front { padding-top:8px; text-align:center; }
-  .back { transform:rotateY(180deg); background:linear-gradient(180deg,#fcf6e6,#f6ecd2); color:#081017; padding:28px; text-align:center; }
-
-  .label {font-size:12px;color:rgba(6,16,20,0.6);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
-  .content {font-weight:700;font-size:20px;line-height:1.25; padding:0 6px}
-
-  /* controls row */
-  .controls {display:flex;align-items:center;justify-content:center;gap:14px;padding-top:4px}
-  .circle {
-    width:56px;height:56px;border-radius:999px;border:0;background:rgba(255,255,255,0.05);display:grid;place-items:center;color:var(--text);cursor:pointer;
-    transition:transform .12s ease,background .12s ease;
-  }
-  .circle.primary { background: linear-gradient(180deg,#0f1113,#141416); color:var(--accent); border:1px solid rgba(224,172,47,0.08); width:64px;height:64px }
-  .circle:hover{transform:translateY(-4px)}
-  .icon { width:22px;height:22px; display:inline-block; }
-
-  /* subtle footer hint */
-  .hint { font-size:12px;color:rgba(230,238,248,0.6); text-align:center; margin-top:2px; }
-
-  /* minimal modal */
-  .modal { position:fixed; inset:0; display:flex;align-items:center;justify-content:center;background:rgba(2,6,23,0.6); z-index:60; visibility:hidden; opacity:0; transition:opacity .18s;}
-  .modal.show{ visibility:visible; opacity:1; }
-  .sheet { width:92%; max-width:420px; background:var(--panel); border-radius:12px; padding:14px; border:1px solid rgba(255,255,255,0.03); box-shadow:0 30px 80px rgba(2,6,23,0.6) }
-  .form-row { display:flex;flex-direction:column; gap:8px; margin-bottom:10px; }
-  input, textarea { padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--text); font-size:14px }
-  button.ghost { background:transparent; color:var(--text); border:1px solid rgba(255,255,255,0.04); padding:8px 12px; border-radius:8px }
-  button.primary { background:var(--accent); color:#071017; padding:8px 12px; border-radius:8px; border:0; font-weight:600 }
-
-  /* responsiveness smaller phones */
-  @media (max-width:380px){
-    .phone { padding:16px }
-    .card { padding:20px }
-    .stack { height:380px }
-  }
+}
 </style>
 </head>
+
 <body>
-  <div class="wrap">
-    <div class="phone" role="application" aria-label="Memora study">
-      <div class="app" id="app">
-        <header>
-          <div style="display:flex;gap:10px;align-items:center">
-            <button id="btnMenu" class="circle" title="Menu" aria-label="Menu" style="width:44px;height:44px;border-radius:10px;background:transparent"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6h.01"/><path d="M12 12h.01"/><path d="M12 18h.01"/></svg></button>
-            <div>
-              <div class="title" id="deckTitle">Flashcards</div>
-              <div class="small" id="deckSub">Tap to flip • Swipe to mark</div>
-            </div>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center">
-            <button id="btnNewDeck" class="ghost">New</button>
-            <button id="btnEdit" class="ghost">Edit</button>
-          </div>
-        </header>
 
-        <div class="stage">
-          <div class="stack" id="stack">
-            <!-- cards injected here -->
-          </div>
+<!-- Splash -->
+<div id="splash" class="screen active">
+  <div class="logo">Flashcards</div>
+</div>
 
-          <div class="controls" aria-hidden="false">
-            <button id="prevBtn" class="circle" title="Previous"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+<!-- Deck Screen -->
+<div id="deckScreen" class="screen">
+  <div class="header">Your Decks</div>
+  <div class="deck-list" id="deckList"></div>
 
-            <button id="markWrong" class="circle" title="Mark wrong" aria-label="Wrong">
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15 9l-6 6"/><path d="M9 9l6 6"/></svg>
-            </button>
-
-            <button id="flipBtn" class="circle primary" title="Flip/Show answer">
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-            </button>
-
-            <button id="markRight" class="circle" title="Mark correct" aria-label="Correct">
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-            </button>
-
-            <button id="nextBtn" class="circle" title="Next"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
-          </div>
-
-          <div class="hint" id="progressText">0 / 0 • ✓ 0 · ✗ 0</div>
-        </div>
-      </div>
+  <div class="deck">
+    <div class="deck-title">Create New Deck</div>
+    <div class="color-picker" id="colorPicker">
+      <div class="color-option selected" style="background:#ffb703"></div>
+      <div class="color-option" style="background:#219ebc"></div>
+      <div class="color-option" style="background:#e63946"></div>
+      <div class="color-option" style="background:#2a9d8f"></div>
     </div>
   </div>
 
-  <!-- Modal simple -->
-  <div id="modal" class="modal" role="dialog" aria-modal="true">
-    <div class="sheet" role="document">
-      <div id="modalInner"></div>
-    </div>
+  <div class="button" onclick="createDeck()">Create Deck</div>
+</div>
+
+<!-- Flashcard Screen -->
+<div id="cardScreen" class="screen">
+  <div class="header" id="deckTitle"></div>
+
+  <div class="card-container">
+    <div class="card" id="flashcard" onclick="flipCard()"></div>
   </div>
+
+  <div class="footer-controls">
+    <div class="control-btn" onclick="prevCard()">←</div>
+    <div class="control-btn" onclick="nextCard()">→</div>
+  </div>
+
+  <div class="button" onclick="goBack()">Back</div>
+</div>
 
 <script>
-/* Minimal dark premium flashcards — single file
-   - Simple study: flip, swipe left (wrong), swipe right (correct)
-   - LocalStorage persistence
-   - Clean UI, subtle motion
-*/
+let decks = [];
+let selectedColor = "#ffb703";
+let currentDeck = null;
+let currentIndex = 0;
+let showingFront = true;
 
-(function(){
-  const KEY = 'memora.dark.minimal.v1';
+const splash = document.getElementById("splash");
+const deckScreen = document.getElementById("deckScreen");
+const cardScreen = document.getElementById("cardScreen");
+const deckList = document.getElementById("deckList");
+const flashcard = document.getElementById("flashcard");
 
-  // state
-  let state = { decks: [], currentDeckId: null, session: { cards: [], index: 0, flipped: false } };
+setTimeout(() => {
+  splash.classList.remove("active");
+  deckScreen.classList.add("active");
+}, 2000);
 
-  // select elements
-  const stack = document.getElementById('stack');
-  const deckTitle = document.getElementById('deckTitle');
-  const deckSub = document.getElementById('deckSub');
-  const flipBtn = document.getElementById('flipBtn');
-  const prevBtn = document.getElementById('prevBtn');
-  const nextBtn = document.getElementById('nextBtn');
-  const markRight = document.getElementById('markRight');
-  const markWrong = document.getElementById('markWrong');
-  const btnNewDeck = document.getElementById('btnNewDeck');
-  const btnEdit = document.getElementById('btnEdit');
-  const modal = document.getElementById('modal');
-  const modalInner = document.getElementById('modalInner');
+/* Color Picker */
+document.querySelectorAll(".color-option").forEach(option => {
+  option.addEventListener("click", () => {
+    document.querySelectorAll(".color-option").forEach(o => o.classList.remove("selected"));
+    option.classList.add("selected");
+    selectedColor = option.style.background;
+  });
+});
 
-  // helpers
-  const uid = ()=> (Date.now().toString(36) + Math.random().toString(36).slice(2,8));
-  const save = ()=> localStorage.setItem(KEY, JSON.stringify(state));
-  const load = ()=> {
-    try { const raw = localStorage.getItem(KEY); if (raw) state = JSON.parse(raw); } catch(e){ console.warn(e); }
+/* Create Deck */
+function createDeck() {
+  const deck = {
+    title: "New Deck " + (decks.length + 1),
+    color: selectedColor,
+    cards: [
+      { q: "Sample Question 1", a: "Sample Answer 1" },
+      { q: "Sample Question 2", a: "Sample Answer 2" }
+    ]
   };
+  decks.push(deck);
+  renderDecks();
+}
 
-  function ensureSample(){
-    if (!state.decks || !state.decks.length) {
-      state.decks = [{
-        id: uid(),
-        name: 'Sample deck',
-        cards: [
-          { q: 'Which amendment gave women the right to vote?', a: 'The 19th Amendment.' },
-          { q: 'What is 2 + 2?', a: '4' }
-        ],
-        stats: { correct:0, incorrect:0 }
-      }];
-      state.currentDeckId = state.decks[0].id;
-      save();
-    }
-  }
-
-  load();
-  ensureSample();
-
-  function currentDeck(){ return state.decks.find(d=>d.id === state.currentDeckId) || state.decks[0]; }
-
-  // session management
-  function startSession(){
-    const deck = currentDeck();
-    if(!deck || !deck.cards.length) return;
-    state.session.cards = deck.cards.slice().sort(()=>Math.random()-0.5);
-    state.session.index = 0;
-    state.session.flipped = false;
-    renderStack();
-    updateProgress();
-  }
-
-  function renderStack(){
-    stack.innerHTML = '';
-    const s = state.session;
-    const total = s.cards.length;
-    if (!total) {
-      stack.innerHTML = '<div class="card" style="display:grid;place-items:center; color:var(--muted); background:transparent; box-shadow:none">No cards</div>';
-      return;
-    }
-
-    // show up to 3 cards: top, next, next-2
-    for (let i=0;i<Math.min(3,total - s.index); i++){
-      const cardData = s.cards[s.index + i];
-      const el = document.createElement('div');
-      el.className = 'card' + (i===1? ' next' : i===2 ? ' next-2' : '') + (i===0 && s.flipped ? ' flipped' : '');
-      el.innerHTML = `
-        <div class="card-inner">
-          <div class="face front">
-            <div class="label">Question</div>
-            <div class="content">${escape(cardData.q)}</div>
-          </div>
-          <div class="face back">
-            <div class="label">Answer</div>
-            <div class="content">${escape(cardData.a)}</div>
-          </div>
-        </div>
-      `;
-      // interactions for top card only
-      if (i===0) attachCardInteractions(el, cardData);
-      stack.appendChild(el);
-    }
-  }
-
-  // Attach flip/swipe interactions (top card)
-  function attachCardInteractions(cardEl, cardData){
-    // flip on tap
-    cardEl.addEventListener('click', (e) => {
-      if (isDragging) return;
-      state.session.flipped = !state.session.flipped;
-      cardEl.classList.toggle('flipped', state.session.flipped);
-    });
-
-    // pointer drag for swipe
-    let startX=0, startY=0, dx=0, dy=0, dragging=false, isDraggingLocal=false;
-    function onDown(e){
-      dragging=true; isDraggingLocal=false;
-      startX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
-      startY = e.clientY || (e.touches && e.touches[0].clientY) || 0;
-      cardEl.style.transition = 'none';
-    }
-    function onMove(e){
-      if(!dragging) return;
-      const x = e.clientX || (e.touches && e.touches[0].clientX) || 0;
-      const y = e.clientY || (e.touches && e.touches[0].clientY) || 0;
-      dx = x - startX; dy = y - startY;
-      if (Math.abs(dx) > 6 || Math.abs(dy) > 10) isDraggingLocal = true;
-      if (isDraggingLocal){
-        cardEl.style.transform = `translateX(${dx}px) rotate(${dx/18}deg)`;
-        cardEl.style.opacity = `${Math.max(0.35, 1 - Math.abs(dx)/600)}`;
-      }
-    }
-    function onUp(){
-      if(!dragging) return;
-      dragging=false;
-      cardEl.style.transition = '';
-      if (Math.abs(dx) > 120) {
-        // swipe decision
-        if (dx > 0) doMark(true, cardEl); else doMark(false, cardEl);
-      } else {
-        // reset
-        cardEl.style.transform = '';
-        cardEl.style.opacity = '';
-      }
-      dx=0; dy=0; isDraggingLocal=false;
-    }
-
-    cardEl.addEventListener('pointerdown', onDown);
-    window.addEventListener('pointermove', onMove);
-    window.addEventListener('pointerup', onUp);
-    // touch fallback
-    cardEl.addEventListener('touchstart', onDown, {passive:true});
-    window.addEventListener('touchmove', onMove, {passive:true});
-    window.addEventListener('touchend', onUp);
-
-    // expose dragging flag for outside
-    Object.defineProperty(window, 'isCardDragging', { get: ()=> isDraggingLocal });
-
-    function doMark(isCorrect, el) {
-      // animate out
-      el.style.transition = 'transform .45s cubic-bezier(.2,.9,.3,1),opacity .35s ease';
-      el.style.transform = `translateX(${isCorrect? 900 : -900}px) rotate(${isCorrect? 22 : -22}deg)`;
-      el.style.opacity = '0';
-      // update stats and advance
-      setTimeout(()=>{
-        const deck = currentDeck();
-        if (!deck.stats) deck.stats = { correct:0, incorrect:0 };
-        if (isCorrect) deck.stats.correct = (deck.stats.correct||0) + 1;
-        else deck.stats.incorrect = (deck.stats.incorrect||0) + 1;
-        save();
-
-        // advance index or end
-        state.session.index++;
-        state.session.flipped = false;
-        if (state.session.index >= state.session.cards.length) {
-          // finished session
-          renderStack();
-          updateProgress();
-          setTimeout(()=> {
-            const d = currentDeck();
-            alert(`Session complete\n\n✓ ${d.stats.correct||0} correct\n✗ ${d.stats.incorrect||0}`);
-          }, 80);
-        } else {
-          renderStack();
-          updateProgress();
-        }
-      }, 360);
-    }
-  }
-
-  function escape(s=''){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-  // update progress/hint
-  function updateProgress(){
-    const d = currentDeck();
-    const s = state.session;
-    const total = s.cards.length || (d ? d.cards.length : 0);
-    const idx = total ? Math.min(total, s.index + 1) : 0;
-    const correct = d?.stats?.correct || 0;
-    const incorrect = d?.stats?.incorrect || 0;
-    const hint = `${idx} / ${total} • ✓ ${correct} · ✗ ${incorrect}`;
-    document.getElementById('progressText').textContent = hint;
-  }
-
-  // mark via buttons
-  function recordAnswer(correct){
-    // reuse top card element
-    const cardEl = stack.querySelector('.card');
-    if (!cardEl) return;
-    // simulate swipe animation then mark
-    cardEl.style.transition = 'transform .45s cubic-bezier(.2,.9,.3,1),opacity .35s ease';
-    cardEl.style.transform = `translateX(${correct? 800 : -800}px) rotate(${correct? 12 : -12}deg)`;
-    cardEl.style.opacity = '0';
-    setTimeout(()=>{
-      // update stats
-      const deck = currentDeck();
-      if (!deck.stats) deck.stats = { correct:0, incorrect:0 };
-      if (correct) deck.stats.correct = (deck.stats.correct||0) + 1;
-      else deck.stats.incorrect = (deck.stats.incorrect||0) + 1;
-      save();
-
-      // advance
-      state.session.index++;
-      state.session.flipped = false;
-      if (state.session.index >= state.session.cards.length) {
-        renderStack(); updateProgress();
-        setTimeout(()=> { alert(`Session complete\n\n✓ ${deck.stats.correct||0} correct\n✗ ${deck.stats.incorrect||0}`); }, 80);
-      } else {
-        renderStack(); updateProgress();
-      }
-    }, 300);
-  }
-
-  // controls wiring
-  flipBtn.addEventListener('click', ()=>{
-    const top = stack.querySelector('.card');
-    if (!top) return;
-    state.session.flipped = !state.session.flipped;
-    top.classList.toggle('flipped', state.session.flipped);
+function renderDecks() {
+  deckList.innerHTML = "";
+  decks.forEach((deck, index) => {
+    const div = document.createElement("div");
+    div.className = "deck";
+    div.style.background = deck.color;
+    div.innerHTML = `
+      <div class="deck-title">${deck.title}</div>
+      <div class="deck-count">${deck.cards.length} cards</div>
+    `;
+    div.onclick = () => openDeck(index);
+    deckList.appendChild(div);
   });
-  prevBtn.addEventListener('click', ()=>{
-    if (state.session.index > 0) { state.session.index--; state.session.flipped=false; renderStack(); updateProgress(); }
-  });
-  nextBtn.addEventListener('click', ()=>{
-    if (state.session.index < (state.session.cards.length - 1)) { state.session.index++; state.session.flipped=false; renderStack(); updateProgress(); }
-  });
-  markRight.addEventListener('click', ()=> recordAnswer(true));
-  markWrong.addEventListener('click', ()=> recordAnswer(false));
+}
 
-  // New & Edit deck (minimal modal)
-  document.getElementById('btnNewDeck').addEventListener('click', ()=> {
-    showModal(`<div style="font-weight:700;margin-bottom:8px">New deck</div>
-      <div class="form-row"><input id="newDeckName" placeholder="Deck name"></div>`, ()=>{
-      const name = document.getElementById('newDeckName').value.trim();
-      if (!name) { alert('Name required'); return; }
-      const deck = { id: uid(), name, cards: [], stats: { correct:0, incorrect:0 } };
-      state.decks.push(deck);
-      state.currentDeckId = deck.id;
-      save();
-      closeModal();
-      // auto-start with empty session (user can add cards later)
-      startSession();
-      updateDeckHeader();
-    });
-  });
+function openDeck(index) {
+  currentDeck = decks[index];
+  currentIndex = 0;
+  showingFront = true;
+  deckScreen.classList.remove("active");
+  cardScreen.classList.add("active");
+  document.getElementById("deckTitle").innerText = currentDeck.title;
+  updateCard();
+}
 
-  // Edit opens a tiny editor for adding a card
-  btnEdit.addEventListener('click', ()=> {
-    const d = currentDeck();
-    if (!d) return;
-    showModal(`<div style="font-weight:700;margin-bottom:8px">Add card — ${escape(d.name)}</div>
-      <div class="form-row"><input id="q" placeholder="Question"></div>
-      <div class="form-row"><textarea id="a" placeholder="Answer"></textarea></div>`, ()=>{
-      const q = document.getElementById('q').value.trim();
-      const a = document.getElementById('a').value.trim();
-      if (!q || !a) { alert('Both required'); return; }
-      d.cards.push({ q,a });
-      save();
-      closeModal();
-      startSession();
-      updateDeckHeader();
-    });
-  });
+function updateCard() {
+  const card = currentDeck.cards[currentIndex];
+  flashcard.style.background = currentDeck.color;
+  flashcard.innerText = showingFront ? card.q : card.a;
+}
 
-  // simple modal helpers
-  function showModal(html, onSave){
-    modalInner.innerHTML = html + `<div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px">
-      <button class="ghost" id="mCancel">Cancel</button><button class="primary" id="mSave">Save</button></div>`;
-    modal.classList.add('show');
-    document.getElementById('mCancel').onclick = closeModal;
-    document.getElementById('mSave').onclick = ()=> onSave && onSave();
+function flipCard() {
+  showingFront = !showingFront;
+  updateCard();
+}
+
+function nextCard() {
+  if (currentIndex < currentDeck.cards.length - 1) {
+    currentIndex++;
+    showingFront = true;
+    updateCard();
   }
-  function closeModal(){ modal.classList.remove('show'); modalInner.innerHTML = ''; }
+}
 
-  // keyboard
-  document.addEventListener('keydown', (e)=>{
-    // ignore when modal open
-    if (modal.classList.contains('show')) return;
-    if (e.key === 'ArrowLeft') prevBtn.click();
-    if (e.key === 'ArrowRight') nextBtn.click();
-    if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); flipBtn.click(); }
-    if (e.key === '1') markWrong.click();
-    if (e.key === '2') markRight.click();
-  });
-
-  // initial render
-  updateDeckHeader();
-  startSession();
-
-  function updateDeckHeader(){
-    const d = currentDeck();
-    deckTitle.textContent = d?.name || 'Flashcards';
-    const cards = d?.cards?.length || 0;
-    deckSub.textContent = `${cards} card${cards===1?'':'s'} • Tap to flip • Swipe to mark`;
-    updateProgress();
+function prevCard() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    showingFront = true;
+    updateCard();
   }
+}
 
-})();
+function goBack() {
+  cardScreen.classList.remove("active");
+  deckScreen.classList.add("active");
+}
 </script>
+
 </body>
 </html>
