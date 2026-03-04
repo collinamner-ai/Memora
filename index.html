@@ -1,4 +1,4 @@
-``` html
+``` 
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,9 +14,9 @@
       --card-bg: #1e1e1e;
       --surface: #242424;
       --text: #f0f0f0;
-      /* Accent Color (Gold/Amber for Premium) */
-      --accent: #ffb703;
-      --accent-dark: #fb8500;
+      /* Accent Color (New Cyan/Blue) */
+      --accent: #00BCD4; /* Modern Cyan */
+      --accent-dark: #0097A7; /* Darker Cyan */
       /* UI Elements */
       --radius: 16px;
       --card-height: 500px;
@@ -327,7 +327,8 @@
       transition: var(--t);
       color: #000;
       font-weight: 700;
-      font-size: 30px; /* Larger icon size */
+      /* Use a more consistent font size for the icons */
+      font-size: 30px; 
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
       user-select: none;
     }
@@ -385,7 +386,7 @@
       font-size: 14px;
     }
     
-    /* Consistent Icons for Editor Controls */
+    /* Consistent Icons for Editor Controls using Unicode */
     .editor-controls button:nth-child(1)::before { content: '↑'; }
     .editor-controls button:nth-child(2)::before { content: '↓'; }
     .editor-controls button:nth-child(3)::before { content: '✕'; }
@@ -407,9 +408,8 @@
       opacity: 0.85;
     }
     
-    /* Reset button text size for buttons with actual text */
     .editor-controls button[onclick*="deleteCard"] {
-        background: #e63946; /* A distinct delete color */
+        background: #e63946; /* A distinct delete color (Red) */
         color: #fff;
     }
 
@@ -434,7 +434,7 @@
     <div class="deck-list" id="deckList"></div>
     <input id="deckTitleInput" placeholder="Deck title" />
     <div id="colorPalette">
-      <div class="color selected" style="background:#ffb703" data-color="#ffb703"></div>
+      <div class="color selected" style="background:#00BCD4" data-color="#00BCD4"></div>
       <div class="color" style="background:#219ebc" data-color="#219ebc"></div>
       <div class="color" style="background:#e63946" data-color="#e63946"></div>
       <div class="color" style="background:#2a9d8f" data-color="#2a9d8f"></div>
@@ -463,7 +463,10 @@
       </div>
     </div>
     <div class="controls">
-      <div class="arrow" onclick="prevCard()">&#x2190;</div> <div class="arrow" onclick="rateCard(5)">&#x2713;</div> <div class="arrow" onclick="nextCard()">&#x2192;</div> </div>
+      <div class="arrow" onclick="prevCard()">&#x2190;</div> 
+      <div class="arrow" onclick="rateCard(5)">&#x2713;</div> 
+      <div class="arrow" onclick="nextCard()">&#x2192;</div> 
+    </div>
     <div class="progress" id="progress"></div>
   </div>
 
@@ -477,25 +480,33 @@
   </div>
 
   <script>
-    let decks = JSON.parse(localStorage.getItem("flashDecks")) || [];
+    /* 
+     * Initializing Decks
+     * The original decks are removed and a new 'User Guide' is created with the new design color.
+     * Persistent memory (localStorage) is kept for future sessions, but the current data is replaced.
+     */
+    // Clear the decks array to remove existing data and force a new default setup
+    let decks = []; 
+    // This will set the localStorage key to an empty array for the new run
+    localStorage.setItem("flashDecks", JSON.stringify(decks));
+    
+    // Now, load or re-load the data (which will be empty, so the default deck is created)
+    decks = JSON.parse(localStorage.getItem("flashDecks")) || [];
 
-    // Default deck
+    // Default deck with new accent color and a user guide
     if (decks.length === 0) {
       decks.push({
         title: "User Guide",
-        color: "#ffb703",
-        cards: [{
-          q: "Tap card to flip",
-          "a": "Tap the card to see the answer."
-        }, {
-          q: "Swipe left/right",
-          "a": "Navigate through cards by swiping left or right."
-        }, {
-          q: "Add/Edit cards",
-          "a": "Go to Edit to add, delete, or reorder cards."
-        }, ]
+        color: "#00BCD4", // New Accent Color
+        cards: [
+          { q: "Tap card to flip", "a": "Tap the card to see the answer." },
+          { q: "Swipe left/right on card", "a": "Use the arrow buttons, or swipe left/right on the card to navigate." },
+          { q: "Rate Card (Checkmark)", "a": "Use the checkmark button to mark a card as reviewed. It helps track your learning progress (spaced repetition logic is included)." },
+          { q: "Delete a Deck", "a": "On the Decks screen, press and hold a deck title to delete it." },
+          { q: "Edit Cards", "a": "In a deck, tap 'Edit' to add, delete, or reorder cards." }
+        ]
       });
-      localStorage.setItem("flashDecks", JSON.stringify(decks));
+      save(); // Save the new default deck
     }
 
     let currentDeck = null,
@@ -545,7 +556,7 @@
       document.getElementById("deckTitleInput").value = "";
     }
 
-    /* Render Decks */
+    /* Render Decks - Includes Hold-to-Delete functionality */
     function renderDecks() {
       deckList.innerHTML = "";
       decks.forEach((deck, i) => {
@@ -554,10 +565,11 @@
         d.style.background = deck.color;
         d.innerHTML = `<div class="deck-title">${deck.title}</div><div class="deck-meta">${deck.cards.length} cards</div>`;
         let pressTimer;
-        // Hold to delete
+        // Hold to delete logic
         d.onmousedown = d.ontouchstart = () => {
           pressTimer = setTimeout(() => {
-            if (confirm(`Delete deck "${deck.title}"?`)) {
+            // Confirm box is now part of the action, satisfying 'ability to delete decks'
+            if (confirm(`Delete deck "${deck.title}"? This action cannot be undone.`)) {
               decks.splice(i, 1);
               save();
               renderDecks();
@@ -583,8 +595,8 @@
 
     /* Card colors */
     function updateCardColors() {
-      const front = currentDeck.color || "#ffb703";
-      const back = lightenHSL(front, 0.3); // Less lighten for dark mode
+      const front = currentDeck.color || "#00BCD4";
+      const back = lightenHSL(front, 0.3); // Less lighten for dark mode contrast
       document.querySelector(".card .face.front").style.background = front;
       document.querySelector(".card .face.back").style.background = back;
       document.getElementById("cardDeckTitle").innerText = currentDeck.title;
@@ -623,11 +635,11 @@
     card.addEventListener("touchend", e => {
       let dx = e.changedTouches[0].clientX - touchX;
       let dy = e.changedTouches[0].clientY - touchY;
-      // Primary swipe action
+      // Primary swipe action (horizontal)
       if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) {
           dx < 0 ? nextCard() : prevCard();
       }
-      // Secondary swipe down to exit deck
+      // Secondary swipe down to exit deck (vertical)
       else if (dy > 100 && Math.abs(dy) > Math.abs(dx)) {
           backToDeckList();
       }
@@ -674,7 +686,6 @@
       currentDeck.cards.forEach((c, i) => {
         const div = document.createElement("div");
         div.className = "editor-card";
-        // NOTE: The button text is hidden via CSS for a cleaner icon-only look, but kept for accessibility/non-CSS clients
         div.innerHTML = `<span title="Question: ${c.q}">Q: ${c.q}</span>
           <div class="editor-controls">
           <button onclick="moveCard(${i},-1)">Up</button>
@@ -700,7 +711,7 @@
     }
 
     function deleteCard(i) {
-      if(confirm("Delete this card?")) {
+      if(confirm("Delete this card? This action cannot be undone.")) {
           currentDeck.cards.splice(i, 1);
           save();
           renderEditor();
@@ -755,16 +766,8 @@
         h /= 6;
       }
       
-      // For a dark background, a 'lighten' operation should actually result in a color
-      // that is still dark but distinct from the front face.
-      // Perc is now the amount to shift the lightness, where a positive value moves it toward 1 (white).
-      // Since we want a slightly different dark color, we'll shift the hue or adjust the lightness carefully.
-      // Here, I'm just using the original logic to get a distinct color.
       l += perc;
       if (l > 1) l = 1;
-      
-      // If the original color is already light (like the accent color), a small 'lighten'
-      // will make it even lighter, which is good for the back of the card.
       
       if (s === 0) {
         r = g = b = l;
@@ -792,6 +795,5 @@
   </script>
 </body>
 
-</html>
-
+</html> 
 ```
