@@ -9,7 +9,7 @@
   <style>
     /* New Premium Design System */
     :root {
-      /* Color System */
+      /* Color System (Retained for UI consistency) */
       --mint-glow: #A8F1E1;
       --teal-core: #2AB7A9;
       --deep-teal: #0F6F66;
@@ -168,11 +168,14 @@
       cursor: pointer;
       transition: var(--t);
       position: relative;
+      /* Added fixed size to prevent resizing/jank */
+      min-height: 120px; 
+      height: 100%;
+      
       /* color set dynamically via JS for contrast */
       font-weight: 600;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      /* Text size already appropriate for smaller card area */
     }
 
     .deck:active {
@@ -250,6 +253,7 @@
       flex-wrap: wrap; /* Allow wrapping for more colors */
       gap: 10px;
       margin-bottom: 16px;
+      align-items: center; /* Vertically align items */
     }
 
     .color {
@@ -266,6 +270,21 @@
       border-color: var(--paper-white);
       box-shadow: 0 0 0 3px var(--accent);
       transform: scale(1.1);
+    }
+
+    .color-picker-placeholder {
+      /* Dropper/Picker Placeholder styling */
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px dashed var(--slate-grey);
+      color: var(--slate-grey);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: not-allowed; /* Indicate it's not functional yet */
+      font-weight: 700;
     }
 
     /* Flashcard */
@@ -346,7 +365,7 @@
       color: inherit; /* Inherit from face text color for consistency */
     }
     
-    /* New Card Count Top Right */
+    /* Card Count Top Right */
     .count-label {
       position: absolute;
       top: 18px;
@@ -526,14 +545,8 @@
     <div class="deck-list" id="deckList"></div>
     <input id="deckTitleInput" placeholder="Deck title" />
     <div id="colorPalette">
-      <div class="color selected" style="background:linear-gradient(135deg, var(--mint-glow), var(--teal-core))" data-color="var(--teal-core)" data-grad-start="var(--mint-glow)" data-grad-end="var(--teal-core)"></div>
-      <div class="color" style="background:linear-gradient(135deg, var(--sky-blue), var(--lavender-drift))" data-color="var(--lavender-drift)" data-grad-start="var(--sky-blue)" data-grad-end="var(--lavender-drift)"></div>
-      <div class="color" style="background:linear-gradient(135deg, var(--mint-glow), var(--soft-purple))" data-color="var(--soft-purple)" data-grad-start="var(--mint-glow)" data-grad-end="var(--soft-purple)"></div>
-      <div class="color" style="background:var(--teal-core)" data-color="var(--teal-core)" data-grad-start="var(--teal-core)" data-grad-end="var(--teal-core)"></div>
-      <div class="color" style="background:var(--deep-teal)" data-color="var(--deep-teal)" data-grad-start="var(--deep-teal)" data-grad-end="var(--deep-teal)"></div>
-      <div class="color" style="background:var(--soft-purple)" data-color="var(--soft-purple)" data-grad-start="var(--soft-purple)" data-grad-end="var(--soft-purple)"></div>
-      <div class="color" style="background:var(--sky-blue)" data-color="var(--sky-blue)" data-grad-start="var(--sky-blue)" data-grad-end="var(--sky-blue)"></div>
-      <div class="color" style="background:#B388FF" data-color="#B388FF" data-grad-start="#B388FF" data-grad-end="#B388FF"></div> <div class="color" style="background:#FF8A80" data-color="#FF8A80" data-grad-start="#FF8A80" data-grad-end="#FF8A80"></div> </div>
+      <div class="color selected" style="background:#7DF9FF" data-color="#7DF9FF"></div> <div class="color" style="background:#FFB86C" data-color="#FFB86C"></div> <div class="color" style="background:#C792EA" data-color="#C792EA"></div> <div class="color" style="background:#80FF72" data-color="#80FF72"></div> <div class="color" style="background:#FF6E9F" data-color="#FF6E9F"></div> <div class="color-picker-placeholder">?</div>
+    </div>
     <div class="button" onclick="createDeck()">Create Deck</div>
   </div>
 
@@ -579,12 +592,8 @@
   <script>
     // --- Data Initialization and Persistence ---
     let decks = []; 
-    // Default values for new default deck
-    const defaultColor = "var(--teal-core)";
-    const defaultGradStart = "var(--mint-glow)";
-    const defaultGradEnd = "var(--teal-core)";
-    const defaultTitle = "Memora";
-
+    // Default values for new default deck (using the first of the new 5 standard colors)
+    const defaultColor = "#7DF9FF"; // Electric Aqua
 
     // Helper to get the computed value of a CSS variable, handling the 'var(--...)' format
     function getCssVarValue(varName) {
@@ -609,7 +618,9 @@
         const b = parseInt(hex.substring(4, 6), 16);
         // Calculate luminance (ITU-R BT.709)
         const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-        return luminance > 0.6; // Threshold for "light" background
+        // The new standard colors are bright, so we set the text color to ink-grey (dark).
+        // Luminance > 0.6 is a good heuristic for light background.
+        return luminance > 0.6; 
     }
 
     // HSL helper (Converts hex to HSL, adjusts lightness, converts back to RGB for card backface) 
@@ -675,8 +686,7 @@
       decks.push({
         title: "User Guide",
         color: defaultColor, 
-        gradStart: defaultGradStart,
-        gradEnd: defaultGradEnd,
+        // Note: gradStart/End are removed from default for simplicity since new colors are single hex
         cards: [
           { q: "Tap card to flip", "a": "Tap the card to see the answer." },
           { q: "Navigate cards", "a": "Use the arrow icons or swipe horizontally on the card to move between questions." },
@@ -727,15 +737,14 @@
       const title = document.getElementById("deckTitleInput").value.trim();
       if (!title) return;
       const selectedColorDiv = document.querySelector("#colorPalette .color.selected");
-      const color = selectedColorDiv.dataset.color;
-      const gradStart = selectedColorDiv.dataset.gradStart;
-      const gradEnd = selectedColorDiv.dataset.gradEnd;
+      
+      // Since new colors are single hex, only the data-color attribute is used.
+      const color = selectedColorDiv ? selectedColorDiv.dataset.color : defaultColor;
       
       decks.push({
         title,
         color,
-        gradStart,
-        gradEnd,
+        // No gradStart/End by default for new decks with the new color set
         cards: []
       });
       save();
@@ -750,12 +759,10 @@
         const d = document.createElement("div");
         d.className = "deck";
         
-        // Handle gradients for decks
-        let deckBg = deck.color;
-        if (deck.gradStart && deck.gradEnd && deck.gradStart !== deck.gradEnd) {
+        // Handle gradients vs solid colors (using only 'color' for new default scheme)
+        let deckBg = getCssVarValue(deck.color || defaultColor);
+        if (deck.gradStart && deck.gradEnd) {
             deckBg = `linear-gradient(135deg, ${getCssVarValue(deck.gradStart)}, ${getCssVarValue(deck.gradEnd)})`;
-        } else {
-            deckBg = getCssVarValue(deck.color);
         }
 
         d.style.background = deckBg;
@@ -814,15 +821,13 @@
     /* Card colors */
     function updateCardColors() {
       // Use gradient for front face if available
-      let frontBg = currentDeck.color || defaultColor;
+      let frontBg = getCssVarValue(currentDeck.color || defaultColor);
       if (currentDeck.gradStart && currentDeck.gradEnd) {
           frontBg = `linear-gradient(135deg, ${getCssVarValue(currentDeck.gradStart)}, ${getCssVarValue(currentDeck.gradEnd)})`;
-      } else {
-          frontBg = getCssVarValue(currentDeck.color || defaultColor);
-      }
+      } 
       
       const backColor = currentDeck.color || defaultColor;
-      // Lighten back face for contrast.
+      // Lighten back face for reverse card logic.
       const backBg = lightenHSL(backColor, 0.1); 
       
       document.querySelector(".card .face.front").style.background = frontBg;
@@ -1026,5 +1031,5 @@
   </script>
 </body>
 
-</html>  
+</html>   
 ```
