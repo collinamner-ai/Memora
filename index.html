@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Memora - Flashcard Learning</title>
   <style>
     :root {
@@ -11,15 +11,20 @@
       --success: #10B981;
       --danger: #EF4444;
       --accent: #8B5CF6;
+
       --bg-primary: #0F172A;
       --bg-secondary: #1E293B;
       --bg-tertiary: #334155;
+
       --text-primary: #F1F5F9;
       --text-secondary: #CBD5E1;
+
       --border: #475569;
+
       --radius-sm: 8px;
       --radius-md: 12px;
       --radius-lg: 16px;
+
       --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -31,7 +36,7 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: var(--bg-primary);
       color: var(--text-primary);
       min-height: 100vh;
@@ -56,83 +61,38 @@
       transform: translateY(0);
     }
 
+    /* Splash */
     #splash {
       justify-content: center;
       align-items: center;
-      background: linear-gradient(135deg, #F5F7FA 0%, #E8EAEF 100%);
-    }
-
-    .splash-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 32px;
-      animation: slideUp 0.8s ease-out;
-    }
-
-    @keyframes slideUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .logo-box {
-      width: 240px;
-      height: 240px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      animation: float 3s ease-in-out infinite;
-    }
-
-    @keyframes float {
-      0%, 100% {
-        transform: translateY(0px);
-      }
-      50% {
-        transform: translateY(-15px);
-      }
-    }
-
-    .logo-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.12));
-    }
-
-    .splash-text {
+      background: radial-gradient(1200px 600px at 20% 20%, rgba(255,255,255,0.18), transparent 55%),
+                  linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
       text-align: center;
-      animation: fadeIn 1s ease-out 0.4s both;
+      gap: 18px;
     }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
+    .splash-logo {
+      width: min(220px, 58vw);
+      height: auto;
+      filter: drop-shadow(0 10px 26px rgba(0,0,0,0.25));
+      user-select: none;
+      -webkit-user-drag: none;
     }
 
     .logo {
       font-size: 44px;
-      font-weight: 800;
-      color: #2D3E50;
-      margin-bottom: 8px;
-      letter-spacing: -1px;
+      font-weight: 900;
+      color: white;
+      letter-spacing: 0.2px;
+      text-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+      margin-top: 4px;
     }
 
     .tagline {
       font-size: 16px;
-      color: #7A8A99;
-      font-weight: 500;
-      letter-spacing: 0.3px;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 600;
+      letter-spacing: 0.4px;
     }
 
     .header {
@@ -157,11 +117,23 @@
       border-radius: var(--radius-md);
       border: none;
       font-size: 14px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       transition: var(--transition);
       gap: 8px;
       min-height: 44px;
+      user-select: none;
+      touch-action: manipulation;
+    }
+
+    .btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none; /* outline icons */
     }
 
     .btn-primary {
@@ -177,7 +149,7 @@
 
     .btn-secondary {
       background: var(--bg-tertiary);
-      color: var(--text-primary);
+      color: var(--text-primary); /* white/contrasting */
       border: 1px solid var(--border);
       width: 44px;
       height: 44px;
@@ -213,7 +185,7 @@
       overflow: hidden;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       user-select: none;
-      min-height: 120px;
+      touch-action: manipulation;
     }
 
     .deck-card:active {
@@ -228,15 +200,16 @@
 
     .deck-title {
       font-size: 16px;
-      font-weight: 700;
+      font-weight: 800;
       line-height: 1.3;
       word-break: break-word;
     }
 
     .deck-meta {
       font-size: 12px;
-      opacity: 0.85;
+      opacity: 0.9;
       margin-top: 8px;
+      font-weight: 650;
     }
 
     .input-group {
@@ -262,7 +235,7 @@
     textarea:focus {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
     }
 
     textarea {
@@ -277,7 +250,7 @@
 
     .color-label {
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--text-secondary);
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -326,38 +299,22 @@
       aspect-ratio: 3 / 4;
       position: relative;
       cursor: pointer;
-      transition: none;
-      touch-action: none;
+      transition: var(--transition);
+      touch-action: pan-y; /* allow vertical swipe down; handle horizontal ourselves */
+      user-select: none;
     }
 
-    .flashcard.exit-left {
-      animation: exitLeft 0.35s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-    }
-
-    .flashcard.exit-right {
-      animation: exitRight 0.35s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-    }
+    .flashcard.exit-left { animation: exitLeft 0.42s ease-out forwards; }
+    .flashcard.exit-right { animation: exitRight 0.42s ease-out forwards; }
 
     @keyframes exitLeft {
-      0% {
-        transform: translateX(0) rotateZ(0deg) scale(1);
-        opacity: 1;
-      }
-      100% {
-        transform: translateX(-150%) rotateZ(-28deg) scale(0.75);
-        opacity: 0;
-      }
+      0% { transform: translateX(0) rotateZ(0deg); opacity: 1; }
+      100% { transform: translateX(-120%) rotateZ(-18deg); opacity: 0; }
     }
 
     @keyframes exitRight {
-      0% {
-        transform: translateX(0) rotateZ(0deg) scale(1);
-        opacity: 1;
-      }
-      100% {
-        transform: translateX(150%) rotateZ(28deg) scale(0.75);
-        opacity: 0;
-      }
+      0% { transform: translateX(0) rotateZ(0deg); opacity: 1; }
+      100% { transform: translateX(120%) rotateZ(18deg); opacity: 0; }
     }
 
     .flashcard-inner {
@@ -365,7 +322,7 @@
       width: 100%;
       height: 100%;
       transform-style: preserve-3d;
-      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.55s;
     }
 
     .flashcard.flipped .flashcard-inner {
@@ -385,27 +342,14 @@
       text-align: center;
       backface-visibility: hidden;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.12);
     }
 
     .card-face.back {
       transform: rotateY(180deg);
-      background: white !important;
-      color: #2D3E50 !important;
-    }
-
-    .card-face.back .card-label {
-      color: #2D3E50 !important;
-      background: rgba(45, 62, 80, 0.1) !important;
-    }
-
-    .card-face.back .card-counter {
-      color: #2D3E50 !important;
-      background: rgba(45, 62, 80, 0.1) !important;
-    }
-
-    .card-face.back .card-deck-title {
-      color: #2D3E50 !important;
+      background: #FFFFFF !important; /* FORCE WHITE ANSWER SIDE */
+      color: #0F172A !important;
+      border: 1px solid rgba(15, 23, 42, 0.12);
     }
 
     .card-label {
@@ -413,13 +357,21 @@
       top: 12px;
       left: 12px;
       font-size: 11px;
-      font-weight: 700;
+      font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 1px;
-      opacity: 0.7;
-      background: rgba(0, 0, 0, 0.2);
+      opacity: 0.9;
+      background: rgba(0, 0, 0, 0.22);
       padding: 4px 8px;
       border-radius: var(--radius-sm);
+    }
+
+    /* On the WHITE back side, label needs contrast */
+    .card-face.back .card-label,
+    .card-face.back .card-counter {
+      background: rgba(15, 23, 42, 0.08);
+      color: #0F172A;
+      opacity: 1;
     }
 
     .card-counter {
@@ -427,23 +379,23 @@
       top: 12px;
       right: 12px;
       font-size: 12px;
-      font-weight: 600;
-      opacity: 0.7;
-      background: rgba(0, 0, 0, 0.2);
+      font-weight: 700;
+      opacity: 0.9;
+      background: rgba(0, 0, 0, 0.22);
       padding: 4px 8px;
       border-radius: var(--radius-sm);
     }
 
     .card-deck-title {
       font-size: 18px;
-      font-weight: 700;
+      font-weight: 800;
       margin-bottom: 20px;
-      opacity: 0.9;
+      opacity: 0.95;
     }
 
     .card-content {
       font-size: 20px;
-      font-weight: 600;
+      font-weight: 650;
       line-height: 1.5;
       word-wrap: break-word;
     }
@@ -453,6 +405,7 @@
       font-size: 14px;
       color: var(--text-secondary);
       margin-top: 16px;
+      font-weight: 650;
     }
 
     .controls {
@@ -474,18 +427,19 @@
       align-items: center;
       justify-content: center;
       background: var(--bg-tertiary);
-      color: var(--text-primary);
+      color: var(--text-primary); /* white/contrasting */
+      user-select: none;
+      touch-action: manipulation;
     }
 
-    .control-btn:active {
-      transform: scale(0.92);
-    }
+    .control-btn:active { transform: scale(0.92); }
 
     .control-btn.primary {
       background: var(--success);
       border-color: var(--success);
       width: 70px;
       height: 70px;
+      color: white;
     }
 
     .control-btn svg {
@@ -495,7 +449,7 @@
       stroke-width: 2.5;
       stroke-linecap: round;
       stroke-linejoin: round;
-      fill: none;
+      fill: none; /* outline icons */
     }
 
     .control-btn.primary svg {
@@ -536,7 +490,7 @@
 
     .editor-card-q {
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--text-primary);
       margin-bottom: 4px;
       white-space: nowrap;
@@ -550,18 +504,19 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      font-weight: 600;
     }
 
     .editor-actions {
       display: flex;
-      gap: 4px;
+      gap: 6px;
     }
 
     .editor-btn {
       width: 36px;
       height: 36px;
       border-radius: var(--radius-sm);
-      border: none;
+      border: 1px solid rgba(255,255,255,0.08);
       background: var(--bg-primary);
       color: var(--text-secondary);
       cursor: pointer;
@@ -574,10 +529,12 @@
     .editor-btn:hover {
       background: var(--primary);
       color: white;
+      border-color: rgba(255,255,255,0.0);
     }
 
     .editor-btn.danger:hover {
       background: var(--danger);
+      color: white;
     }
 
     .editor-btn svg {
@@ -587,21 +544,12 @@
       stroke-width: 2.5;
       stroke-linecap: round;
       stroke-linejoin: round;
-      fill: none;
+      fill: none; /* outline icons */
     }
 
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: var(--bg-secondary);
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: var(--bg-tertiary);
-      border-radius: 3px;
-    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+    ::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 3px; }
 
     @media (min-width: 600px) {
       .screen {
@@ -625,18 +573,22 @@
       color: var(--text-secondary);
     }
 
-    .empty-icon {
-      font-size: 48px;
-      opacity: 0.5;
-    }
+    .empty-icon { font-size: 48px; opacity: 0.55; }
+    .empty-text { font-size: 16px; font-weight: 650; }
 
-    .empty-text {
-      font-size: 16px;
-      font-weight: 500;
+    /* A little hint for swipe */
+    .hint {
+      margin-top: 10px;
+      font-size: 13px;
+      font-weight: 650;
+      color: rgba(255,255,255,0.9);
+      opacity: 0.9;
     }
   </style>
 </head>
+
 <body>
+  <!-- Outline icons (stroke only) -->
   <svg style="display:none;">
     <symbol id="icon-arrow-left" viewBox="0 0 24 24">
       <path d="M19 12H5M12 19l-7-7 7-7"/>
@@ -661,26 +613,25 @@
     </symbol>
   </svg>
 
+  <!-- SPLASH -->
   <div id="splash" class="screen active">
-    <div class="splash-container">
-      <div class="logo-box">
-        <img src="memora-logo.png" alt="Memora Logo">
-      </div>
-      <div class="splash-text">
-        <div class="logo">Memora</div>
-        <div class="tagline">Remember more, faster</div>
-      </div>
-    </div>
+    <!-- Put your provided logo image next to this HTML as: memora-logo.png -->
+    <img class="splash-logo" src="memora-logo.png" alt="Memora Logo">
+    <div class="logo">Memora</div>
+    <div class="tagline">Remember more, faster</div>
+    <div class="hint">Tap to start</div>
   </div>
 
+  <!-- DECK LIST -->
   <div id="deckScreen" class="screen">
     <div class="header">
       <div class="header-title">Decks</div>
     </div>
+
     <div class="deck-grid" id="deckList"></div>
-    
+
     <div class="input-group">
-      <input type="text" id="deckTitleInput" placeholder="Enter deck name...">
+      <input type="text" id="deckTitleInput" placeholder="Enter deck name..." />
     </div>
 
     <div class="color-group">
@@ -691,19 +642,22 @@
     <button class="btn btn-primary" onclick="createDeck()">Create Deck</button>
   </div>
 
+  <!-- CARD SCREEN -->
   <div id="cardScreen" class="screen">
     <div class="header">
-      <button class="btn btn-secondary" onclick="backToDeckList()">
+      <button class="btn btn-secondary" onclick="backToDeckList()" aria-label="Back">
         <svg><use href="#icon-arrow-left"/></svg>
       </button>
+
       <div class="header-title" id="deckTitleDisplay" style="flex: 1; text-align: center;"></div>
-      <button class="btn btn-secondary" onclick="openEditor()">
+
+      <button class="btn btn-secondary" onclick="openEditor()" aria-label="Edit cards">
         <svg><use href="#icon-edit"/></svg>
       </button>
     </div>
 
     <div class="card-container">
-      <div class="flashcard" id="flashcard">
+      <div class="flashcard" id="flashcard" aria-label="Flashcard">
         <div class="flashcard-inner">
           <div class="card-face front" id="cardFront">
             <div class="card-label">QUESTION</div>
@@ -711,6 +665,7 @@
             <div class="card-deck-title" id="deckTitleFront"></div>
             <div class="card-content" id="questionText"></div>
           </div>
+
           <div class="card-face back" id="cardBack">
             <div class="card-label">ANSWER</div>
             <div class="card-counter" id="counterBack"></div>
@@ -722,13 +677,15 @@
     </div>
 
     <div class="controls">
-      <button class="control-btn" onclick="prevCard()" title="Previous">
+      <button class="control-btn" onclick="prevCard()" title="Previous" aria-label="Previous">
         <svg><use href="#icon-arrow-left"/></svg>
       </button>
-      <button class="control-btn primary" onclick="rateCard(5)" title="Mark as reviewed">
+
+      <button class="control-btn primary" onclick="rateCard(5)" title="Mark as reviewed" aria-label="Reviewed">
         <svg><use href="#icon-check"/></svg>
       </button>
-      <button class="control-btn" onclick="nextCard()" title="Next">
+
+      <button class="control-btn" onclick="nextCard()" title="Next" aria-label="Next">
         <svg><use href="#icon-arrow-right"/></svg>
       </button>
     </div>
@@ -736,10 +693,11 @@
     <div class="progress-display" id="progress"></div>
   </div>
 
+  <!-- EDITOR -->
   <div id="editorScreen" class="screen">
     <div class="header">
       <div class="header-title">Edit Cards</div>
-      <button class="btn btn-secondary" onclick="backToCardScreen()">
+      <button class="btn btn-secondary" onclick="backToCardScreen()" aria-label="Close editor">
         <svg><use href="#icon-x"/></svg>
       </button>
     </div>
@@ -751,7 +709,7 @@
       <textarea id="newA" placeholder="Answer..."></textarea>
     </div>
 
-    <button class="btn btn-primary" onclick="addCard()" style="margin-bottom: 12px;">Add Card</button>
+    <button class="btn btn-primary" onclick="addCard()" style="margin-bottom: 12px;">Add / Save Card</button>
     <button class="btn btn-secondary" onclick="backToCardScreen()" style="width: 100%; background: var(--bg-tertiary);">Done</button>
   </div>
 
@@ -761,7 +719,7 @@
     let currentIndex = 0;
     let editingCardIndex = null;
 
-    const colors = ['#3B82F6', '#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#06B6D4', '#EF4444', '#F97316'];
+    const colors = ["#3B82F6", "#8B5CF6", "#EC4899", "#F59E0B", "#10B981", "#06B6D4", "#EF4444", "#F97316"];
     const defaultColor = colors[0];
 
     function save() {
@@ -770,16 +728,17 @@
 
     function load() {
       decks = JSON.parse(localStorage.getItem("flashDecks")) || [];
+
       if (decks.length === 0) {
         decks.push({
           title: "Welcome to Memora",
           color: defaultColor,
           cards: [
-            { q: "Tap a card to flip it", a: "Click or tap the card to reveal the answer." },
-            { q: "Swipe left or right", a: "Swipe horizontally to navigate between cards with smooth animations." },
-            { q: "Mark as reviewed", a: "Use the checkmark button to mark a card as studied. This helps with spaced repetition!" },
-            { q: "Edit your cards", a: "Click the edit button to add, edit, or delete cards from any deck." },
-            { q: "Create new decks", a: "Go back to the home screen and create a new deck with a custom color." }
+            { q: "Tap a card to flip it", a: "Tap/click the card to reveal the answer." },
+            { q: "Swipe left or right", a: "Swipe horizontally to move between cards." },
+            { q: "Swipe down to exit", a: "Swipe down to return to your deck list." },
+            { q: "Mark as reviewed", a: "Use the check button to mark a card as studied." },
+            { q: "Edit your cards", a: "Tap the edit icon to add, edit, reorder, or delete cards." }
           ]
         });
         save();
@@ -791,7 +750,7 @@
       palette.innerHTML = "";
       colors.forEach(color => {
         const swatch = document.createElement("div");
-        swatch.className = "color-swatch selected";
+        swatch.className = "color-swatch";
         swatch.style.background = color;
         swatch.dataset.color = color;
         swatch.onclick = () => selectColor(color);
@@ -802,7 +761,8 @@
 
     function selectColor(color) {
       document.querySelectorAll(".color-swatch").forEach(s => s.classList.remove("selected"));
-      document.querySelector(`[data-color="${color}"]`).classList.add("selected");
+      const el = document.querySelector('[data-color="' + color + '"]');
+      if (el) el.classList.add("selected");
     }
 
     function haptic() {
@@ -814,18 +774,31 @@
       document.getElementById(screenId).classList.add("active");
     }
 
+    // Faster start: allow tap on splash to proceed instantly
     window.addEventListener("load", () => {
       load();
       setupColorPalette();
       renderDecks();
-      setTimeout(() => showScreen("deckScreen"), 1500);
+
+      const goDecks = () => showScreen("deckScreen");
+
+      // Auto after short delay, but also allow immediate tap
+      const splashTimer = setTimeout(goDecks, 1100);
+
+      const splash = document.getElementById("splash");
+      splash.addEventListener("click", () => { clearTimeout(splashTimer); goDecks(); }, { once: true });
+      splash.addEventListener("touchstart", () => { clearTimeout(splashTimer); goDecks(); }, { once: true, passive: true });
     });
 
     function createDeck() {
       const title = document.getElementById("deckTitleInput").value.trim();
       if (!title) return;
-      const selectedColor = document.querySelector(".color-swatch.selected").dataset.color;
+
+      const selected = document.querySelector(".color-swatch.selected");
+      const selectedColor = selected ? selected.dataset.color : defaultColor;
+
       decks.push({ title, color: selectedColor, cards: [] });
+
       save();
       renderDecks();
       document.getElementById("deckTitleInput").value = "";
@@ -844,42 +817,50 @@
     function renderDecks() {
       const deckList = document.getElementById("deckList");
       deckList.innerHTML = "";
+
       decks.forEach((deck, i) => {
         const card = document.createElement("div");
         card.className = "deck-card";
         card.style.background = deck.color;
+
         const textColor = isLightColor(deck.color) ? "#0F172A" : "#F1F5F9";
         card.style.color = textColor;
-        card.innerHTML = `<div class="deck-title">${deck.title}</div><div class="deck-meta">${deck.cards.length} card${deck.cards.length !== 1 ? 's' : ''}</div>`;
+
+        card.innerHTML =
+          '<div class="deck-title">' + deck.title + '</div>' +
+          '<div class="deck-meta">' + deck.cards.length + ' card' + (deck.cards.length !== 1 ? "s" : "") + "</div>";
 
         let pressTimer;
+
         const handlePress = () => {
           pressTimer = setTimeout(() => {
             card.classList.add("long-press");
-            if (confirm(`Delete "${deck.title}"? This cannot be undone.`)) {
+            if (confirm('Delete "' + deck.title + '"? This cannot be undone.')) {
               decks.splice(i, 1);
               save();
               renderDecks();
             } else {
               card.classList.remove("long-press");
             }
-          }, 700);
+          }, 650);
         };
+
         const handleRelease = () => {
           clearTimeout(pressTimer);
           card.classList.remove("long-press");
         };
+
         card.addEventListener("mousedown", handlePress);
-        card.addEventListener("touchstart", handlePress);
+        card.addEventListener("touchstart", handlePress, { passive: true });
         card.addEventListener("mouseup", handleRelease);
         card.addEventListener("mouseleave", handleRelease);
         card.addEventListener("touchend", handleRelease);
+
         card.addEventListener("click", () => {
-          if (pressTimer) {
-            clearTimeout(pressTimer);
-            openDeck(i);
-          }
+          if (pressTimer) clearTimeout(pressTimer);
+          openDeck(i);
         });
+
         deckList.appendChild(card);
       });
     }
@@ -894,123 +875,185 @@
       haptic();
     }
 
-    function adjustBrightness(color, percent) {
-      const hex = color.replace("#", "");
-      const r = Math.min(255, Math.max(0, parseInt(hex.substr(0, 2), 16) + percent));
-      const g = Math.min(255, Math.max(0, parseInt(hex.substr(2, 2), 16) + percent));
-      const b = Math.min(255, Math.max(0, parseInt(hex.substr(4, 2), 16) + percent));
-      return "#" + [r, g, b].map(x => x.toString(16).padStart(2, "0")).join("");
-    }
-
     function updateCardVisuals() {
       document.getElementById("deckTitleDisplay").innerText = currentDeck.title;
       document.getElementById("deckTitleFront").innerText = currentDeck.title;
       document.getElementById("deckTitleBack").innerText = currentDeck.title;
+
       const textColor = isLightColor(currentDeck.color) ? "#0F172A" : "#F1F5F9";
-      document.getElementById("cardFront").style.background = currentDeck.color;
-      document.getElementById("cardFront").style.color = textColor;
-      const backColor = adjustBrightness(currentDeck.color, isLightColor(currentDeck.color) ? -20 : 20);
-      document.getElementById("cardBack").style.background = backColor;
-      document.getElementById("cardBack").style.color = textColor;
+
+      // Front is deck color
+      const front = document.getElementById("cardFront");
+      front.style.background = currentDeck.color;
+      front.style.color = textColor;
+
+      // Back is forced white via CSS. Ensure deck title still readable:
+      const back = document.getElementById("cardBack");
+      back.style.background = "#FFFFFF";
+      back.style.color = "#0F172A";
     }
 
     function updateCard() {
       const flashcard = document.getElementById("flashcard");
       flashcard.classList.remove("flipped", "exit-left", "exit-right");
+
       if (!currentDeck.cards.length) {
-        document.getElementById("questionText").innerHTML = '<div class="empty-state"><div class="empty-icon">📝</div><div class="empty-text">No cards yet. Create one to get started!</div></div>';
+        document.getElementById("questionText").innerHTML =
+          '<div class="empty-state"><div class="empty-icon">📝</div><div class="empty-text">No cards yet. Create one to get started!</div></div>';
         document.getElementById("answerText").innerText = "";
         document.getElementById("progress").innerText = "";
         document.getElementById("counterFront").innerText = "";
         document.getElementById("counterBack").innerText = "";
         return;
       }
+
       const card = currentDeck.cards[currentIndex];
-      const counter = `${currentIndex + 1}/${currentDeck.cards.length}`;
+      const counter = (currentIndex + 1) + "/" + currentDeck.cards.length;
+
       document.getElementById("questionText").innerText = card.q;
       document.getElementById("answerText").innerText = card.a;
+
       document.getElementById("progress").innerText = counter;
       document.getElementById("counterFront").innerText = counter;
       document.getElementById("counterBack").innerText = counter;
     }
 
-    let touchStartX = 0, touchStartY = 0, isDragging = false;
-    const flashcard = document.getElementById("flashcard");
+    /* ---------- More responsive swiping (pointer events + low threshold) ---------- */
+    const flashcardEl = document.getElementById("flashcard");
 
-    flashcard.addEventListener("click", (e) => {
-      if (!isDragging) {
-        flashcard.classList.toggle("flipped");
-        haptic();
+    let startX = 0;
+    let startY = 0;
+    let lastX = 0;
+    let lastY = 0;
+    let activePointerId = null;
+    let dragging = false;
+    let lockDirection = null; // "x" or "y"
+    let raf = null;
+
+    const SWIPE_X_COMMIT = 38;   // lower = more responsive
+    const SWIPE_Y_COMMIT = 90;
+    const LOCK_THRESHOLD = 8;
+
+    function onPointerDown(e) {
+      activePointerId = e.pointerId;
+      flashcardEl.setPointerCapture(activePointerId);
+
+      startX = lastX = e.clientX;
+      startY = lastY = e.clientY;
+
+      dragging = false;
+      lockDirection = null;
+
+      if (raf) cancelAnimationFrame(raf);
+    }
+
+    function onPointerMove(e) {
+      if (activePointerId !== e.pointerId) return;
+
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+
+      lastX = e.clientX;
+      lastY = e.clientY;
+
+      // Decide lock direction quickly
+      if (!lockDirection) {
+        if (Math.abs(dx) > LOCK_THRESHOLD || Math.abs(dy) > LOCK_THRESHOLD) {
+          lockDirection = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+          dragging = true;
+        }
       }
-    });
 
-    flashcard.addEventListener("touchstart", (e) => {
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
-      isDragging = false;
-    });
+      // If locked to horizontal, prevent page scrolling and do a tiny "drag" feedback
+      if (lockDirection === "x") {
+        e.preventDefault();
+        if (!raf) {
+          raf = requestAnimationFrame(() => {
+            raf = null;
+            // subtle drag feedback
+            flashcardEl.style.transform = `translateX(${dx * 0.12}px) rotateZ(${dx * 0.03}deg)`;
+          });
+        }
+      }
+    }
 
-    flashcard.addEventListener("touchmove", (e) => {
-      const dx = Math.abs(e.touches[0].clientX - touchStartX);
-      const dy = Math.abs(e.touches[0].clientY - touchStartY);
-      if (dx > 10) isDragging = true;
-    });
+    function onPointerUp(e) {
+      if (activePointerId !== e.pointerId) return;
 
-    flashcard.addEventListener("touchend", (e) => {
-      const dx = e.changedTouches[0].clientX - touchStartX;
-      const dy = e.changedTouches[0].clientY - touchStartY;
-      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) {
-        dx > 0 ? prevCardWithAnimation() : nextCardWithAnimation();
-      } else if (dy > 100 && Math.abs(dy) > Math.abs(dx)) {
+      const dx = lastX - startX;
+      const dy = lastY - startY;
+
+      // reset drag transform
+      flashcardEl.style.transform = "";
+
+      // Commit swipe
+      if (lockDirection === "x" && Math.abs(dx) >= SWIPE_X_COMMIT) {
+        if (dx > 0) prevCardWithAnimation();
+        else nextCardWithAnimation();
+      } else if (lockDirection === "y" && dy > SWIPE_Y_COMMIT) {
         backToDeckList();
+      } else {
+        // Tap = flip (only if not a drag)
+        if (!dragging) {
+          flashcardEl.classList.toggle("flipped");
+          haptic();
+        }
       }
-    });
+
+      activePointerId = null;
+      dragging = false;
+      lockDirection = null;
+    }
+
+    flashcardEl.addEventListener("pointerdown", onPointerDown);
+    flashcardEl.addEventListener("pointermove", onPointerMove, { passive: false });
+    flashcardEl.addEventListener("pointerup", onPointerUp);
+    flashcardEl.addEventListener("pointercancel", onPointerUp);
 
     function nextCard() {
-      if (currentIndex < currentDeck.cards.length - 1) {
-        currentIndex++;
-        updateCard();
-        haptic();
-      }
+      if (!currentDeck || currentIndex >= currentDeck.cards.length - 1) return;
+      currentIndex++;
+      updateCard();
+      haptic();
     }
 
     function prevCard() {
-      if (currentIndex > 0) {
-        currentIndex--;
-        updateCard();
-        haptic();
-      }
+      if (!currentDeck || currentIndex <= 0) return;
+      currentIndex--;
+      updateCard();
+      haptic();
     }
 
     function nextCardWithAnimation() {
-      if (currentIndex < currentDeck.cards.length - 1) {
-        flashcard.classList.add("exit-left");
-        setTimeout(() => {
-          currentIndex++;
-          updateCard();
-          haptic();
-        }, 350);
-      }
+      if (!currentDeck || currentIndex >= currentDeck.cards.length - 1) return;
+      flashcardEl.classList.add("exit-left");
+      setTimeout(() => {
+        currentIndex++;
+        updateCard();
+        haptic();
+      }, 320);
     }
 
     function prevCardWithAnimation() {
-      if (currentIndex > 0) {
-        flashcard.classList.add("exit-right");
-        setTimeout(() => {
-          currentIndex--;
-          updateCard();
-          haptic();
-        }, 350);
-      }
+      if (!currentDeck || currentIndex <= 0) return;
+      flashcardEl.classList.add("exit-right");
+      setTimeout(() => {
+        currentIndex--;
+        updateCard();
+        haptic();
+      }, 320);
     }
 
     function rateCard(score) {
-      if (!currentDeck.cards.length) return;
+      if (!currentDeck || !currentDeck.cards.length) return;
+
       const card = currentDeck.cards[currentIndex];
       card.interval = card.interval || 1;
       card.ease = card.ease || 2.5;
+
       card.interval = Math.round(card.interval * card.ease);
       card.ease = Math.max(1.3, card.ease + (0.1 - (5 - score) * (0.08 + (5 - score) * 0.02)));
+
       save();
       nextCardWithAnimation();
     }
@@ -1024,38 +1067,49 @@
     function renderEditor() {
       const list = document.getElementById("editorList");
       list.innerHTML = "";
+
       currentDeck.cards.forEach((card, i) => {
         const div = document.createElement("div");
         div.className = "editor-card";
+
         const content = document.createElement("div");
         content.className = "editor-card-content";
-        content.innerHTML = `<div class="editor-card-q">Q${i + 1}: ${card.q}</div><div class="editor-card-a">A: ${card.a}</div>`;
+        content.innerHTML =
+          '<div class="editor-card-q">Q' + (i + 1) + ": " + card.q + "</div>" +
+          '<div class="editor-card-a">A: ' + card.a + "</div>";
+
         const actions = document.createElement("div");
         actions.className = "editor-actions";
+
         const editBtn = document.createElement("button");
         editBtn.className = "editor-btn";
         editBtn.innerHTML = '<svg><use href="#icon-edit"/></svg>';
         editBtn.title = "Edit";
         editBtn.onclick = () => showEditForm(i);
+
         const upBtn = document.createElement("button");
         upBtn.className = "editor-btn";
         upBtn.innerHTML = '<svg><use href="#icon-arrow-up"/></svg>';
         upBtn.title = "Move up";
         upBtn.onclick = () => moveCard(i, -1);
+
         const downBtn = document.createElement("button");
         downBtn.className = "editor-btn";
         downBtn.innerHTML = '<svg><use href="#icon-arrow-down"/></svg>';
         downBtn.title = "Move down";
         downBtn.onclick = () => moveCard(i, 1);
+
         const deleteBtn = document.createElement("button");
         deleteBtn.className = "editor-btn danger";
         deleteBtn.innerHTML = '<svg><use href="#icon-x"/></svg>';
         deleteBtn.title = "Delete";
         deleteBtn.onclick = () => deleteCard(i);
+
         actions.appendChild(editBtn);
         actions.appendChild(upBtn);
         actions.appendChild(downBtn);
         actions.appendChild(deleteBtn);
+
         div.appendChild(content);
         div.appendChild(actions);
         list.appendChild(div);
@@ -1065,8 +1119,14 @@
     function showEditForm(i) {
       editingCardIndex = i;
       const card = currentDeck.cards[i];
+
       document.getElementById("newQ").value = card.q;
       document.getElementById("newA").value = card.a;
+
+      // scroll to bottom so form is visible
+      const screen = document.getElementById("editorScreen");
+      screen.scrollTop = screen.scrollHeight;
+
       document.getElementById("newQ").focus();
     }
 
@@ -1074,6 +1134,7 @@
       const q = document.getElementById("newQ").value.trim();
       const a = document.getElementById("newA").value.trim();
       if (!q || !a) return;
+
       if (editingCardIndex !== null) {
         currentDeck.cards[editingCardIndex].q = q;
         currentDeck.cards[editingCardIndex].a = a;
@@ -1081,10 +1142,12 @@
       } else {
         currentDeck.cards.push({ q, a });
       }
+
       save();
       document.getElementById("newQ").value = "";
       document.getElementById("newA").value = "";
       renderEditor();
+      updateCard();
     }
 
     function deleteCard(i) {
@@ -1092,6 +1155,7 @@
         currentDeck.cards.splice(i, 1);
         save();
         renderEditor();
+
         if (currentIndex >= currentDeck.cards.length) {
           currentIndex = Math.max(0, currentDeck.cards.length - 1);
         }
@@ -1102,11 +1166,14 @@
     function moveCard(i, dir) {
       const newI = i + dir;
       if (newI < 0 || newI >= currentDeck.cards.length) return;
+
       const temp = currentDeck.cards[i];
       currentDeck.cards[i] = currentDeck.cards[newI];
       currentDeck.cards[newI] = temp;
+
       save();
       renderEditor();
+      updateCard();
     }
 
     function backToCardScreen() {
