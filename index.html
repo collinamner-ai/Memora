@@ -5,7 +5,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Premium Flashcards</title>
+  <title>Memora</title>
   <style>
     /* New Premium Design System */
     :root {
@@ -81,9 +81,10 @@
       transform: translateY(0);
     }
 
-    /* Splash */
+    /* Splash - Renamed App and Tagline */
     #splash {
       display: flex;
+      flex-direction: column; /* Added for tagline positioning */
       justify-content: center;
       align-items: center;
       background: var(--bg);
@@ -96,6 +97,16 @@
       color: var(--accent);
       opacity: 0;
       animation: fade 1.2s forwards;
+    }
+    
+    .tagline {
+        font-size: 14px; /* Subtle smaller font */
+        font-weight: 500;
+        color: var(--slate-grey);
+        margin-top: 8px;
+        opacity: 0;
+        animation: fade 1.2s forwards;
+        animation-delay: 0.2s;
     }
 
     @keyframes fade {
@@ -232,6 +243,7 @@
     /* Color Picker */
     #colorPalette {
       display: flex;
+      flex-wrap: wrap; /* Allow wrapping for more colors */
       gap: 10px;
       margin-bottom: 16px;
     }
@@ -335,7 +347,7 @@
         line-height: 1.4;
     }
 
-    /* Controls - Consistent Line Icons (SVGs) */
+    /* Controls - Made Neutral, Minimal, and Discreet */
     .controls {
       display: flex;
       justify-content: space-around;
@@ -347,24 +359,28 @@
       width: 64px;
       height: 64px;
       border-radius: 50%;
-      background: var(--accent); /* Solid accent color */
+      background: transparent; /* Minimal Background */
+      border: 1px solid var(--slate-grey);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       transition: var(--t);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      box-shadow: none; /* Discreet Shadow */
       user-select: none;
+      /* Ensure tap targets are large enough */
+      min-width: 44px;
+      min-height: 44px;
     }
 
     .arrow:active {
-      transform: scale(.9);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      transform: scale(.95); /* Less aggressive scale */
+      background: rgba(255, 255, 255, 0.1); /* Subtle press state */
     }
     
     .arrow svg {
-        stroke: var(--ink-grey); /* Icons: Inactive: Slate Grey, but Active button should use a dark color */
-        stroke-width: 2; /* Consistent line icon stroke */
+        stroke: var(--paper-white); /* White icons on dark background */
+        stroke-width: 2;
         width: 32px;
         height: 32px;
         transition: stroke 0.2s;
@@ -373,7 +389,14 @@
     .arrow:nth-child(2) {
         width: 72px;
         height: 72px;
-        background: linear-gradient(135deg, var(--accent-grad-start), var(--accent-grad-end)); /* Gradient for the primary action */
+        /* Primary button is slightly more prominent */
+        background: var(--slate-grey);
+        border: none;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .arrow:nth-child(2):active {
+        background: var(--slate-grey); /* Keep press state subtle */
     }
 
     .progress {
@@ -406,15 +429,17 @@
 
     .editor-controls button {
       margin-left: 6px;
-      padding: 6px; /* Tap targets: Minimum 44x44px - this is small, but a balance for the list */
+      padding: 6px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      background: var(--accent);
+      background: var(--slate-grey); /* Neutral background for editor controls */
       transition: 0.2s;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      min-width: 44px;
+      min-height: 44px;
     }
 
     .editor-controls button:hover {
@@ -422,7 +447,7 @@
     }
     
     .editor-controls button svg {
-        stroke: var(--ink-grey);
+        stroke: var(--paper-white); /* White icons on dark neutral background */
         stroke-width: 2;
         width: 18px;
         height: 18px;
@@ -476,7 +501,8 @@
   </svg>
 
   <div id="splash" class="screen active">
-    <div class="logo">Flashcards</div>
+    <div class="logo">Memora</div>
+    <div class="tagline">remember more, faster</div>
   </div>
 
   <div id="deckScreen" class="screen">
@@ -484,10 +510,13 @@
     <div class="deck-list" id="deckList"></div>
     <input id="deckTitleInput" placeholder="Deck title" />
     <div id="colorPalette">
-      <div class="color selected" style="background:var(--teal-core)" data-color="var(--teal-core)" data-grad-start="var(--mint-glow)" data-grad-end="var(--teal-core)"></div>
+      <div class="color selected" style="background:linear-gradient(135deg, var(--mint-glow), var(--teal-core))" data-color="var(--teal-core)" data-grad-start="var(--mint-glow)" data-grad-end="var(--teal-core)"></div>
+      <div class="color" style="background:linear-gradient(135deg, var(--sky-blue), var(--lavender-drift))" data-color="var(--lavender-drift)" data-grad-start="var(--sky-blue)" data-grad-end="var(--lavender-drift)"></div>
+      <div class="color" style="background:linear-gradient(135deg, var(--mint-glow), var(--soft-purple))" data-color="var(--soft-purple)" data-grad-start="var(--mint-glow)" data-grad-end="var(--soft-purple)"></div>
       <div class="color" style="background:var(--deep-teal)" data-color="var(--deep-teal)" data-grad-start="var(--deep-teal)" data-grad-end="var(--deep-teal)"></div>
-      <div class="color" style="background:var(--soft-purple)" data-color="var(--soft-purple)" data-grad-start="var(--sky-blue)" data-grad-end="var(--lavender-drift)"></div>
-      <div class="color" style="background:var(--sky-blue)" data-color="var(--sky-blue)" data-grad-start="var(--mint-glow)" data-grad-end="var(--soft-purple)"></div>
+      <div class="color" style="background:var(--teal-core)" data-color="var(--teal-core)" data-grad-start="var(--teal-core)" data-grad-end="var(--teal-core)"></div>
+      <div class="color" style="background:var(--soft-purple)" data-color="var(--soft-purple)" data-grad-start="var(--soft-purple)" data-grad-end="var(--soft-purple)"></div>
+      <div class="color" style="background:var(--sky-blue)" data-color="var(--sky-blue)" data-grad-start="var(--sky-blue)" data-grad-end="var(--sky-blue)"></div>
     </div>
     <div class="button" onclick="createDeck()">Create Deck</div>
   </div>
@@ -531,20 +560,21 @@
 
   <script>
     // --- Data Initialization and Persistence ---
-    // These need to be accessible to the utility functions defined later
     let decks = []; 
     // Default values for new default deck
     const defaultColor = "var(--teal-core)";
     const defaultGradStart = "var(--mint-glow)";
     const defaultGradEnd = "var(--teal-core)";
+    const defaultTitle = "Memora";
+
 
     // Helper to get the computed value of a CSS variable, handling the 'var(--...)' format
     function getCssVarValue(varName) {
         if (varName.startsWith('var(--')) {
-            const prop = varName.substring(4, varName.length - 1);
+            const prop = varName.substring(6, varName.length - 1);
             const rootStyle = getComputedStyle(document.documentElement);
             // This is a robust way to get the actual hex value from the variable
-            return rootStyle.getPropertyValue(prop).trim();
+            return rootStyle.getPropertyValue('--' + prop).trim();
         }
         return varName; // Return as is if it's not a var (e.g. a hex code)
     }
@@ -705,9 +735,9 @@
         // Handle gradients for decks
         let deckBg = deck.color;
         if (deck.gradStart && deck.gradEnd && deck.gradStart !== deck.gradEnd) {
-            deckBg = `linear-gradient(135deg, ${deck.gradStart}, ${deck.gradEnd})`;
+            deckBg = `linear-gradient(135deg, ${getCssVarValue(deck.gradStart)}, ${getCssVarValue(deck.gradEnd)})`;
         } else {
-            deckBg = deck.color;
+            deckBg = getCssVarValue(deck.color);
         }
 
         d.style.background = deckBg;
@@ -751,6 +781,7 @@
       });
     }
 
+
     /* Open Deck */
     function openDeck(i) {
       currentDeck = decks[i];
@@ -767,9 +798,9 @@
       // Use gradient for front face if available
       let frontBg = currentDeck.color || defaultColor;
       if (currentDeck.gradStart && currentDeck.gradEnd) {
-          frontBg = `linear-gradient(135deg, ${currentDeck.gradStart}, ${currentDeck.gradEnd})`;
+          frontBg = `linear-gradient(135deg, ${getCssVarValue(currentDeck.gradStart)}, ${getCssVarValue(currentDeck.gradEnd)})`;
       } else {
-          frontBg = currentDeck.color || defaultColor;
+          frontBg = getCssVarValue(currentDeck.color || defaultColor);
       }
       
       const backColor = currentDeck.color || defaultColor;
