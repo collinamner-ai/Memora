@@ -2,442 +2,136 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Memora - Remember more, faster.</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Memora - Remember more, faster</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary: #2AB7A9;
+      --primary-dark: #0F6F66;
+      --mint: #A8F1E1;
+      --sky: #7FD4F8;
+      --purple: #9A86FF;
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      -webkit-tap-highlight-color: transparent;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      -webkit-user-select: none;
+      user-select: none;
     }
 
     html, body {
       width: 100%;
       height: 100%;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #F9FAFA;
-      color: #2A2E33;
-      overflow-x: hidden;
+      background: #0f0f0f;
+      color: white;
+      overflow: hidden;
     }
 
-    /* Navigation */
-    nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      padding: 20px 24px;
+    .app {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background: #0f0f0f;
+    }
+
+    /* Icons Helper */
+    .icon {
+      width: 24px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .icon svg {
+      width: 100%;
+      height: 100%;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Header */
+    header {
+      padding: 16px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(249, 250, 250, 0.8);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(221, 226, 229, 0.4);
+      z-index: 50;
     }
 
-    .logo {
+    .header-left {
       display: flex;
       align-items: center;
       gap: 12px;
       font-size: 18px;
       font-weight: 700;
-      color: #2A2E33;
-      text-decoration: none;
     }
 
-    .logo-icon {
-      width: 36px;
-      height: 36px;
-      background: linear-gradient(135deg, #A8F1E1 0%, #2AB7A9 100%);
-      border-radius: 8px;
+    .header-logo {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
       color: white;
-    }
-
-    .nav-actions {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .btn {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
       font-size: 14px;
-      font-weight: 600;
+      font-weight: 700;
+    }
+
+    .header-btn {
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.7);
       cursor: pointer;
-      transition: all 0.3s ease;
-      text-decoration: none;
-      display: inline-flex;
+      display: flex;
       align-items: center;
-      gap: 8px;
-      font-family: inherit;
+      justify-content: center;
+      transition: all 0.2s;
     }
 
-    .btn-secondary {
-      background: #DDE2E5;
-      color: #2A2E33;
-    }
-
-    .btn-secondary:hover {
-      background: #C8CFD6;
-      transform: translateY(-2px);
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #2AB7A9 0%, #0F6F66 100%);
+    .header-btn:hover {
       color: white;
     }
 
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(42, 183, 169, 0.3);
+    .header-btn:active {
+      transform: scale(0.9);
     }
 
-    /* Hero Section */
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 100px 24px 60px;
-      position: relative;
+    /* Main */
+    main {
+      flex: 1;
       overflow: hidden;
+      display: flex;
+      position: relative;
     }
 
-    .hero::before {
-      content: '';
+    .screen {
+      display: none;
+      flex: 1;
+      flex-direction: column;
       position: absolute;
-      top: -50%;
-      right: -20%;
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(168, 241, 225, 0.15) 0%, transparent 70%);
-      border-radius: 50%;
-      z-index: -1;
-    }
-
-    .hero::after {
-      content: '';
-      position: absolute;
-      bottom: -30%;
-      left: -10%;
-      width: 500px;
-      height: 500px;
-      background: radial-gradient(circle, rgba(127, 212, 248, 0.1) 0%, transparent 70%);
-      border-radius: 50%;
-      z-index: -1;
-    }
-
-    .hero-content {
-      text-align: center;
-      max-width: 600px;
-      animation: slideInUp 0.8s ease 0.2s backwards;
-    }
-
-    .hero-logo {
-      width: 120px;
-      height: 120px;
-      margin: 0 auto 32px;
-      animation: slideInDown 0.8s ease backwards;
-    }
-
-    .hero-logo img {
       width: 100%;
       height: 100%;
-      object-fit: contain;
-      filter: drop-shadow(0 10px 30px rgba(42, 183, 169, 0.2));
     }
 
-    h1 {
-      font-size: 48px;
-      font-weight: 700;
-      line-height: 1.2;
-      margin-bottom: 16px;
-      color: #2A2E33;
-      letter-spacing: -0.5px;
-    }
-
-    .tagline {
-      font-size: 18px;
-      font-weight: 500;
-      color: #5A6168;
-      margin-bottom: 32px;
-    }
-
-    .hero-description {
-      font-size: 16px;
-      line-height: 1.6;
-      color: #5A6168;
-      margin-bottom: 40px;
-    }
-
-    .cta-buttons {
+    .screen.active {
       display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 60px;
+      animation: slideInUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    .btn-large {
-      padding: 16px 32px;
-      font-size: 16px;
-      font-weight: 600;
-    }
-
-    /* Features Section */
-    .features {
-      padding: 80px 24px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .section-header {
-      text-align: center;
-      margin-bottom: 60px;
-    }
-
-    .section-header h2 {
-      font-size: 32px;
-      font-weight: 700;
-      margin-bottom: 12px;
-      color: #2A2E33;
-    }
-
-    .section-header p {
-      font-size: 16px;
-      color: #5A6168;
-      max-width: 500px;
-      margin: 0 auto;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 32px;
-      margin-bottom: 60px;
-    }
-
-    .feature-card {
-      background: white;
-      padding: 32px 24px;
-      border-radius: 16px;
-      border: 1px solid #DDE2E5;
-      transition: all 0.3s ease;
-      text-align: center;
-    }
-
-    .feature-card:hover {
-      border-color: #2AB7A9;
-      transform: translateY(-8px);
-      box-shadow: 0 20px 40px rgba(42, 183, 169, 0.1);
-    }
-
-    .feature-icon {
-      width: 60px;
-      height: 60px;
-      margin: 0 auto 20px;
-      background: linear-gradient(135deg, #A8F1E1 0%, #2AB7A9 100%);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-    }
-
-    .feature-card h3 {
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 12px;
-      color: #2A2E33;
-    }
-
-    .feature-card p {
-      font-size: 14px;
-      color: #5A6168;
-      line-height: 1.6;
-    }
-
-    /* Benefits Section */
-    .benefits {
-      background: linear-gradient(135deg, #A8F1E1 0%, #7FD4F8 50%, #C7B7FF 100%);
-      padding: 80px 24px;
-      margin: 60px 0;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .benefits::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      right: -20%;
-      width: 600px;
-      height: 600px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
-      z-index: 0;
-    }
-
-    .benefits-content {
-      max-width: 1000px;
-      margin: 0 auto;
-      position: relative;
-      z-index: 1;
-    }
-
-    .benefits h2 {
-      font-size: 32px;
-      font-weight: 700;
-      color: #0F6F66;
-      margin-bottom: 40px;
-      text-align: center;
-    }
-
-    .benefits-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 32px;
-    }
-
-    .benefit-item {
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-    }
-
-    .benefit-check {
-      width: 32px;
-      height: 32px;
-      background: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #2AB7A9;
-      font-weight: 700;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    .benefit-item h4 {
-      font-size: 16px;
-      font-weight: 600;
-      color: #0F6F66;
-      margin-bottom: 6px;
-    }
-
-    .benefit-item p {
-      font-size: 14px;
-      color: #0F6F66;
-      opacity: 0.85;
-      line-height: 1.5;
-    }
-
-    /* Social Proof Section */
-    .social-proof {
-      padding: 80px 24px;
-      max-width: 1200px;
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 32px;
-      margin-top: 50px;
-    }
-
-    .stat {
-      background: white;
-      padding: 32px 24px;
-      border-radius: 12px;
-      border: 1px solid #DDE2E5;
-    }
-
-    .stat-number {
-      font-size: 36px;
-      font-weight: 700;
-      background: linear-gradient(135deg, #2AB7A9 0%, #9A86FF 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 8px;
-    }
-
-    .stat-label {
-      font-size: 14px;
-      font-weight: 500;
-      color: #5A6168;
-    }
-
-    /* CTA Section */
-    .final-cta {
-      padding: 80px 24px;
-      background: linear-gradient(135deg, #2AB7A9 0%, #0F6F66 100%);
-      text-align: center;
-      color: white;
-    }
-
-    .final-cta h2 {
-      font-size: 36px;
-      font-weight: 700;
-      margin-bottom: 16px;
-    }
-
-    .final-cta p {
-      font-size: 18px;
-      margin-bottom: 32px;
-      opacity: 0.9;
-    }
-
-    .final-cta .btn {
-      background: white;
-      color: #2AB7A9;
-      font-weight: 700;
-      padding: 16px 40px;
-    }
-
-    .final-cta .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Footer */
-    footer {
-      background: #2A2E33;
-      color: white;
-      padding: 40px 24px;
-      text-align: center;
-      font-size: 14px;
-    }
-
-    footer p {
-      margin: 8px 0;
-      opacity: 0.8;
-    }
-
-    footer a {
-      color: #A8F1E1;
-      text-decoration: none;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
-
-    /* Animations */
     @keyframes slideInUp {
       from {
         opacity: 0;
@@ -449,15 +143,517 @@
       }
     }
 
-    @keyframes slideInDown {
-      from {
-        opacity: 0;
-        transform: translateY(-30px);
-      }
+    /* Home Screen */
+    .home-screen {
+      padding: 24px 20px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .home-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .decks-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .deck-card {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      border-radius: 20px;
+      padding: 24px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 10px 30px rgba(42, 183, 169, 0.2);
+    }
+
+    .deck-card::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      right: -40%;
+      width: 250px;
+      height: 250px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .deck-card:nth-child(2) {
+      background: linear-gradient(135deg, var(--sky) 0%, var(--purple) 100%);
+    }
+
+    .deck-card:nth-child(3n) {
+      background: linear-gradient(135deg, var(--mint) 0%, var(--primary) 100%);
+    }
+
+    .deck-card:active {
+      transform: scale(0.98);
+      box-shadow: 0 15px 40px rgba(42, 183, 169, 0.3);
+    }
+
+    .deck-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      position: relative;
+      z-index: 1;
+    }
+
+    .deck-icon {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .deck-icon svg {
+      width: 100%;
+      height: 100%;
+      stroke: white;
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .deck-count {
+      font-size: 12px;
+      opacity: 0.9;
+      background: rgba(255, 255, 255, 0.25);
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+    .deck-name {
+      font-size: 16px;
+      font-weight: 700;
+      position: relative;
+      z-index: 1;
+      margin-top: 12px;
+    }
+
+    .deck-hint {
+      font-size: 12px;
+      opacity: 0.85;
+      position: relative;
+      z-index: 1;
+      margin-top: 4px;
+    }
+
+    /* Empty State */
+    .empty-state {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .empty-icon {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 16px;
+      opacity: 0.3;
+    }
+
+    .empty-icon svg {
+      width: 100%;
+      height: 100%;
+      stroke: white;
+      fill: none;
+      stroke-width: 1.2;
+    }
+
+    .empty-text {
+      font-size: 14px;
+      opacity: 0.6;
+      margin-bottom: 24px;
+    }
+
+    .btn {
+      padding: 14px 28px;
+      border: none;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      box-shadow: 0 8px 20px rgba(42, 183, 169, 0.25);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.95);
+    }
+
+    /* Study Screen */
+    .study-screen {
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .study-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      perspective: 1000px;
+    }
+
+    .cards-stack {
+      position: relative;
+      width: 100%;
+      max-width: 340px;
+      height: 420px;
+    }
+
+    .flashcard {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      border-radius: 24px;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      overflow: hidden;
+      top: 0;
+      left: 0;
+    }
+
+    .flashcard::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 350px;
+      height: 350px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .flashcard:nth-child(2) {
+      background: linear-gradient(135deg, var(--sky) 0%, var(--purple) 100%);
+      transform: translateY(24px) scale(0.96);
+      opacity: 0.85;
+      z-index: 1;
+    }
+
+    .flashcard:nth-child(3) {
+      background: linear-gradient(135deg, var(--mint) 0%, var(--primary) 100%);
+      transform: translateY(48px) scale(0.92);
+      opacity: 0.7;
+      z-index: 0;
+    }
+
+    .flashcard.swipe-left {
+      animation: swipeLeft 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .flashcard.swipe-right {
+      animation: swipeRight 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    @keyframes swipeLeft {
       to {
-        opacity: 1;
-        transform: translateY(0);
+        opacity: 0;
+        transform: translateX(-120%) rotateZ(-20deg);
       }
+    }
+
+    @keyframes swipeRight {
+      to {
+        opacity: 0;
+        transform: translateX(120%) rotateZ(20deg);
+      }
+    }
+
+    .flashcard.flip {
+      animation: flipCard 0.5s ease;
+    }
+
+    @keyframes flipCard {
+      0%, 100% { transform: rotateY(0deg); }
+      50% { transform: rotateY(90deg); }
+    }
+
+    .card-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      opacity: 0.85;
+      position: relative;
+      z-index: 1;
+      font-weight: 600;
+    }
+
+    .card-counter {
+      font-size: 12px;
+      opacity: 0.8;
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: rgba(255, 255, 255, 0.25);
+      padding: 4px 10px;
+      border-radius: 6px;
+      z-index: 2;
+      font-weight: 600;
+    }
+
+    .card-content {
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.3;
+      word-break: break-word;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+      max-height: 200px;
+      overflow: hidden;
+    }
+
+    .card-hint {
+      font-size: 11px;
+      opacity: 0.75;
+      position: relative;
+      z-index: 1;
+      font-style: italic;
+    }
+
+    /* Progress */
+    .progress-section {
+      padding: 16px 20px;
+      text-align: center;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .progress-bar {
+      width: 200px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      margin: 8px auto;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--mint));
+      transition: width 0.4s ease;
+    }
+
+    /* Controls */
+    .study-controls {
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .control-btn {
+      width: 52px;
+      height: 52px;
+      border: none;
+      background: rgba(255, 255, 255, 0.12);
+      color: rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: all 0.2s;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .control-btn:hover {
+      color: white;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .control-btn:active {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(0.9);
+    }
+
+    .control-btn.primary {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      border: none;
+      color: white;
+      box-shadow: 0 10px 30px rgba(42, 183, 169, 0.35);
+    }
+
+    .control-btn.primary:active {
+      transform: scale(0.92);
+      box-shadow: 0 8px 24px rgba(42, 183, 169, 0.25);
+    }
+
+    /* Editor Screen */
+    .editor-screen {
+      padding: 20px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .editor-header {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .action-btn {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 12px;
+      border: none;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .action-btn.primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      box-shadow: 0 8px 20px rgba(42, 183, 169, 0.25);
+    }
+
+    .action-btn.secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .action-btn:active {
+      transform: scale(0.98);
+    }
+
+    .card-item {
+      background: rgba(255, 255, 255, 0.06);
+      padding: 14px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .card-item-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .card-item-q {
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 6px;
+      word-break: break-word;
+    }
+
+    .card-item-a {
+      font-size: 12px;
+      opacity: 0.6;
+      word-break: break-word;
+    }
+
+    .card-item-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .icon-btn-small {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.7);
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .icon-btn-small:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+    }
+
+    .icon-btn-small:active {
+      transform: scale(0.9);
+    }
+
+    .icon-btn-small.delete {
+      color: #ef4444;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 1000;
+      align-items: flex-end;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .modal.active {
+      display: flex;
     }
 
     @keyframes fadeIn {
@@ -465,316 +661,673 @@
       to { opacity: 1; }
     }
 
-    .feature-card {
-      animation: fadeIn 0.8s ease backwards;
+    .modal-sheet {
+      background: linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%);
+      width: 100%;
+      border-radius: 28px 28px 0 0;
+      padding: 24px 20px 40px;
+      max-height: 85vh;
+      overflow-y: auto;
+      animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .feature-card:nth-child(1) { animation-delay: 0.2s; }
-    .feature-card:nth-child(2) { animation-delay: 0.3s; }
-    .feature-card:nth-child(3) { animation-delay: 0.4s; }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      nav {
-        padding: 16px;
-      }
-
-      h1 {
-        font-size: 36px;
-      }
-
-      .tagline {
-        font-size: 16px;
-      }
-
-      .section-header h2 {
-        font-size: 24px;
-      }
-
-      .benefits h2 {
-        font-size: 24px;
-      }
-
-      .final-cta h2 {
-        font-size: 28px;
-      }
-
-      .cta-buttons {
-        flex-direction: column;
-        gap: 12px;
-      }
-
-      .btn-large {
-        width: 100%;
-      }
-
-      .features-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      nav {
-        flex-wrap: wrap;
-        gap: 16px;
-      }
-
-      .nav-actions {
-        width: 100%;
-        justify-content: flex-end;
-      }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
     }
 
-    @media (max-width: 480px) {
-      .hero {
-        padding: 80px 16px 40px;
-      }
+    .modal-header {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-      h1 {
-        font-size: 28px;
-      }
+    .modal-close {
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
 
-      .hero-logo {
-        width: 100px;
-        height: 100px;
-        margin-bottom: 24px;
-      }
+    .modal-close:hover {
+      color: white;
+    }
 
-      .tagline {
-        font-size: 16px;
-      }
+    .modal-close:active {
+      transform: scale(0.9);
+    }
 
-      .btn-secondary {
-        display: none;
-      }
+    .form-group {
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
 
-      .features {
-        padding: 60px 16px;
-      }
+    label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      opacity: 0.8;
+    }
 
-      .benefits {
-        padding: 60px 16px;
-        margin: 40px 0;
-      }
+    input, textarea, select {
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
 
-      .social-proof {
-        padding: 60px 16px;
-      }
+    input::placeholder, textarea::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
 
-      .final-cta {
-        padding: 60px 16px;
-      }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 3px rgba(42, 183, 169, 0.1);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .btn-submit {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.2s;
+    }
+
+    .btn-submit.primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+    }
+
+    .btn-submit.secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-submit:active {
+      transform: scale(0.95);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.25);
     }
   </style>
 </head>
 <body>
-  <!-- Navigation -->
-  <nav>
-    <div class="logo">
-      <div class="logo-icon">✓</div>
-      Memora
-    </div>
-    <div class="nav-actions">
-      <button class="btn btn-secondary">Sign In</button>
-      <button class="btn btn-primary">Get Started Free</button>
-    </div>
-  </nav>
-
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="hero-content">
-      <div class="hero-logo">
-        <img src="data:image/svg+xml,%3Csvg viewBox='0 0 120 120' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23A8F1E1;stop-opacity:1' /%3E%3Cstop offset='50%25' style='stop-color:%237FD4F8;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23C7B7FF;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='30' y='35' width='45' height='60' rx='8' fill='url(%23grad1)' opacity='0.8'/%3E%3Crect x='50' y='25' width='45' height='60' rx='8' fill='url(%23grad1)'/%3E%3Cpath d='M60 55 L70 65 L80 45' stroke='white' stroke-width='6' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Cpath d='M35 85 Q60 95 85 80' stroke='url(%23grad1)' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E" alt="Memora">
-      </div>
-
-      <h1>Remember more, faster.</h1>
-      <p class="tagline">Master any subject with spaced repetition.</p>
-      <p class="hero-description">
-        Memora is the smartest way to study. Create flashcards, learn with intelligent repetition, and track your progress. Perfect for GCSE, A-Levels, University, and beyond.
-      </p>
-
-      <div class="cta-buttons">
-        <button class="btn btn-primary btn-large">Start Learning Free</button>
-        <button class="btn btn-secondary btn-large">Watch Demo</button>
-      </div>
-
-      <p style="font-size: 13px; color: #5A6168;">No credit card required. Free forever with unlimited cards.</p>
-    </div>
-  </section>
-
-  <!-- Features Section -->
-  <section class="features">
-    <div class="section-header">
-      <h2>Powerful Study Features</h2>
-      <p>Everything you need to learn faster and remember longer.</p>
-    </div>
-
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">🎯</div>
-        <h3>Smart Repetition</h3>
-        <p>Our algorithm focuses on cards you struggle with, optimizing your study time for maximum retention.</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">📊</div>
-        <h3>Track Progress</h3>
-        <p>Visualize your learning journey with detailed statistics, accuracy rates, and study streaks.</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">🌙</div>
-        <h3>Dark Mode</h3>
-        <p>Study comfortably anytime with our premium dark mode and customizable interface.</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">📱</div>
-        <h3>Learn Anywhere</h3>
-        <p>Beautiful responsive design works perfectly on phone, tablet, or desktop. Sync across devices.</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">🔄</div>
-        <h3>Backup & Restore</h3>
-        <p>Export your decks and import them anytime. Your data is always in your control.</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">🎨</div>
-        <h3>Fully Customizable</h3>
-        <p>Personalize your decks with emojis, colors, and descriptions. Make studying your own.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Benefits Section -->
-  <section class="benefits">
-    <div class="benefits-content">
-      <h2>Why Students Choose Memora</h2>
-      <div class="benefits-list">
-        <div class="benefit-item">
-          <div class="benefit-check">✓</div>
-          <div>
-            <h4>Science-Backed</h4>
-            <p>Built on proven spaced repetition techniques used by top students worldwide.</p>
-          </div>
+  <div class="app">
+    <!-- Home Screen -->
+    <section class="screen active" id="home-screen">
+      <header>
+        <div class="header-left">
+          <div class="header-logo">M</div>
+          <span>Memora</span>
         </div>
-
-        <div class="benefit-item">
-          <div class="benefit-check">✓</div>
-          <div>
-            <h4>100% Private</h4>
-            <p>All your study data stays on your device. We never collect or sell your information.</p>
+        <button class="header-btn" id="menu-btn" title="Menu">
+          <div class="icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
           </div>
+        </button>
+      </header>
+
+      <main class="home-screen">
+        <div class="home-title">My Decks</div>
+        <div id="decks-container" class="decks-container"></div>
+        <div id="empty-state" class="empty-state" style="display: none;">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="empty-text">No decks yet. Create one to start!</div>
+          <button class="btn btn-primary" id="create-first-btn">
+            <div class="icon" style="width: 18px; height: 18px;">
+              <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+            Create Deck
+          </button>
         </div>
+      </main>
+    </section>
 
-        <div class="benefit-item">
-          <div class="benefit-check">✓</div>
-          <div>
-            <h4>Perfect for All Levels</h4>
-            <p>Whether you're studying GCSE, A-Levels, IB, or University courses - Memora adapts to you.</p>
+    <!-- Study Screen -->
+    <section class="screen" id="study-screen">
+      <header>
+        <button class="header-btn" id="back-btn" title="Back">
+          <div class="icon">
+            <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           </div>
+        </button>
+        <div class="header-left" id="study-title" style="flex: 1; text-align: center; font-size: 16px;">Studying</div>
+        <div style="width: 40px;"></div>
+      </header>
+
+      <div class="progress-section">
+        <div id="progress-text">1 / 10</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
         </div>
-
-        <div class="benefit-item">
-          <div class="benefit-check">✓</div>
-          <div>
-            <h4>For Parents Too</h4>
-            <p>Help your children study with shared decks and progress tracking features.</p>
-          </div>
-        </div>
-
-        <div class="benefit-item">
-          <div class="benefit-check">✓</div>
-          <div>
-            <h4>Always Free</h4>
-            <p>Create unlimited decks and cards. No paywalls, no ads, no hidden costs ever.</p>
-          </div>
-        </div>
-
-        <div class="benefit-item">
-          <div class="benefit-check">✓</div>
-          <div>
-            <h4>Made for Focus</h4>
-            <p>Minimal, distraction-free interface designed to keep you studying, not tinkering.</p>
-          </div>
+        <div>
+          <span id="correct-count" style="color: #10b981;">✓ 0</span>
+          <span style="opacity: 0.5; margin: 0 8px;">·</span>
+          <span id="incorrect-count" style="color: #ef4444;">✗ 0</span>
         </div>
       </div>
+
+      <main class="study-screen">
+        <div class="study-content">
+          <div class="cards-stack" id="cards-stack"></div>
+        </div>
+      </main>
+
+      <div class="study-controls">
+        <button class="control-btn" id="prev-btn" title="Previous">
+          <div class="icon">
+            <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+          </div>
+        </button>
+        <button class="control-btn" id="wrong-btn" title="Mark as wrong">
+          <div class="icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          </div>
+        </button>
+        <button class="control-btn" id="bookmark-btn" title="Bookmark">
+          <div class="icon">
+            <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          </div>
+        </button>
+        <button class="control-btn primary" id="flip-btn" title="Flip card">
+          <div class="icon">
+            <svg viewBox="0 0 24 24"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64M3.51 15A9 9 0 0 0 18.36 18.36"/></svg>
+          </div>
+        </button>
+        <button class="control-btn" id="next-btn" title="Next">
+          <div class="icon">
+            <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+          </div>
+        </button>
+      </div>
+    </section>
+
+    <!-- Editor Screen -->
+    <section class="screen" id="editor-screen">
+      <header>
+        <button class="header-btn" id="editor-back-btn" title="Back">
+          <div class="icon">
+            <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          </div>
+        </button>
+        <div class="header-left" id="editor-title" style="flex: 1; text-align: center; font-size: 16px;">Deck</div>
+        <div style="width: 40px;"></div>
+      </header>
+
+      <main class="editor-screen">
+        <div class="editor-header">Cards</div>
+        <button class="action-btn primary" id="add-card-btn">
+          <div class="icon" style="width: 18px; height: 18px;">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+          Add Card
+        </button>
+        <button class="action-btn primary" id="start-study-btn">
+          <div class="icon" style="width: 18px; height: 18px;">
+            <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </div>
+          Start Studying
+        </button>
+        <div id="cards-list"></div>
+      </main>
+    </section>
+
+    <!-- Modals -->
+    <div class="modal" id="new-deck-modal">
+      <div class="modal-sheet">
+        <div class="modal-header">
+          <span>New Deck</span>
+          <button class="modal-close" onclick="closeModal('new-deck-modal')">
+            <div class="icon">
+              <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </div>
+          </button>
+        </div>
+        <div class="form-group">
+          <label>Deck Name</label>
+          <input type="text" id="new-deck-name" placeholder="Biology - Cells" autofocus>
+        </div>
+        <div class="form-group">
+          <label>Icon</label>
+          <input type="text" id="new-deck-icon" placeholder="📚" maxlength="2" value="📚">
+        </div>
+        <div class="btn-group">
+          <button class="btn-submit secondary" onclick="closeModal('new-deck-modal')">Cancel</button>
+          <button class="btn-submit primary" id="create-deck-btn">Create</button>
+        </div>
+      </div>
     </div>
-  </section>
 
-  <!-- Social Proof -->
-  <section class="social-proof">
-    <div class="section-header">
-      <h2>Trusted by Students</h2>
-      <p>Join thousands of students achieving their study goals.</p>
-    </div>
-
-    <div class="stats-grid">
-      <div class="stat">
-        <div class="stat-number">50K+</div>
-        <div class="stat-label">Cards Created</div>
-      </div>
-
-      <div class="stat">
-        <div class="stat-number">12K+</div>
-        <div class="stat-label">Active Students</div>
-      </div>
-
-      <div class="stat">
-        <div class="stat-number">95%</div>
-        <div class="stat-label">Passing Rate</div>
-      </div>
-
-      <div class="stat">
-        <div class="stat-number">4.9★</div>
-        <div class="stat-label">User Rating</div>
+    <div class="modal" id="card-modal">
+      <div class="modal-sheet">
+        <div class="modal-header">
+          <span id="card-modal-title">Add Card</span>
+          <button class="modal-close" onclick="closeModal('card-modal')">
+            <div class="icon">
+              <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </div>
+          </button>
+        </div>
+        <div class="form-group">
+          <label>Question</label>
+          <textarea id="card-question" placeholder="Question or term..." autofocus></textarea>
+        </div>
+        <div class="form-group">
+          <label>Answer</label>
+          <textarea id="card-answer" placeholder="Answer or definition..."></textarea>
+        </div>
+        <div class="btn-group">
+          <button class="btn-submit secondary" onclick="closeModal('card-modal')">Cancel</button>
+          <button class="btn-submit primary" id="save-card-btn">Save</button>
+        </div>
       </div>
     </div>
-  </section>
 
-  <!-- Final CTA -->
-  <section class="final-cta">
-    <h2>Ready to Study Smarter?</h2>
-    <p>Join thousands of students who are already using Memora to ace their exams.</p>
-    <button class="btn btn-large">Get Started Free Today</button>
-    <p style="margin-top: 16px; font-size: 14px;">Start now. No credit card required. Cancel anytime.</p>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    <p><strong>Memora</strong> — Remember more, faster.</p>
-    <p>Made for students. By students.</p>
-    <p style="margin-top: 20px; opacity: 0.6;">
-      <a href="#">Privacy</a> · 
-      <a href="#">Terms</a> · 
-      <a href="#">Contact</a> · 
-      <a href="#">Twitter</a>
-    </p>
-    <p style="margin-top: 16px; opacity: 0.5;">© 2026 Memora. All rights reserved.</p>
-  </footer>
+    <div class="modal" id="menu-modal">
+      <div class="modal-sheet">
+        <div class="modal-header">
+          <span>Menu</span>
+          <button class="modal-close" onclick="closeModal('menu-modal')">
+            <div class="icon">
+              <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </div>
+          </button>
+        </div>
+        <button class="action-btn secondary" id="settings-btn" style="margin-bottom: 12px;">
+          <div class="icon" style="width: 18px; height: 18px;">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m3.08 3.08l4.24 4.24M1 12h6m6 0h6m-15.78 7.78l4.24-4.24m3.08-3.08l4.24-4.24"/></svg>
+          </div>
+          Settings
+        </button>
+        <button class="action-btn secondary" onclick="alert('Memora v1.0 - Remember more, faster')">
+          <div class="icon" style="width: 18px; height: 18px;">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          About
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script>
-    // Smooth scroll for demo button
-    document.querySelector('[class*="Watch"]')?.addEventListener('click', () => {
-      window.scrollTo({ top: document.querySelector('.features').offsetTop - 100, behavior: 'smooth' });
-    });
+    let state = {
+      decks: [],
+      currentDeckId: null,
+      currentCardIndex: 0
+    };
 
-    // Get started button navigation
-    document.querySelectorAll('[class*="Start Learning"]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        alert('Welcome to Memora! Loading app...');
-        // In production, this would navigate to the app
+    let isFlipped = false;
+    let currentCards = [];
+
+    function init() {
+      loadData();
+      setupListeners();
+      updateHome();
+    }
+
+    function saveData() {
+      localStorage.setItem('memora-slick', JSON.stringify(state));
+    }
+
+    function loadData() {
+      const saved = localStorage.getItem('memora-slick');
+      if (saved) {
+        try {
+          state = JSON.parse(saved);
+        } catch (e) {
+          console.error('Load failed');
+        }
+      }
+    }
+
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function setupListeners() {
+      document.getElementById('menu-btn').addEventListener('click', () => openModal('menu-modal'));
+      document.getElementById('create-first-btn').addEventListener('click', () => openModal('new-deck-modal'));
+      document.getElementById('create-deck-btn').addEventListener('click', createDeck);
+      
+      document.getElementById('add-card-btn').addEventListener('click', () => {
+        document.getElementById('card-modal-title').textContent = 'Add Card';
+        document.getElementById('card-question').value = '';
+        document.getElementById('card-answer').value = '';
+        openModal('card-modal');
       });
-    });
 
-    // Sign in button
-    document.querySelector('[class*="Sign In"]')?.addEventListener('click', () => {
-      alert('Sign in page would appear here.');
-    });
+      document.getElementById('save-card-btn').addEventListener('click', saveCard);
+      document.getElementById('start-study-btn').addEventListener('click', startStudy);
+      document.getElementById('back-btn').addEventListener('click', goBack);
+      document.getElementById('editor-back-btn').addEventListener('click', () => {
+        showScreen('home-screen');
+        updateHome();
+      });
+
+      document.getElementById('flip-btn').addEventListener('click', flipCard);
+      document.getElementById('prev-btn').addEventListener('click', prevCard);
+      document.getElementById('next-btn').addEventListener('click', nextCard);
+      document.getElementById('wrong-btn').addEventListener('click', () => recordAnswer('wrong'));
+      document.getElementById('bookmark-btn').addEventListener('click', () => {
+        alert('Bookmarked! (Coming soon)');
+      });
+
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('.flashcard')) {
+          flipCard();
+        }
+      });
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    function createDeck() {
+      const name = document.getElementById('new-deck-name').value.trim();
+      const icon = document.getElementById('new-deck-icon').value || '📚';
+
+      if (!name) {
+        alert('Enter a deck name');
+        return;
+      }
+
+      state.decks.push({
+        id: Date.now(),
+        name,
+        icon,
+        cards: [],
+        stats: { correct: 0, incorrect: 0 }
+      });
+
+      saveData();
+      closeModal('new-deck-modal');
+      document.getElementById('new-deck-name').value = '';
+      updateHome();
+    }
+
+    function updateHome() {
+      const container = document.getElementById('decks-container');
+      const empty = document.getElementById('empty-state');
+
+      if (state.decks.length === 0) {
+        container.innerHTML = '';
+        empty.style.display = 'flex';
+        return;
+      }
+
+      empty.style.display = 'none';
+      container.innerHTML = state.decks.map(deck => `
+        <div class="deck-card" onclick="openDeck(${deck.id})">
+          <div class="deck-top">
+            <div class="deck-icon">
+              <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4h16v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4z"/></svg>
+            </div>
+            <div class="deck-count">${deck.cards.length}</div>
+          </div>
+          <div>
+            <div class="deck-name">${deck.name}</div>
+            <div class="deck-hint">Tap to study</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openDeck(id) {
+      state.currentDeckId = id;
+      const deck = state.decks.find(d => d.id === id);
+      document.getElementById('editor-title').textContent = deck.name;
+      loadCards();
+      showScreen('editor-screen');
+    }
+
+    function loadCards() {
+      const deck = getCurrentDeck();
+      const list = document.getElementById('cards-list');
+
+      list.innerHTML = deck.cards.map((card, idx) => `
+        <div class="card-item">
+          <div class="card-item-text">
+            <div class="card-item-q">${escapeHtml(card.q)}</div>
+            <div class="card-item-a">${escapeHtml(card.a)}</div>
+          </div>
+          <div class="card-item-actions">
+            <button class="icon-btn-small" title="Edit" onclick="editCard(${idx})">
+              <div class="icon">
+                <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              </div>
+            </button>
+            <button class="icon-btn-small delete" title="Delete" onclick="deleteCard(${idx})">
+              <div class="icon">
+                <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+              </div>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function saveCard() {
+      const q = document.getElementById('card-question').value.trim();
+      const a = document.getElementById('card-answer').value.trim();
+
+      if (!q || !a) {
+        alert('Fill in both fields');
+        return;
+      }
+
+      const deck = getCurrentDeck();
+      const idx = state.editingCardIdx;
+
+      if (idx !== undefined) {
+        deck.cards[idx] = { q, a };
+        state.editingCardIdx = undefined;
+      } else {
+        deck.cards.push({ q, a });
+      }
+
+      saveData();
+      closeModal('card-modal');
+      loadCards();
+    }
+
+    function editCard(idx) {
+      const deck = getCurrentDeck();
+      const card = deck.cards[idx];
+      document.getElementById('card-modal-title').textContent = 'Edit Card';
+      document.getElementById('card-question').value = card.q;
+      document.getElementById('card-answer').value = card.a;
+      state.editingCardIdx = idx;
+      openModal('card-modal');
+    }
+
+    function deleteCard(idx) {
+      if (confirm('Delete this card?')) {
+        const deck = getCurrentDeck();
+        deck.cards.splice(idx, 1);
+        saveData();
+        loadCards();
+      }
+    }
+
+    function getCurrentDeck() {
+      return state.decks.find(d => d.id === state.currentDeckId);
+    }
+
+    function startStudy() {
+      const deck = getCurrentDeck();
+      if (deck.cards.length === 0) {
+        alert('Add cards first!');
+        return;
+      }
+
+      currentCards = [...deck.cards].sort(() => Math.random() - 0.5);
+      state.currentCardIndex = 0;
+      deck.stats.correct = 0;
+      deck.stats.incorrect = 0;
+      isFlipped = false;
+
+      renderCards();
+      showScreen('study-screen');
+    }
+
+    function renderCards() {
+      const stack = document.getElementById('cards-stack');
+      stack.innerHTML = '';
+
+      for (let i = 0; i < Math.min(3, currentCards.length - state.currentCardIndex); i++) {
+        const card = currentCards[state.currentCardIndex + i];
+        const div = document.createElement('div');
+        div.className = 'flashcard';
+        div.innerHTML = `
+          <div class="card-counter">${state.currentCardIndex + i + 1}/${currentCards.length}</div>
+          <div class="card-label">${isFlipped && i === 0 ? 'Answer' : 'Question'}</div>
+          <div class="card-content">${escapeHtml(isFlipped && i === 0 ? card.a : card.q)}</div>
+          <div class="card-hint">${i === 0 ? (isFlipped ? '' : 'Click to flip') : ''}</div>
+        `;
+        stack.appendChild(div);
+      }
+
+      updateProgress();
+    }
+
+    function flipCard() {
+      const stack = document.getElementById('cards-stack');
+      const card = stack.querySelector('.flashcard');
+      if (card) {
+        card.classList.add('flip');
+        setTimeout(() => {
+          isFlipped = !isFlipped;
+          renderCards();
+          card.classList.remove('flip');
+        }, 250);
+      }
+    }
+
+    function nextCard() {
+      recordAnswer('correct');
+    }
+
+    function prevCard() {
+      if (state.currentCardIndex > 0) {
+        state.currentCardIndex--;
+        isFlipped = false;
+        renderCards();
+      }
+    }
+
+    function recordAnswer(type) {
+      const deck = getCurrentDeck();
+      
+      if (state.currentCardIndex < currentCards.length - 1) {
+        const stack = document.getElementById('cards-stack');
+        const card = stack.querySelector('.flashcard');
+        
+        if (type === 'correct') {
+          deck.stats.correct++;
+          card.classList.add('swipe-right');
+        } else {
+          deck.stats.incorrect++;
+          card.classList.add('swipe-left');
+        }
+        
+        setTimeout(() => {
+          state.currentCardIndex++;
+          isFlipped = false;
+          renderCards();
+        }, 500);
+      } else {
+        saveData();
+        const accuracy = Math.round((deck.stats.correct / currentCards.length) * 100);
+        alert(`Great job!\n\n✓ ${deck.stats.correct} correct\n✗ ${deck.stats.incorrect} incorrect\nAccuracy: ${accuracy}%`);
+        showScreen('editor-screen');
+      }
+
+      saveData();
+    }
+
+    function updateProgress() {
+      const total = currentCards.length;
+      const current = state.currentCardIndex + 1;
+      document.getElementById('progress-text').textContent = `${current} / ${total}`;
+      document.getElementById('progress-fill').style.width = (current / total) * 100 + '%';
+      
+      const deck = getCurrentDeck();
+      document.getElementById('correct-count').textContent = '✓ ' + deck.stats.correct;
+      document.getElementById('incorrect-count').textContent = '✗ ' + deck.stats.incorrect;
+      document.getElementById('study-title').textContent = deck.name;
+    }
+
+    function goBack() {
+      showScreen('editor-screen');
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    init();
   </script>
 </body>
 </html>
