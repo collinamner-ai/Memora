@@ -1,78 +1,53 @@
-``` 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Memora</title>
+  <title>Memora - Flashcard Learning</title>
   <style>
-    /* New Premium Design System */
     :root {
-      /* Color System (Retained for UI consistency) */
-      --mint-glow: #A8F1E1;
-      --teal-core: #2AB7A9;
-      --deep-teal: #0F6F66;
-      --sky-blue: #7FD4F8;
-      --lavender-drift: #C7B7FF;
-      --soft-purple: #9A86FF;
-      --ink-grey: #2A2E33;
-      --slate-grey: #5A6168;
-      --fog-grey: #DDE2E5;
-      --paper-white: #F9FAFA;
-
-      /* UI Elements - Adapted for Dark/Premium look, using the new color system */
-      --bg: var(--ink-grey);
-      --card-bg: #2A2E33; /* Darker surface for contrast */
-      --surface: var(--ink-grey);
-      --text: var(--paper-white);
-      --accent: var(--teal-core);
-      --accent-grad-start: var(--mint-glow);
-      --accent-grad-end: var(--teal-core);
-
-      /* Layout & Spacing */
-      --radius: 16px;
-      --card-height: 500px;
-      --card-width: 350px;
-      --screen-padding: 20px; /* Between 16px-24px */
-      --t: 0.35s cubic-bezier(.4, 0, .2, 1);
+      --primary: #3B82F6;
+      --primary-dark: #1E40AF;
+      --success: #10B981;
+      --danger: #EF4444;
+      --accent: #8B5CF6;
+      --bg-primary: #0F172A;
+      --bg-secondary: #1E293B;
+      --bg-tertiary: #334155;
+      --text-primary: #F1F5F9;
+      --text-secondary: #CBD5E1;
+      --border: #475569;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      /* Typography - Rounded sans-serif */
-      font-family: 'Nunito', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      background: var(--bg);
-      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
       min-height: 100vh;
       overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
 
-    /* Screens */
     .screen {
       position: absolute;
       inset: 0;
-      padding: var(--screen-padding);
       display: flex;
       flex-direction: column;
       opacity: 0;
       pointer-events: none;
-      transform: translateY(16px);
-      transition: opacity var(--t), transform var(--t);
-      max-width: 480px;
-      margin: 0 auto;
-      background: var(--bg);
-      border-radius: var(--radius);
-      overflow: hidden; /* For mobile screens on desktop */
+      transform: translateY(20px);
+      transition: var(--transition);
+      padding: 20px;
     }
 
     .screen.active {
@@ -81,819 +56,864 @@
       transform: translateY(0);
     }
 
-    /* Splash - Renamed App and Tagline */
     #splash {
-      display: flex;
-      flex-direction: column; /* Added for tagline positioning */
       justify-content: center;
       align-items: center;
-      background: var(--bg);
-      z-index: 100;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
     }
 
     .logo {
-      font-size: 32px; /* Title (H1): 24–32px */
-      font-weight: 700;
-      color: var(--accent);
-      opacity: 0;
-      animation: fade 1.2s forwards;
+      font-size: 48px;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 12px;
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
-    
+
     .tagline {
-        font-size: 14px; /* Subtle smaller font */
-        font-weight: 500;
-        color: var(--slate-grey);
-        margin-top: 8px;
-        opacity: 0;
-        animation: fade 1.2s forwards;
-        animation-delay: 0.2s;
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 500;
+      letter-spacing: 0.5px;
     }
 
-    @keyframes fade {
-      to {
-        opacity: 1
-      }
-    }
-
-    /* Headers */
     .header {
-      font-size: 20px; /* Subtitle (H2): 20–24px */
-      font-weight: 600;
-      margin-bottom: 24px; /* Screen Margins: 16-24px */
       display: flex;
       justify-content: space-between;
       align-items: center;
-      color: var(--text);
+      margin-bottom: 24px;
+      gap: 12px;
     }
 
-    .header span {
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-
-    .home-btn, .edit-btn {
-        font-size: 14px; /* Caption/Label: 12–14px */
-        font-weight: 500; /* Label: 500 */
-        color: var(--teal-core);
-        padding: 8px 12px;
-        border-radius: 10px;
-        background: var(--surface);
-    }
-    
-    .edit-btn {
-        color: var(--accent);
-    }
-
-    .home-btn:hover, .edit-btn:hover {
-        background: var(--surface);
-        opacity: 0.9;
-    }
-
-    /* Deck List - Modified for 2-across Grid */
-    .deck-list {
+    .header-title {
+      font-size: 28px;
+      font-weight: 700;
       flex: 1;
-      display: grid; /* Use grid for 2-across layout */
-      grid-template-columns: repeat(2, 1fr); /* Two columns of equal width */
-      gap: 12px; /* Gutters: 8-16px */
-      overflow-y: auto;
-      padding-bottom: 20px;
-      /* Scrollbar styling for a cleaner look */
-      scrollbar-width: thin;
-      scrollbar-color: var(--slate-grey) var(--ink-grey);
     }
 
-    .deck {
-      padding: 16px; /* Adjusted padding for smaller cards */
-      border-radius: var(--radius);
-      cursor: pointer;
-      transition: var(--t);
-      position: relative;
-      /* Added fixed size to prevent resizing/jank */
-      min-height: 120px; 
-      height: 100%;
-      
-      /* color set dynamically via JS for contrast */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      border-radius: var(--radius-md);
+      border: none;
+      font-size: 14px;
       font-weight: 600;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      transition: var(--transition);
+      gap: 8px;
+      min-height: 44px;
     }
 
-    .deck:active {
-        transform: scale(0.98);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      width: 100%;
+    }
+
+    .btn-primary:active {
+      background: var(--primary-dark);
+      transform: scale(0.98);
+    }
+
+    .btn-secondary {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      width: 44px;
+      height: 44px;
+      padding: 0;
+    }
+
+    .btn-secondary:active {
+      background: var(--border);
+      transform: scale(0.98);
+    }
+
+    .deck-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      overflow-y: auto;
+      margin-bottom: 24px;
+      padding-right: 4px;
+    }
+
+    .deck-card {
+      aspect-ratio: 1;
+      padding: 16px;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      user-select: none;
+    }
+
+    .deck-card:active {
+      transform: scale(0.96);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .deck-card.long-press {
+      border-color: var(--danger);
+      box-shadow: 0 0 0 2px var(--danger), 0 4px 12px rgba(239, 68, 68, 0.3);
     }
 
     .deck-title {
-      font-size: 16px; /* Slightly reduced font size for 2-across */
-      margin-bottom: 4px;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.3;
+      word-break: break-word;
     }
 
     .deck-meta {
-      font-size: 12px; /* Caption size */
-      opacity: .9;
+      font-size: 12px;
+      opacity: 0.85;
+      margin-top: 8px;
     }
 
-    /* Inputs & Buttons */
-    input,
-    textarea {
-      background: var(--surface);
-      border: 1px solid var(--slate-grey);
-      padding: 16px;
-      border-radius: 12px;
-      color: var(--text);
-      font-size: 16px; /* Body: 16px */
-      outline: none;
-      margin-bottom: 12px;
-      width: 100%;
-      transition: border-color var(--t);
-    }
-
-    input:focus,
-    textarea:focus {
-        border-color: var(--accent);
-    }
-
-    textarea {
-      resize: none;
-      height: 100px;
-    }
-
-    .button {
-      /* Primary: Teal Core background, white text */
-      background: var(--teal-core); 
-      color: var(--paper-white); 
-      padding: 16px;
-      border-radius: 12px;
-      text-align: center;
-      font-weight: 700;
-      cursor: pointer;
-      transition: var(--t);
-      margin-bottom: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-
-    .button:active {
-      transform: scale(.98);
-      opacity: 0.9;
-    }
-
-    .button.muted-btn {
-      /* Secondary: Fog Grey background, Ink Grey text */
-      background: var(--fog-grey); 
-      color: var(--ink-grey); 
-      box-shadow: none;
-    }
-
-    /* Color Picker */
-    #colorPalette {
+    .input-group {
       display: flex;
-      flex-wrap: wrap; /* Allow wrapping for more colors */
-      gap: 10px;
+      flex-direction: column;
+      gap: 12px;
       margin-bottom: 16px;
-      align-items: center; /* Vertically align items */
     }
 
-    .color {
-      width: 36px;
-      height: 36px;
+    input[type="text"],
+    textarea {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 16px;
+      font-family: inherit;
+      transition: var(--transition);
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+      max-height: 120px;
+    }
+
+    .color-group {
+      margin-bottom: 16px;
+    }
+
+    .color-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .color-palette {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .color-swatch {
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       cursor: pointer;
       border: 3px solid transparent;
-      box-shadow: 0 0 0 1px var(--surface);
-      transition: all 0.2s;
+      transition: var(--transition);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
 
-    .color.selected {
-      border-color: var(--paper-white);
-      box-shadow: 0 0 0 3px var(--accent);
+    .color-swatch:hover {
       transform: scale(1.1);
     }
 
-    .color-picker-placeholder {
-      /* Dropper/Picker Placeholder styling */
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border: 2px dashed var(--slate-grey);
-      color: var(--slate-grey);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      cursor: not-allowed; /* Indicate it's not functional yet */
-      font-weight: 700;
+    .color-swatch.selected {
+      border-color: var(--text-primary);
+      box-shadow: 0 0 0 2px var(--bg-secondary), 0 0 0 4px var(--text-primary), 0 2px 8px rgba(0, 0, 0, 0.3);
+      transform: scale(1.15);
     }
 
-    /* Flashcard */
-    .card-wrapper {
+    .card-container {
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      perspective: 1000px;
-      touch-action: none;
       margin-bottom: 20px;
+      perspective: 1000px;
     }
 
-    .card {
-      width: var(--card-width);
-      height: var(--card-height);
+    .flashcard {
+      width: 100%;
+      max-width: 320px;
+      aspect-ratio: 3 / 4;
       position: relative;
-      transform-style: preserve-3d;
-      transition: transform .6s cubic-bezier(.4, 0, .2, 1);
-      border-radius: var(--radius);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+      transition: var(--transition);
     }
 
-    .card.flipped {
+    .flashcard.exit-left {
+      animation: exitLeft 0.5s ease-out forwards;
+    }
+
+    .flashcard.exit-right {
+      animation: exitRight 0.5s ease-out forwards;
+    }
+
+    @keyframes exitLeft {
+      0% {
+        transform: translateX(0) rotateZ(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(-120%) rotateZ(-20deg);
+        opacity: 0;
+      }
+    }
+
+    @keyframes exitRight {
+      0% {
+        transform: translateX(0) rotateZ(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(120%) rotateZ(20deg);
+        opacity: 0;
+      }
+    }
+
+    .flashcard-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+    }
+
+    .flashcard.flipped .flashcard-inner {
       transform: rotateY(180deg);
     }
-    
-    /* New: Visual Feedback for Rating */
-    .card.rated {
-      animation: pulse 0.4s ease-out;
-    }
 
-    @keyframes pulse {
-        0% { transform: scale(1); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4); }
-        50% { transform: scale(1.01); box-shadow: 0 0 20px 8px var(--mint-glow), 0 16px 40px rgba(0, 0, 0, 0.4); }
-        100% { transform: scale(1); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4); }
-    }
-
-
-    .face {
+    .card-face {
       position: absolute;
-      inset: 0;
-      border-radius: var(--radius);
-      padding: 30px 24px;
+      width: 100%;
+      height: 100%;
+      border-radius: var(--radius-lg);
+      padding: 24px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      font-size: 28px;
-      /* color set dynamically via JS for contrast */
       backface-visibility: hidden;
-      transition: background 0.3s;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .face.back {
+    .card-face.back {
       transform: rotateY(180deg);
     }
 
-    .face .deck-title-card {
-      font-size: 22px;
+    .card-label {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.7;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+    }
+
+    .card-counter {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      opacity: 0.7;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+    }
+
+    .card-deck-title {
+      font-size: 18px;
       font-weight: 700;
       margin-bottom: 20px;
-      opacity: 0.8;
-      color: inherit;
+      opacity: 0.9;
     }
 
-    .label {
-      position: absolute;
-      top: 18px;
-      left: 20px;
-      font-size: 14px;
+    .card-content {
+      font-size: 20px;
       font-weight: 600;
-      opacity: .9;
-      background: rgba(0,0,0,0.1);
-      padding: 4px 8px;
-      border-radius: 8px;
-      color: inherit; /* Inherit from face text color for consistency */
+      line-height: 1.5;
+      word-wrap: break-word;
     }
-    
-    /* Card Count Top Right */
-    .count-label {
-      position: absolute;
-      top: 18px;
-      right: 20px;
+
+    .progress-display {
+      text-align: center;
       font-size: 14px;
-      font-weight: 600;
-      opacity: .9;
-      background: rgba(0,0,0,0.1);
-      padding: 4px 8px;
-      border-radius: 8px;
-      color: inherit;
+      color: var(--text-secondary);
+      margin-top: 16px;
     }
 
-    #questionText, #answerText {
-        font-weight: 600;
-        line-height: 1.4;
-    }
-
-    /* Controls - Minimal and Discreet */
     .controls {
       display: flex;
-      justify-content: space-around;
-      margin-top: 16px;
+      justify-content: center;
       align-items: center;
+      gap: 12px;
+      margin-top: 16px;
     }
 
-    .arrow {
-      width: 64px;
-      height: 64px;
+    .control-btn {
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
-      background: transparent; 
-      border: 1px solid var(--slate-grey);
+      border: 2px solid var(--border);
+      cursor: pointer;
+      transition: var(--transition);
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      transition: var(--t);
-      box-shadow: none; 
-      user-select: none;
-      min-width: 44px;
-      min-height: 44px;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
     }
 
-    .arrow:active {
-      transform: scale(.95);
-      background: rgba(255, 255, 255, 0.1); 
-    }
-    
-    .arrow svg {
-        stroke: var(--paper-white); 
-        stroke-width: 2;
-        width: 32px;
-        height: 32px;
-        transition: stroke 0.2s;
+    .control-btn:active {
+      transform: scale(0.92);
     }
 
-    .arrow:nth-child(2) {
-        width: 72px;
-        height: 72px;
-        background: var(--slate-grey); /* Primary action with dark neutral color */
-        border: none;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    }
-    
-    .arrow:nth-child(2):active {
-        background: var(--slate-grey); 
+    .control-btn.primary {
+      background: var(--success);
+      border-color: var(--success);
+      width: 70px;
+      height: 70px;
     }
 
-    .progress {
-      text-align: center;
-      font-size: 16px;
-      opacity: .7;
-      margin-top: 10px;
+    .control-btn svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
     }
 
-    /* Editor */
-    .editor-card {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-      background: var(--surface);
-      padding: 14px;
-      border-radius: 10px;
-      color: var(--text);
-      font-size: 15px;
+    .control-btn.primary svg {
+      width: 28px;
+      height: 28px;
     }
 
-    .editor-card span {
+    .editor-container {
       flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+      margin-bottom: 16px;
+      padding-right: 4px;
+    }
+
+    .editor-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      transition: var(--transition);
+    }
+
+    .editor-card:hover {
+      border-color: var(--primary);
+      background: var(--bg-tertiary);
+    }
+
+    .editor-card-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .editor-card-q {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
-      padding-right: 10px;
     }
 
-    .editor-controls button {
-      margin-left: 6px;
-      padding: 6px;
+    .editor-card-a {
+      font-size: 12px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .editor-actions {
+      display: flex;
+      gap: 4px;
+    }
+
+    .editor-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
       border: none;
-      border-radius: 8px;
+      background: var(--bg-primary);
+      color: var(--text-secondary);
       cursor: pointer;
-      background: var(--slate-grey); /* Neutral background for editor controls */
-      transition: 0.2s;
-      display: inline-flex;
+      transition: var(--transition);
+      display: flex;
       align-items: center;
       justify-content: center;
-      min-width: 44px;
-      min-height: 44px;
     }
 
-    .editor-controls button:hover {
-      opacity: 0.85;
-    }
-    
-    .editor-controls button svg {
-        stroke: var(--paper-white);
-        stroke-width: 2;
-        width: 18px;
-        height: 18px;
+    .editor-btn:hover {
+      background: var(--primary);
+      color: white;
     }
 
-    .editor-controls button[data-action="delete"] {
-        background: #e63946; /* A distinct delete color (Red) */
-    }
-    
-    .editor-controls button[data-action="delete"] svg {
-        stroke: var(--paper-white);
+    .editor-btn.danger:hover {
+      background: var(--danger);
     }
 
-    /* Desktop Center */
-    @media(min-width:600px) {
+    .editor-btn svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-secondary);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--bg-tertiary);
+      border-radius: 3px;
+    }
+
+    @media (min-width: 600px) {
       .screen {
-        position: relative;
+        max-width: 480px;
         height: 100vh;
-        border: 1px solid var(--slate-grey);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border);
+        margin: auto;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
       }
+    }
+
+    .empty-state {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      gap: 16px;
+      color: var(--text-secondary);
+    }
+
+    .empty-icon {
+      font-size: 48px;
+      opacity: 0.5;
+    }
+
+    .empty-text {
+      font-size: 16px;
+      font-weight: 500;
     }
   </style>
 </head>
-
 <body>
-  
   <svg style="display:none;">
-    <symbol id="icon-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="19" y1="12" x2="5" y2="12"></line>
-      <polyline points="12 19 5 12 12 5"></polyline>
+    <symbol id="icon-arrow-left" viewBox="0 0 24 24">
+      <path d="M19 12H5M12 19l-7-7 7-7"/>
     </symbol>
-    <symbol id="icon-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="5" y1="12" x2="19" y2="12"></line>
-      <polyline points="12 5 19 12 12 19"></polyline>
+    <symbol id="icon-arrow-right" viewBox="0 0 24 24">
+      <path d="M5 12h14M12 5l7 7-7 7"/>
     </symbol>
-    <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="20 6 9 17 4 12"></polyline>
+    <symbol id="icon-arrow-up" viewBox="0 0 24 24">
+      <path d="M12 19V5M5 12l7-7 7 7"/>
     </symbol>
-    <symbol id="icon-arrow-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="12" y1="19" x2="12" y2="5"></line>
-        <polyline points="5 12 12 5 19 12"></polyline>
+    <symbol id="icon-arrow-down" viewBox="0 0 24 24">
+      <path d="M12 5v14M19 12l-7 7-7-7"/>
     </symbol>
-    <symbol id="icon-arrow-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="12" y1="5" x2="12" y2="19"></line>
-        <polyline points="19 12 12 19 5 12"></polyline>
+    <symbol id="icon-check" viewBox="0 0 24 24">
+      <path d="M20 6l-11 11-7-7"/>
     </symbol>
-    <symbol id="icon-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="18" y1="6" x2="6" y2="18"></line>
-        <line x1="6" y1="6" x2="18" y2="18"></line>
+    <symbol id="icon-x" viewBox="0 0 24 24">
+      <path d="M18 6l-12 12M6 6l12 12"/>
+    </symbol>
+    <symbol id="icon-edit" viewBox="0 0 24 24">
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
     </symbol>
   </svg>
 
   <div id="splash" class="screen active">
-    <div class="logo">Memora</div>
-    <div class="tagline">remember more, faster</div>
+    <div class="logo">✨ Memora</div>
+    <div class="tagline">Remember more, faster</div>
   </div>
 
   <div id="deckScreen" class="screen">
-    <div class="header">Decks</div>
-    <div class="deck-list" id="deckList"></div>
-    <input id="deckTitleInput" placeholder="Deck title" />
-    <div id="colorPalette">
-      <div class="color selected" style="background:#7DF9FF" data-color="#7DF9FF"></div> <div class="color" style="background:#FFB86C" data-color="#FFB86C"></div> <div class="color" style="background:#C792EA" data-color="#C792EA"></div> <div class="color" style="background:#80FF72" data-color="#80FF72"></div> <div class="color" style="background:#FF6E9F" data-color="#FF6E9F"></div> <div class="color-picker-placeholder">?</div>
+    <div class="header">
+      <div class="header-title">Decks</div>
     </div>
-    <div class="button" onclick="createDeck()">Create Deck</div>
+    <div class="deck-grid" id="deckList"></div>
+    
+    <div class="input-group">
+      <input type="text" id="deckTitleInput" placeholder="Enter deck name...">
+    </div>
+
+    <div class="color-group">
+      <label class="color-label">Color</label>
+      <div class="color-palette" id="colorPalette"></div>
+    </div>
+
+    <button class="btn btn-primary" onclick="createDeck()">Create Deck</button>
   </div>
 
   <div id="cardScreen" class="screen">
     <div class="header">
-      <span class="home-btn" onclick="backToDeckList()">Home</span>
-      <span id="deckTitleDisplay"></span>
-      <span class="edit-btn" onclick="openEditor()">Edit</span>
+      <button class="btn btn-secondary" onclick="backToDeckList()">
+        <svg><use href="#icon-arrow-left"/></svg>
+      </button>
+      <div class="header-title" id="deckTitleDisplay" style="flex: 1; text-align: center;"></div>
+      <button class="btn btn-secondary" onclick="openEditor()">
+        <svg><use href="#icon-edit"/></svg>
+      </button>
     </div>
-    <div class="card-wrapper">
-      <div class="card" id="card">
-        <div class="face front">
-          <div class="deck-title-card" id="cardDeckTitle"></div>
-          <div class="label">QUESTION</div>
-          <div class="count-label" id="cardCountFront"></div>
-          <div id="questionText"></div>
-        </div>
-        <div class="face back">
-          <div class="deck-title-card" id="cardDeckTitleBack"></div>
-          <div class="label">ANSWER</div>
-          <div class="count-label" id="cardCountBack"></div>
-          <div id="answerText"></div>
+
+    <div class="card-container">
+      <div class="flashcard" id="flashcard">
+        <div class="flashcard-inner">
+          <div class="card-face front" id="cardFront">
+            <div class="card-label">QUESTION</div>
+            <div class="card-counter" id="counterFront"></div>
+            <div class="card-deck-title" id="deckTitleFront"></div>
+            <div class="card-content" id="questionText"></div>
+          </div>
+          <div class="card-face back" id="cardBack">
+            <div class="card-label">ANSWER</div>
+            <div class="card-counter" id="counterBack"></div>
+            <div class="card-deck-title" id="deckTitleBack"></div>
+            <div class="card-content" id="answerText"></div>
+          </div>
         </div>
       </div>
     </div>
+
     <div class="controls">
-      <div class="arrow" onclick="prevCard()"><svg><use href="#icon-arrow-left"/></svg></div> 
-      <div class="arrow" onclick="rateCard(5)"><svg><use href="#icon-check"/></svg></div> 
-      <div class="arrow" onclick="nextCard()"><svg><use href="#icon-arrow-right"/></svg></div> 
+      <button class="control-btn" onclick="prevCard()" title="Previous">
+        <svg><use href="#icon-arrow-left"/></svg>
+      </button>
+      <button class="control-btn primary" onclick="rateCard(5)" title="Mark as reviewed">
+        <svg><use href="#icon-check"/></svg>
+      </button>
+      <button class="control-btn" onclick="nextCard()" title="Next">
+        <svg><use href="#icon-arrow-right"/></svg>
+      </button>
     </div>
-    <div class="progress" id="progress"></div>
+
+    <div class="progress-display" id="progress"></div>
   </div>
 
   <div id="editorScreen" class="screen">
-    <div class="header">Edit Cards</div>
-    <div id="editorList" style="flex:1; overflow-y:auto; padding-bottom: 20px;"></div>
-    <textarea id="newQ" placeholder="Question"></textarea>
-    <textarea id="newA" placeholder="Answer"></textarea>
-    <div class="button" onclick="addCard()">Add Card</div>
-    <div class="button muted-btn" onclick="backToCardScreen()">Done</div>
+    <div class="header">
+      <div class="header-title">Edit Cards</div>
+      <button class="btn btn-secondary" onclick="backToCardScreen()">
+        <svg><use href="#icon-x"/></svg>
+      </button>
+    </div>
+
+    <div class="editor-container" id="editorList"></div>
+
+    <div class="input-group">
+      <textarea id="newQ" placeholder="Question..."></textarea>
+      <textarea id="newA" placeholder="Answer..."></textarea>
+    </div>
+
+    <button class="btn btn-primary" onclick="addCard()" style="margin-bottom: 12px;">Add Card</button>
+    <button class="btn btn-secondary" onclick="backToCardScreen()" style="width: 100%; background: var(--bg-tertiary);">Done</button>
   </div>
 
   <script>
-    // --- Data Initialization and Persistence ---
-    let decks = []; 
-    // Default values for new default deck (using the first of the new 5 standard colors)
-    const defaultColor = "#7DF9FF"; // Electric Aqua
+    let decks = [];
+    let currentDeck = null;
+    let currentIndex = 0;
+    let editingCardIndex = null;
 
-    // Helper to get the computed value of a CSS variable, handling the 'var(--...)' format
-    function getCssVarValue(varName) {
-        if (varName.startsWith('var(--')) {
-            const prop = varName.substring(6, varName.length - 1);
-            const rootStyle = getComputedStyle(document.documentElement);
-            // This is a robust way to get the actual hex value from the variable
-            return rootStyle.getPropertyValue('--' + prop).trim();
-        }
-        return varName; // Return as is if it's not a var (e.g. a hex code)
-    }
+    const colors = ['#3B82F6', '#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#06B6D4', '#EF4444', '#F97316'];
+    const defaultColor = colors[0];
 
-    // Helper to determine if a hex color is light for text contrast
-    function isColorLight(color) {
-        let hex = getCssVarValue(color).replace('#', '');
-        // Default to a dark text color (Ink Grey) on transparent or unparsed colors
-        if (!hex || hex.length !== 6) return false; 
-
-        // Convert to RGB
-        const r = parseInt(hex.substring(0, 2), 16);
-        const g = parseInt(hex.substring(2, 4), 16);
-        const b = parseInt(hex.substring(4, 6), 16);
-        // Calculate luminance (ITU-R BT.709)
-        const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-        // The new standard colors are bright, so we set the text color to ink-grey (dark).
-        // Luminance > 0.6 is a good heuristic for light background.
-        return luminance > 0.6; 
-    }
-
-    // HSL helper (Converts hex to HSL, adjusts lightness, converts back to RGB for card backface) 
-    function lightenHSL(color, perc) {
-        let hex = getCssVarValue(color);
-        if (hex.startsWith('#')) hex = hex.substring(1);
-
-        let r = parseInt(hex.substr(0, 2), 16) / 255,
-            g = parseInt(hex.substr(2, 2), 16) / 255,
-            b = parseInt(hex.substr(4, 2), 16) / 255;
-        let max = Math.max(r, g, b),
-            min = Math.min(r, g, b),
-            h, s, l = (max + min) / 2;
-        if (max === min) {
-            h = s = 0;
-        } else {
-            let d = max - min;
-            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-            switch (max) {
-                case r:
-                    h = (g - b) / d + (g < b ? 6 : 0);
-                    break;
-                case g:
-                    h = (b - r) / d + 2;
-                    break;
-                case b:
-                    h = (r - g) / d + 4;
-                    break;
-            }
-            h /= 6;
-        }
-        
-        // Adjust lightness and clamp between 0 and 1
-        l += perc;
-        l = Math.max(0, Math.min(1, l));
-        
-        if (s === 0) {
-            r = g = b = l;
-        } else {
-            function hue2rgb(p, q, t) {
-                if (t < 0) t += 1;
-                if (t > 1) t -= 1;
-                if (t < 1 / 6) return p + (q - p) * 6 * t;
-                if (t < 1 / 2) return q;
-                if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-                return p;
-            }
-            let q = l < 0.5 ? l * (1 + s) : l + s - l * s,
-                p = 2 * l - q;
-            r = hue2rgb(p, q, h + 1 / 3);
-            g = hue2rgb(p, q, h);
-            b = hue2rgb(p, q, h - 1 / 3);
-        }
-
-        return `rgb(${Math.round(r * 255)},${Math.round(g * 255)},${Math.round(b * 255)})`;
-    }
-
-    // Clear existing decks and create the new default one
-    localStorage.setItem("flashDecks", JSON.stringify(decks));
-    decks = JSON.parse(localStorage.getItem("flashDecks")) || [];
-
-    if (decks.length === 0) {
-      decks.push({
-        title: "User Guide",
-        color: defaultColor, 
-        // Note: gradStart/End are removed from default for simplicity since new colors are single hex
-        cards: [
-          { q: "Tap card to flip", "a": "Tap the card to see the answer." },
-          { q: "Navigate cards", "a": "Use the arrow icons or swipe horizontally on the card to move between questions." },
-          { q: "Rate Card (Check icon)", "a": "Use the checkmark icon to mark a card as reviewed. This updates its learning interval." },
-          { q: "Delete a Deck", "a": "On the 'Decks' screen, press and hold a deck title to delete it." },
-          { q: "Edit Cards", "a": "In a deck, tap 'Edit' to add, delete, or reorder cards." }
-        ]
-      });
-      save(); // Save the new default deck
-    }
-
-    let currentDeck = null,
-      currentIndex = 0;
-    const splash = document.getElementById("splash");
-    const deckScreen = document.getElementById("deckScreen");
-    const cardScreen = document.getElementById("cardScreen");
-    const editorScreen = document.getElementById("editorScreen");
-    const deckList = document.getElementById("deckList");
-    const card = document.getElementById("card");
-
-    setTimeout(() => {
-      splash.classList.remove("active");
-      deckScreen.classList.add("active");
-    }, 1200);
-
-    // --- Core Functions ---
-
-    /* HAPTIC */
-    function haptic() {
-      if (navigator.vibrate) navigator.vibrate(10);
-    }
-
-    /* Save */
     function save() {
       localStorage.setItem("flashDecks", JSON.stringify(decks));
     }
 
-    /* Color Picker */
-    document.querySelectorAll("#colorPalette .color").forEach(div => {
-      div.addEventListener("click", () => {
-        document.querySelectorAll("#colorPalette .color").forEach(d => d.classList.remove("selected"));
-        div.classList.add("selected");
+    function load() {
+      decks = JSON.parse(localStorage.getItem("flashDecks")) || [];
+      
+      if (decks.length === 0) {
+        decks.push({
+          title: "Welcome to Memora",
+          color: defaultColor,
+          cards: [
+            { q: "Tap a card to flip it", a: "Click or tap the card to reveal the answer." },
+            { q: "Swipe left or right", a: "Swipe horizontally to navigate between cards with smooth animations." },
+            { q: "Mark as reviewed", a: "Use the checkmark button to mark a card as studied. This helps with spaced repetition!" },
+            { q: "Edit your cards", a: "Click the edit button to add, edit, or delete cards from any deck." },
+            { q: "Create new decks", a: "Go back to the home screen and create a new deck with a custom color." }
+          ]
+        });
+        save();
+      }
+    }
+
+    function setupColorPalette() {
+      const palette = document.getElementById("colorPalette");
+      palette.innerHTML = "";
+      colors.forEach(color => {
+        const swatch = document.createElement("div");
+        swatch.className = "color-swatch selected";
+        swatch.style.background = color;
+        swatch.dataset.color = color;
+        swatch.onclick = () => selectColor(color);
+        palette.appendChild(swatch);
       });
+      selectColor(defaultColor);
+    }
+
+    function selectColor(color) {
+      document.querySelectorAll(".color-swatch").forEach(s => s.classList.remove("selected"));
+      document.querySelector('[data-color="' + color + '"]').classList.add("selected");
+    }
+
+    function haptic() {
+      if (navigator.vibrate) navigator.vibrate([10]);
+    }
+
+    function showScreen(screenId) {
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      document.getElementById(screenId).classList.add("active");
+    }
+
+    window.addEventListener("load", () => {
+      load();
+      setupColorPalette();
+      renderDecks();
+      
+      setTimeout(() => {
+        showScreen("deckScreen");
+      }, 1500);
     });
 
-    /* Create Deck */
     function createDeck() {
       const title = document.getElementById("deckTitleInput").value.trim();
       if (!title) return;
-      const selectedColorDiv = document.querySelector("#colorPalette .color.selected");
-      
-      // Since new colors are single hex, only the data-color attribute is used.
-      const color = selectedColorDiv ? selectedColorDiv.dataset.color : defaultColor;
+
+      const selectedColor = document.querySelector(".color-swatch.selected").dataset.color;
       
       decks.push({
         title,
-        color,
-        // No gradStart/End by default for new decks with the new color set
+        color: selectedColor,
         cards: []
       });
+
       save();
       renderDecks();
       document.getElementById("deckTitleInput").value = "";
+      selectColor(defaultColor);
     }
 
-    /* Render Decks - Refactored to use createElement for clean event binding */
+    function isLightColor(color) {
+      const hex = color.replace("#", "");
+      const r = parseInt(hex.substr(0, 2), 16);
+      const g = parseInt(hex.substr(2, 2), 16);
+      const b = parseInt(hex.substr(4, 2), 16);
+      const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      return luminance > 0.6;
+    }
+
     function renderDecks() {
+      const deckList = document.getElementById("deckList");
       deckList.innerHTML = "";
+
       decks.forEach((deck, i) => {
-        const d = document.createElement("div");
-        d.className = "deck";
+        const card = document.createElement("div");
+        card.className = "deck-card";
+        card.style.background = deck.color;
         
-        // Handle gradients vs solid colors (using only 'color' for new default scheme)
-        let deckBg = getCssVarValue(deck.color || defaultColor);
-        if (deck.gradStart && deck.gradEnd) {
-            deckBg = `linear-gradient(135deg, ${getCssVarValue(deck.gradStart)}, ${getCssVarValue(deck.gradEnd)})`;
-        }
+        const textColor = isLightColor(deck.color) ? "#0F172A" : "#F1F5F9";
+        card.style.color = textColor;
 
-        d.style.background = deckBg;
-        
-        // Determine text color based on background
-        const textColor = isColorLight(deck.color) ? 'var(--ink-grey)' : 'var(--paper-white)';
-        d.style.color = textColor;
-        d.style.textShadow = isColorLight(deck.color) ? 'none' : '0 1px 3px rgba(0, 0, 0, 0.3)';
+        card.innerHTML = '<div class="deck-title">' + deck.title + '</div><div class="deck-meta">' + deck.cards.length + ' card' + (deck.cards.length !== 1 ? 's' : '') + '</div>';
 
-        // Inner HTML is simple enough to keep as innerHTML
-        d.innerHTML = `<div class="deck-title">${deck.title}</div><div class="deck-meta">${deck.cards.length} cards</div>`;
-        
         let pressTimer;
-        // Hold to delete logic
-        const startPress = (e) => {
-          e.stopPropagation(); 
+        const handlePress = () => {
           pressTimer = setTimeout(() => {
-            if (confirm(`Delete deck "${deck.title}"? This action cannot be undone.`)) {
+            card.classList.add("long-press");
+            if (confirm('Delete "' + deck.title + '"? This cannot be undone.')) {
               decks.splice(i, 1);
               save();
               renderDecks();
+            } else {
+              card.classList.remove("long-press");
             }
           }, 700);
         };
-        const endPress = () => clearTimeout(pressTimer);
-        const clickAction = (e) => {
-            if (pressTimer) {
-                clearTimeout(pressTimer);
-                // Only open deck if it wasn't a long press (timer cleared quickly)
-                openDeck(i);
-            }
+
+        const handleRelease = () => {
+          clearTimeout(pressTimer);
+          card.classList.remove("long-press");
         };
 
-        d.addEventListener("mousedown", startPress);
-        d.addEventListener("touchstart", startPress);
-        d.addEventListener("mouseup", endPress);
-        d.addEventListener("touchend", endPress);
-        d.addEventListener("click", clickAction);
-        
-        deckList.appendChild(d);
+        card.addEventListener("mousedown", handlePress);
+        card.addEventListener("touchstart", handlePress);
+        card.addEventListener("mouseup", handleRelease);
+        card.addEventListener("mouseleave", handleRelease);
+        card.addEventListener("touchend", handleRelease);
+        card.addEventListener("click", () => {
+          if (pressTimer) {
+            clearTimeout(pressTimer);
+            openDeck(i);
+          }
+        });
+
+        deckList.appendChild(card);
       });
     }
 
-
-    /* Open Deck */
     function openDeck(i) {
       currentDeck = decks[i];
       currentIndex = 0;
-      deckScreen.classList.remove("active");
-      cardScreen.classList.add("active");
-      document.getElementById("deckTitleDisplay").innerText = currentDeck.title;
-      updateCardColors();
+      editingCardIndex = null;
+      updateCardVisuals();
       updateCard();
+      showScreen("cardScreen");
+      haptic();
     }
 
-    /* Card colors */
-    function updateCardColors() {
-      // Use gradient for front face if available
-      let frontBg = getCssVarValue(currentDeck.color || defaultColor);
-      if (currentDeck.gradStart && currentDeck.gradEnd) {
-          frontBg = `linear-gradient(135deg, ${getCssVarValue(currentDeck.gradStart)}, ${getCssVarValue(currentDeck.gradEnd)})`;
-      } 
-      
-      const backColor = currentDeck.color || defaultColor;
-      // Lighten back face for reverse card logic.
-      const backBg = lightenHSL(backColor, 0.1); 
-      
-      document.querySelector(".card .face.front").style.background = frontBg;
-      document.querySelector(".card .face.back").style.background = backBg;
-
-      document.getElementById("cardDeckTitle").innerText = currentDeck.title;
-      document.getElementById("cardDeckTitleBack").innerText = currentDeck.title;
-      
-      // Update text color for contrast on the card faces
-      const textColor = isColorLight(currentDeck.color || defaultColor) ? 'var(--ink-grey)' : 'var(--paper-white)';
-
-      document.querySelector(".card .face.front").style.color = textColor;
-      document.querySelector(".card .face.back").style.color = textColor;
-      document.querySelector(".card .face.front .label").style.color = textColor;
-      document.querySelector(".card .face.back .label").style.color = textColor;
+    function adjustBrightness(color, percent) {
+      const hex = color.replace("#", "");
+      const r = Math.min(255, Math.max(0, parseInt(hex.substr(0, 2), 16) + percent));
+      const g = Math.min(255, Math.max(0, parseInt(hex.substr(2, 2), 16) + percent));
+      const b = Math.min(255, Math.max(0, parseInt(hex.substr(4, 2), 16) + percent));
+      return "#" + [r, g, b].map(x => x.toString(16).padStart(2, "0")).join("");
     }
 
-    /* Update Card */
+    function updateCardVisuals() {
+      document.getElementById("deckTitleDisplay").innerText = currentDeck.title;
+      document.getElementById("deckTitleFront").innerText = currentDeck.title;
+      document.getElementById("deckTitleBack").innerText = currentDeck.title;
+
+      const textColor = isLightColor(currentDeck.color) ? "#0F172A" : "#F1F5F9";
+
+      document.getElementById("cardFront").style.background = currentDeck.color;
+      document.getElementById("cardFront").style.color = textColor;
+      
+      const backColor = adjustBrightness(currentDeck.color, isLightColor(currentDeck.color) ? -20 : 20);
+      document.getElementById("cardBack").style.background = backColor;
+      document.getElementById("cardBack").style.color = textColor;
+    }
+
     function updateCard() {
+      const flashcard = document.getElementById("flashcard");
+      flashcard.classList.remove("flipped", "exit-left", "exit-right");
+
       if (!currentDeck.cards.length) {
-        document.getElementById("questionText").innerText = "No cards yet. Go to 'Edit' to add new cards.";
+        document.getElementById("questionText").innerHTML = '<div class="empty-state"><div class="empty-icon">📝</div><div class="empty-text">No cards yet. Create one to get started!</div></div>';
         document.getElementById("answerText").innerText = "";
         document.getElementById("progress").innerText = "";
-        document.getElementById("cardCountFront").innerText = "";
-        document.getElementById("cardCountBack").innerText = "";
+        document.getElementById("counterFront").innerText = "";
+        document.getElementById("counterBack").innerText = "";
         return;
       }
-      card.classList.remove("flipped");
-      const c = currentDeck.cards[currentIndex];
-      const countText = `${currentIndex + 1} / ${currentDeck.cards.length}`;
-      
-      document.getElementById("questionText").innerText = c.q;
-      document.getElementById("answerText").innerText = c.a;
-      document.getElementById("progress").innerText = countText;
-      document.getElementById("cardCountFront").innerText = countText;
-      document.getElementById("cardCountBack").innerText = countText;
+
+      const card = currentDeck.cards[currentIndex];
+      const counter = (currentIndex + 1) + "/" + currentDeck.cards.length;
+
+      document.getElementById("questionText").innerText = card.q;
+      document.getElementById("answerText").innerText = card.a;
+      document.getElementById("progress").innerText = counter;
+      document.getElementById("counterFront").innerText = counter;
+      document.getElementById("counterBack").innerText = counter;
     }
 
-    /* Flip */
-    card.onclick = () => {
-      card.classList.toggle("flipped");
-      haptic();
-    };
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let isDragging = false;
 
-    /* Swipe */
-    let touchX = 0,
-      touchY = 0;
-    card.addEventListener("touchstart", e => {
-      touchX = e.touches[0].clientX;
-      touchY = e.touches[0].clientY;
+    const flashcard = document.getElementById("flashcard");
+
+    flashcard.addEventListener("click", (e) => {
+      if (!isDragging) {
+        flashcard.classList.toggle("flipped");
+        haptic();
+      }
     });
 
-    card.addEventListener("touchend", e => {
-      let dx = e.changedTouches[0].clientX - touchX;
-      let dy = e.changedTouches[0].clientY - touchY;
-      // Primary swipe action (horizontal)
+    flashcard.addEventListener("touchstart", (e) => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      isDragging = false;
+    });
+
+    flashcard.addEventListener("touchmove", (e) => {
+      const dx = Math.abs(e.touches[0].clientX - touchStartX);
+      const dy = Math.abs(e.touches[0].clientY - touchStartY);
+      if (dx > 10) isDragging = true;
+    });
+
+    flashcard.addEventListener("touchend", (e) => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+
       if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) {
-          dx < 0 ? nextCard() : prevCard();
-      }
-      // Secondary swipe down to exit deck (vertical)
-      else if (dy > 100 && Math.abs(dy) > Math.abs(dx)) {
-          backToDeckList();
+        if (dx > 0) {
+          prevCardWithAnimation();
+        } else {
+          nextCardWithAnimation();
+        }
+      } else if (dy > 100 && Math.abs(dy) > Math.abs(dx)) {
+        backToDeckList();
       }
     });
 
-    /* Navigation */
     function nextCard() {
       if (currentIndex < currentDeck.cards.length - 1) {
         currentIndex++;
@@ -910,126 +930,163 @@
       }
     }
 
-    /* Spaced Repetition - Added visual feedback */
+    function nextCardWithAnimation() {
+      if (currentIndex < currentDeck.cards.length - 1) {
+        flashcard.classList.add("exit-left");
+        setTimeout(() => {
+          currentIndex++;
+          updateCard();
+          haptic();
+        }, 400);
+      }
+    }
+
+    function prevCardWithAnimation() {
+      if (currentIndex > 0) {
+        flashcard.classList.add("exit-right");
+        setTimeout(() => {
+          currentIndex--;
+          updateCard();
+          haptic();
+        }, 400);
+      }
+    }
+
     function rateCard(score) {
-      if(!currentDeck.cards.length) return;
-      const cardObj = currentDeck.cards[currentIndex];
-      cardObj.interval = cardObj.interval || 1;
-      cardObj.ease = cardObj.ease || 2.5;
-      cardObj.interval = Math.round(cardObj.interval * cardObj.ease);
-      cardObj.ease = Math.max(1.3, cardObj.ease + (.1 - (5 - score) * (0.08 + (5 - score) * 0.02)));
-      save();
+      if (!currentDeck.cards.length) return;
+
+      const card = currentDeck.cards[currentIndex];
+      card.interval = card.interval || 1;
+      card.ease = card.ease || 2.5;
+      card.interval = Math.round(card.interval * card.ease);
+      card.ease = Math.max(1.3, card.ease + (0.1 - (5 - score) * (0.08 + (5 - score) * 0.02)));
       
-      // Visual feedback
-      card.classList.add("rated");
-      setTimeout(() => {
-          card.classList.remove("rated");
-          nextCard();
-      }, 400); // Animation duration is 0.4s
-      haptic();
+      save();
+      nextCardWithAnimation();
     }
 
-    /* Editor */
     function openEditor() {
-      cardScreen.classList.remove("active");
-      editorScreen.classList.add("active");
+      editingCardIndex = null;
       renderEditor();
+      showScreen("editorScreen");
     }
 
-    /* Render Editor - Refactored for maintainability with createElement */
     function renderEditor() {
       const list = document.getElementById("editorList");
       list.innerHTML = "";
-      currentDeck.cards.forEach((c, i) => {
+
+      currentDeck.cards.forEach((card, i) => {
         const div = document.createElement("div");
         div.className = "editor-card";
-        
-        // Card Question/Text Span
-        const textSpan = document.createElement("span");
-        textSpan.title = `Question: ${c.q}`;
-        textSpan.innerText = `Q: ${i+1}. ${c.q}`;
-        div.appendChild(textSpan);
 
-        // Controls Div
-        const controlsDiv = document.createElement("div");
-        controlsDiv.className = "editor-controls";
-        
-        // Up Button
+        const content = document.createElement("div");
+        content.className = "editor-card-content";
+        content.innerHTML = '<div class="editor-card-q">Q' + (i + 1) + ': ' + card.q + '</div><div class="editor-card-a">A: ' + card.a + '</div>';
+
+        const actions = document.createElement("div");
+        actions.className = "editor-actions";
+
+        const editBtn = document.createElement("button");
+        editBtn.className = "editor-btn";
+        editBtn.innerHTML = '<svg><use href="#icon-edit"/></svg>';
+        editBtn.title = "Edit";
+        editBtn.onclick = () => showEditForm(i);
+
         const upBtn = document.createElement("button");
+        upBtn.className = "editor-btn";
+        upBtn.innerHTML = '<svg><use href="#icon-arrow-up"/></svg>';
+        upBtn.title = "Move up";
         upBtn.onclick = () => moveCard(i, -1);
-        upBtn.innerHTML = `<svg><use href="#icon-arrow-up"/></svg>`;
-        upBtn.title = "Move Up";
 
-        // Down Button
         const downBtn = document.createElement("button");
+        downBtn.className = "editor-btn";
+        downBtn.innerHTML = '<svg><use href="#icon-arrow-down"/></svg>';
+        downBtn.title = "Move down";
         downBtn.onclick = () => moveCard(i, 1);
-        downBtn.innerHTML = `<svg><use href="#icon-arrow-down"/></svg>`;
-        downBtn.title = "Move Down";
 
-        // Delete Button
         const deleteBtn = document.createElement("button");
-        deleteBtn.setAttribute("data-action", "delete");
+        deleteBtn.className = "editor-btn danger";
+        deleteBtn.innerHTML = '<svg><use href="#icon-x"/></svg>';
+        deleteBtn.title = "Delete";
         deleteBtn.onclick = () => deleteCard(i);
-        deleteBtn.innerHTML = `<svg><use href="#icon-x"/></svg>`;
-        deleteBtn.title = "Delete Card";
 
-        controlsDiv.appendChild(upBtn);
-        controlsDiv.appendChild(downBtn);
-        controlsDiv.appendChild(deleteBtn);
-        div.appendChild(controlsDiv);
+        actions.appendChild(editBtn);
+        actions.appendChild(upBtn);
+        actions.appendChild(downBtn);
+        actions.appendChild(deleteBtn);
 
+        div.appendChild(content);
+        div.appendChild(actions);
         list.appendChild(div);
       });
+    }
+
+    function showEditForm(i) {
+      editingCardIndex = i;
+      const card = currentDeck.cards[i];
+      
+      document.getElementById("newQ").value = card.q;
+      document.getElementById("newA").value = card.a;
+      
+      document.querySelector(".editor-container").parentElement.scrollTop = document.querySelector(".editor-container").parentElement.scrollHeight;
+      document.getElementById("newQ").focus();
     }
 
     function addCard() {
       const q = document.getElementById("newQ").value.trim();
       const a = document.getElementById("newA").value.trim();
+
       if (!q || !a) return;
-      currentDeck.cards.push({
-        q,
-        a
-      });
+
+      if (editingCardIndex !== null) {
+        currentDeck.cards[editingCardIndex].q = q;
+        currentDeck.cards[editingCardIndex].a = a;
+        editingCardIndex = null;
+      } else {
+        currentDeck.cards.push({ q, a });
+      }
+
+      save();
       document.getElementById("newQ").value = "";
       document.getElementById("newA").value = "";
-      save();
       renderEditor();
     }
 
     function deleteCard(i) {
-      if(confirm("Delete this card? This action cannot be undone.")) {
-          currentDeck.cards.splice(i, 1);
-          save();
-          renderEditor();
-          updateCard(); // Refresh card display if we're deleting the current one
+      if (confirm("Delete this card?")) {
+        currentDeck.cards.splice(i, 1);
+        save();
+        renderEditor();
+        if (currentIndex >= currentDeck.cards.length) {
+          currentIndex = Math.max(0, currentDeck.cards.length - 1);
+        }
+        updateCard();
       }
     }
 
     function moveCard(i, dir) {
       const newI = i + dir;
       if (newI < 0 || newI >= currentDeck.cards.length) return;
-      [currentDeck.cards[i], currentDeck.cards[newI]] = [currentDeck.cards[newI], currentDeck.cards[i]];
+      const temp = currentDeck.cards[i];
+      currentDeck.cards[i] = currentDeck.cards[newI];
+      currentDeck.cards[newI] = temp;
       save();
       renderEditor();
     }
 
-    /* Back buttons */
     function backToCardScreen() {
-      editorScreen.classList.remove("active");
-      cardScreen.classList.add("active");
+      editingCardIndex = null;
+      document.getElementById("newQ").value = "";
+      document.getElementById("newA").value = "";
       updateCard();
+      showScreen("cardScreen");
     }
 
     function backToDeckList() {
-      cardScreen.classList.remove("active");
-      deckScreen.classList.add("active");
-      renderDecks();
+      editingCardIndex = null;
+      currentDeck = null;
+      showScreen("deckScreen");
     }
-
-    /* Init */
-    renderDecks();
   </script>
 </body>
-
-</html>   
-```
+</html>
