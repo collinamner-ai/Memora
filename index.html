@@ -149,12 +149,12 @@
         opacity: 0.9;
     }
 
-    /* Deck List */
+    /* Deck List - Modified for 2-across Grid */
     .deck-list {
       flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+      display: grid; /* Use grid for 2-across layout */
+      grid-template-columns: repeat(2, 1fr); /* Two columns of equal width */
+      gap: 12px; /* Gutters: 8-16px */
       overflow-y: auto;
       padding-bottom: 20px;
       /* Scrollbar styling for a cleaner look */
@@ -163,7 +163,7 @@
     }
 
     .deck {
-      padding: 20px;
+      padding: 16px; /* Adjusted padding for smaller cards */
       border-radius: var(--radius);
       cursor: pointer;
       transition: var(--t);
@@ -172,6 +172,7 @@
       font-weight: 600;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       border: 1px solid rgba(255, 255, 255, 0.1);
+      /* Text size already appropriate for smaller card area */
     }
 
     .deck:active {
@@ -180,12 +181,15 @@
     }
 
     .deck-title {
-      font-size: 18px;
+      font-size: 16px; /* Slightly reduced font size for 2-across */
       margin-bottom: 4px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
     .deck-meta {
-      font-size: 14px;
+      font-size: 12px; /* Caption size */
       opacity: .9;
     }
 
@@ -341,13 +345,27 @@
       border-radius: 8px;
       color: inherit; /* Inherit from face text color for consistency */
     }
+    
+    /* New Card Count Top Right */
+    .count-label {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      opacity: .9;
+      background: rgba(0,0,0,0.1);
+      padding: 4px 8px;
+      border-radius: 8px;
+      color: inherit;
+    }
 
     #questionText, #answerText {
         font-weight: 600;
         line-height: 1.4;
     }
 
-    /* Controls - Made Neutral, Minimal, and Discreet */
+    /* Controls - Minimal and Discreet */
     .controls {
       display: flex;
       justify-content: space-around;
@@ -359,27 +377,26 @@
       width: 64px;
       height: 64px;
       border-radius: 50%;
-      background: transparent; /* Minimal Background */
+      background: transparent; 
       border: 1px solid var(--slate-grey);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       transition: var(--t);
-      box-shadow: none; /* Discreet Shadow */
+      box-shadow: none; 
       user-select: none;
-      /* Ensure tap targets are large enough */
       min-width: 44px;
       min-height: 44px;
     }
 
     .arrow:active {
-      transform: scale(.95); /* Less aggressive scale */
-      background: rgba(255, 255, 255, 0.1); /* Subtle press state */
+      transform: scale(.95);
+      background: rgba(255, 255, 255, 0.1); 
     }
     
     .arrow svg {
-        stroke: var(--paper-white); /* White icons on dark background */
+        stroke: var(--paper-white); 
         stroke-width: 2;
         width: 32px;
         height: 32px;
@@ -389,14 +406,13 @@
     .arrow:nth-child(2) {
         width: 72px;
         height: 72px;
-        /* Primary button is slightly more prominent */
-        background: var(--slate-grey);
+        background: var(--slate-grey); /* Primary action with dark neutral color */
         border: none;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
     
     .arrow:nth-child(2):active {
-        background: var(--slate-grey); /* Keep press state subtle */
+        background: var(--slate-grey); 
     }
 
     .progress {
@@ -447,7 +463,7 @@
     }
     
     .editor-controls button svg {
-        stroke: var(--paper-white); /* White icons on dark neutral background */
+        stroke: var(--paper-white);
         stroke-width: 2;
         width: 18px;
         height: 18px;
@@ -513,11 +529,11 @@
       <div class="color selected" style="background:linear-gradient(135deg, var(--mint-glow), var(--teal-core))" data-color="var(--teal-core)" data-grad-start="var(--mint-glow)" data-grad-end="var(--teal-core)"></div>
       <div class="color" style="background:linear-gradient(135deg, var(--sky-blue), var(--lavender-drift))" data-color="var(--lavender-drift)" data-grad-start="var(--sky-blue)" data-grad-end="var(--lavender-drift)"></div>
       <div class="color" style="background:linear-gradient(135deg, var(--mint-glow), var(--soft-purple))" data-color="var(--soft-purple)" data-grad-start="var(--mint-glow)" data-grad-end="var(--soft-purple)"></div>
-      <div class="color" style="background:var(--deep-teal)" data-color="var(--deep-teal)" data-grad-start="var(--deep-teal)" data-grad-end="var(--deep-teal)"></div>
       <div class="color" style="background:var(--teal-core)" data-color="var(--teal-core)" data-grad-start="var(--teal-core)" data-grad-end="var(--teal-core)"></div>
+      <div class="color" style="background:var(--deep-teal)" data-color="var(--deep-teal)" data-grad-start="var(--deep-teal)" data-grad-end="var(--deep-teal)"></div>
       <div class="color" style="background:var(--soft-purple)" data-color="var(--soft-purple)" data-grad-start="var(--soft-purple)" data-grad-end="var(--soft-purple)"></div>
       <div class="color" style="background:var(--sky-blue)" data-color="var(--sky-blue)" data-grad-start="var(--sky-blue)" data-grad-end="var(--sky-blue)"></div>
-    </div>
+      <div class="color" style="background:#B388FF" data-color="#B388FF" data-grad-start="#B388FF" data-grad-end="#B388FF"></div> <div class="color" style="background:#FF8A80" data-color="#FF8A80" data-grad-start="#FF8A80" data-grad-end="#FF8A80"></div> </div>
     <div class="button" onclick="createDeck()">Create Deck</div>
   </div>
 
@@ -532,11 +548,13 @@
         <div class="face front">
           <div class="deck-title-card" id="cardDeckTitle"></div>
           <div class="label">QUESTION</div>
+          <div class="count-label" id="cardCountFront"></div>
           <div id="questionText"></div>
         </div>
         <div class="face back">
           <div class="deck-title-card" id="cardDeckTitleBack"></div>
           <div class="label">ANSWER</div>
+          <div class="count-label" id="cardCountBack"></div>
           <div id="answerText"></div>
         </div>
       </div>
@@ -828,13 +846,19 @@
         document.getElementById("questionText").innerText = "No cards yet. Go to 'Edit' to add new cards.";
         document.getElementById("answerText").innerText = "";
         document.getElementById("progress").innerText = "";
+        document.getElementById("cardCountFront").innerText = "";
+        document.getElementById("cardCountBack").innerText = "";
         return;
       }
       card.classList.remove("flipped");
       const c = currentDeck.cards[currentIndex];
+      const countText = `${currentIndex + 1} / ${currentDeck.cards.length}`;
+      
       document.getElementById("questionText").innerText = c.q;
       document.getElementById("answerText").innerText = c.a;
-      document.getElementById("progress").innerText = `${currentIndex + 1} / ${currentDeck.cards.length}`;
+      document.getElementById("progress").innerText = countText;
+      document.getElementById("cardCountFront").innerText = countText;
+      document.getElementById("cardCountBack").innerText = countText;
     }
 
     /* Flip */
@@ -1002,5 +1026,5 @@
   </script>
 </body>
 
-</html> 
+</html>  
 ```
