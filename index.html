@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Memora - Remember more, faster.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #F9FAFA;
+      color: #2A2E33;
+      overflow-x: hidden;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(249, 250, 250, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(221, 226, 229, 0.4);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #2A2E33;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #A8F1E1 0%, #2AB7A9 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: white;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: inherit;
+    }
+
+    .btn-secondary {
+      background: #DDE2E5;
+      color: #2A2E33;
+    }
+
+    .btn-secondary:hover {
+      background: #C8CFD6;
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2AB7A9 0%, #0F6F66 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(42, 183, 169, 0.3);
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 100px 24px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(168, 241, 225, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      z-index: -1;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -10%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(127, 212, 248, 0.1) 0%, transparent 70%);
+      border-radius: 50%;
+      z-index: -1;
+    }
+
+    .hero-content {
+      text-align: center;
+      max-width: 600px;
+      animation: slideInUp 0.8s ease 0.2s backwards;
+    }
+
+    .hero-logo {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 32px;
+      animation: slideInDown 0.8s ease backwards;
+    }
+
+    .hero-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 30px rgba(42, 183, 169, 0.2));
+    }
+
+    h1 {
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      color: #2A2E33;
+      letter-spacing: -0.5px;
+    }
+
+    .tagline {
+      font-size: 18px;
+      font-weight: 500;
+      color: #5A6168;
+      margin-bottom: 32px;
+    }
+
+    .hero-description {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #5A6168;
+      margin-bottom: 40px;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 60px;
+    }
+
+    .btn-large {
+      padding: 16px 32px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    /* Features Section */
+    .features {
+      padding: 80px 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .section-header h2 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #2A2E33;
+    }
+
+    .section-header p {
+      font-size: 16px;
+      color: #5A6168;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+      margin-bottom: 60px;
+    }
+
+    .feature-card {
+      background: white;
+      padding: 32px 24px;
+      border-radius: 16px;
+      border: 1px solid #DDE2E5;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .feature-card:hover {
+      border-color: #2AB7A9;
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(42, 183, 169, 0.1);
+    }
+
+    .feature-icon {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg, #A8F1E1 0%, #2AB7A9 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+
+    .feature-card h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #2A2E33;
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      color: #5A6168;
+      line-height: 1.6;
+    }
+
+    /* Benefits Section */
+    .benefits {
+      background: linear-gradient(135deg, #A8F1E1 0%, #7FD4F8 50%, #C7B7FF 100%);
+      padding: 80px 24px;
+      margin: 60px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .benefits::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 600px;
+      height: 600px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      z-index: 0;
+    }
+
+    .benefits-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .benefits h2 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #0F6F66;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .benefits-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 32px;
+    }
+
+    .benefit-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .benefit-check {
+      width: 32px;
+      height: 32px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #2AB7A9;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .benefit-item h4 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #0F6F66;
+      margin-bottom: 6px;
+    }
+
+    .benefit-item p {
+      font-size: 14px;
+      color: #0F6F66;
+      opacity: 0.85;
+      line-height: 1.5;
+    }
+
+    /* Social Proof Section */
+    .social-proof {
+      padding: 80px 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+      margin-top: 50px;
+    }
+
+    .stat {
+      background: white;
+      padding: 32px 24px;
+      border-radius: 12px;
+      border: 1px solid #DDE2E5;
+    }
+
+    .stat-number {
+      font-size: 36px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #2AB7A9 0%, #9A86FF 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #5A6168;
+    }
+
+    /* CTA Section */
+    .final-cta {
+      padding: 80px 24px;
+      background: linear-gradient(135deg, #2AB7A9 0%, #0F6F66 100%);
+      text-align: center;
+      color: white;
+    }
+
+    .final-cta h2 {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .final-cta p {
+      font-size: 18px;
+      margin-bottom: 32px;
+      opacity: 0.9;
+    }
+
+    .final-cta .btn {
+      background: white;
+      color: #2AB7A9;
+      font-weight: 700;
+      padding: 16px 40px;
+    }
+
+    .final-cta .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Footer */
+    footer {
+      background: #2A2E33;
+      color: white;
+      padding: 40px 24px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    footer p {
+      margin: 8px 0;
+      opacity: 0.8;
+    }
+
+    footer a {
+      color: #A8F1E1;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Animations */
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .feature-card {
+      animation: fadeIn 0.8s ease backwards;
+    }
+
+    .feature-card:nth-child(1) { animation-delay: 0.2s; }
+    .feature-card:nth-child(2) { animation-delay: 0.3s; }
+    .feature-card:nth-child(3) { animation-delay: 0.4s; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav {
+        padding: 16px;
+      }
+
+      h1 {
+        font-size: 36px;
+      }
+
+      .tagline {
+        font-size: 16px;
+      }
+
+      .section-header h2 {
+        font-size: 24px;
+      }
+
+      .benefits h2 {
+        font-size: 24px;
+      }
+
+      .final-cta h2 {
+        font-size: 28px;
+      }
+
+      .cta-buttons {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .btn-large {
+        width: 100%;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      nav {
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+
+      .nav-actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero {
+        padding: 80px 16px 40px;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+
+      .hero-logo {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 24px;
+      }
+
+      .tagline {
+        font-size: 16px;
+      }
+
+      .btn-secondary {
+        display: none;
+      }
+
+      .features {
+        padding: 60px 16px;
+      }
+
+      .benefits {
+        padding: 60px 16px;
+        margin: 40px 0;
+      }
+
+      .social-proof {
+        padding: 60px 16px;
+      }
+
+      .final-cta {
+        padding: 60px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="logo">
+      <div class="logo-icon">✓</div>
+      Memora
+    </div>
+    <div class="nav-actions">
+      <button class="btn btn-secondary">Sign In</button>
+      <button class="btn btn-primary">Get Started Free</button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-logo">
+        <img src="data:image/svg+xml,%3Csvg viewBox='0 0 120 120' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23A8F1E1;stop-opacity:1' /%3E%3Cstop offset='50%25' style='stop-color:%237FD4F8;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23C7B7FF;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='30' y='35' width='45' height='60' rx='8' fill='url(%23grad1)' opacity='0.8'/%3E%3Crect x='50' y='25' width='45' height='60' rx='8' fill='url(%23grad1)'/%3E%3Cpath d='M60 55 L70 65 L80 45' stroke='white' stroke-width='6' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Cpath d='M35 85 Q60 95 85 80' stroke='url(%23grad1)' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E" alt="Memora">
+      </div>
+
+      <h1>Remember more, faster.</h1>
+      <p class="tagline">Master any subject with spaced repetition.</p>
+      <p class="hero-description">
+        Memora is the smartest way to study. Create flashcards, learn with intelligent repetition, and track your progress. Perfect for GCSE, A-Levels, University, and beyond.
+      </p>
+
+      <div class="cta-buttons">
+        <button class="btn btn-primary btn-large">Start Learning Free</button>
+        <button class="btn btn-secondary btn-large">Watch Demo</button>
+      </div>
+
+      <p style="font-size: 13px; color: #5A6168;">No credit card required. Free forever with unlimited cards.</p>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="section-header">
+      <h2>Powerful Study Features</h2>
+      <p>Everything you need to learn faster and remember longer.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Smart Repetition</h3>
+        <p>Our algorithm focuses on cards you struggle with, optimizing your study time for maximum retention.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Track Progress</h3>
+        <p>Visualize your learning journey with detailed statistics, accuracy rates, and study streaks.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🌙</div>
+        <h3>Dark Mode</h3>
+        <p>Study comfortably anytime with our premium dark mode and customizable interface.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <h3>Learn Anywhere</h3>
+        <p>Beautiful responsive design works perfectly on phone, tablet, or desktop. Sync across devices.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔄</div>
+        <h3>Backup & Restore</h3>
+        <p>Export your decks and import them anytime. Your data is always in your control.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🎨</div>
+        <h3>Fully Customizable</h3>
+        <p>Personalize your decks with emojis, colors, and descriptions. Make studying your own.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefits Section -->
+  <section class="benefits">
+    <div class="benefits-content">
+      <h2>Why Students Choose Memora</h2>
+      <div class="benefits-list">
+        <div class="benefit-item">
+          <div class="benefit-check">✓</div>
+          <div>
+            <h4>Science-Backed</h4>
+            <p>Built on proven spaced repetition techniques used by top students worldwide.</p>
+          </div>
+        </div>
+
+        <div class="benefit-item">
+          <div class="benefit-check">✓</div>
+          <div>
+            <h4>100% Private</h4>
+            <p>All your study data stays on your device. We never collect or sell your information.</p>
+          </div>
+        </div>
+
+        <div class="benefit-item">
+          <div class="benefit-check">✓</div>
+          <div>
+            <h4>Perfect for All Levels</h4>
+            <p>Whether you're studying GCSE, A-Levels, IB, or University courses - Memora adapts to you.</p>
+          </div>
+        </div>
+
+        <div class="benefit-item">
+          <div class="benefit-check">✓</div>
+          <div>
+            <h4>For Parents Too</h4>
+            <p>Help your children study with shared decks and progress tracking features.</p>
+          </div>
+        </div>
+
+        <div class="benefit-item">
+          <div class="benefit-check">✓</div>
+          <div>
+            <h4>Always Free</h4>
+            <p>Create unlimited decks and cards. No paywalls, no ads, no hidden costs ever.</p>
+          </div>
+        </div>
+
+        <div class="benefit-item">
+          <div class="benefit-check">✓</div>
+          <div>
+            <h4>Made for Focus</h4>
+            <p>Minimal, distraction-free interface designed to keep you studying, not tinkering.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Social Proof -->
+  <section class="social-proof">
+    <div class="section-header">
+      <h2>Trusted by Students</h2>
+      <p>Join thousands of students achieving their study goals.</p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-number">50K+</div>
+        <div class="stat-label">Cards Created</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-number">12K+</div>
+        <div class="stat-label">Active Students</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-number">95%</div>
+        <div class="stat-label">Passing Rate</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-number">4.9★</div>
+        <div class="stat-label">User Rating</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="final-cta">
+    <h2>Ready to Study Smarter?</h2>
+    <p>Join thousands of students who are already using Memora to ace their exams.</p>
+    <button class="btn btn-large">Get Started Free Today</button>
+    <p style="margin-top: 16px; font-size: 14px;">Start now. No credit card required. Cancel anytime.</p>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p><strong>Memora</strong> — Remember more, faster.</p>
+    <p>Made for students. By students.</p>
+    <p style="margin-top: 20px; opacity: 0.6;">
+      <a href="#">Privacy</a> · 
+      <a href="#">Terms</a> · 
+      <a href="#">Contact</a> · 
+      <a href="#">Twitter</a>
+    </p>
+    <p style="margin-top: 16px; opacity: 0.5;">© 2026 Memora. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Smooth scroll for demo button
+    document.querySelector('[class*="Watch"]')?.addEventListener('click', () => {
+      window.scrollTo({ top: document.querySelector('.features').offsetTop - 100, behavior: 'smooth' });
+    });
+
+    // Get started button navigation
+    document.querySelectorAll('[class*="Start Learning"]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        alert('Welcome to Memora! Loading app...');
+        // In production, this would navigate to the app
+      });
+    });
+
+    // Sign in button
+    document.querySelector('[class*="Sign In"]')?.addEventListener('click', () => {
+      alert('Sign in page would appear here.');
+    });
+  </script>
+</body>
+</html>
