@@ -2,854 +2,515 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Memora — Premium Flashcards</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Memora — Dark Minimal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0b0b0d;
-    --panel:#0f1113;
-    --muted:rgba(255,255,255,0.6);
-    --glass: rgba(255,255,255,0.04);
-    --accent:#2ab7a9;
-    --accent-2:#0f6f66;
-    --card-radius:20px;
-    --gap:16px;
-    --max-width:980px;
+    --bg: #0b0b0c;
+    --panel: #0f1113;
+    --muted: #9aa4b2;
+    --text: #e6eef8;
+    --accent: #e0ac2f; /* warm mustard */
+    --glass: rgba(255,255,255,0.03);
+    --radius: 18px;
+    --gap: 16px;
+    --phone-w: 360px;
   }
 
-  /* Reset & base */
   *{box-sizing:border-box}
-  html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,"Helvetica Neue",Arial;color:#fff;background:linear-gradient(180deg,var(--bg),#050506);-webkit-font-smoothing:antialiased}
-  a{color:inherit}
-  button{font:inherit}
-  .app{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:28px 20px}
+  html,body{height:100%;margin:0;background:linear-gradient(180deg,#070708 0%, #0b0b0c 100%);font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--text);-webkit-font-smoothing:antialiased}
+  .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:36px}
 
-  /* Container */
-  .shell{width:100%;max-width:var(--max-width);display:flex;flex-direction:column;gap:20px;min-height:80vh}
-
-  /* Top header */
-  header.appbar{display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .brand{display:flex;align-items:center;gap:12px}
-  .logo{
-    background:linear-gradient(135deg,var(--accent),var(--accent-2));
-    width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-weight:700;font-size:18px;box-shadow:0 8px 30px rgba(42,183,169,0.12)
+  /* phone frame (visual only) */
+  .phone {
+    width:var(--phone-w);
+    border-radius:34px;
+    background:linear-gradient(180deg,#050505,#0b0b0c);
+    padding:22px 18px;
+    box-shadow: 0 40px 90px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+    position:relative;
   }
-  .brand h1{font-size:18px;margin:0}
-  .header-actions{display:flex;gap:8px;align-items:center}
 
-  /* Layout: left column (list) and right panel (editor/study) */
-  .layout{display:grid;grid-template-columns:360px 1fr;gap:20px}
-  @media (max-width:920px){ .layout{grid-template-columns:1fr} }
+  /* notch/indicator */
+  .phone::before{content:'';position:absolute;left:50%;transform:translateX(-50%);top:8px;width:120px;height:5px;border-radius:999px;background:linear-gradient(90deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02));opacity:.6}
 
-  /* Deck list */
-  .panel{
-    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border-radius:var(--card-radius);padding:18px;backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.04)
+  /* app area */
+  .app {
+    background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
+    border-radius:22px;
+    padding:18px;
+    min-height:640px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    border:1px solid rgba(255,255,255,0.03);
   }
-  .panel h2{margin:0 0 12px 0;font-weight:600}
-  .deck-list{display:flex;flex-direction:column;gap:12px;max-height:60vh;overflow:auto;padding-right:4px}
-  .deck-card{display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:14px;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease;position:relative;overflow:hidden}
-  .deck-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.6)}
-  .deck-meta{display:flex;align-items:center;justify-content:space-between;gap:10px}
-  .deck-left{display:flex;gap:12px;align-items:center}
-  .deck-icon{width:48px;height:48px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 8px 20px rgba(10,10,10,0.4)}
-  .deck-title{font-weight:700}
-  .deck-sub{font-size:13px;opacity:0.8}
-  .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:18px;border-radius:12px;background:rgba(255,255,255,0.02);text-align:center}
 
-  /* Controls */
-  .controls{display:flex;gap:8px;flex-wrap:wrap}
-  .btn{
-    padding:10px 14px;border-radius:12px;border:0;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;font-weight:600;cursor:pointer;box-shadow:0 10px 30px rgba(42,183,169,0.14)
+  header {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    justify-content:space-between;
   }
-  .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06)}
+  .title {font-weight:600;font-size:16px;opacity:0.95}
+  .small {font-size:13px;color:var(--muted)}
 
-  /* Right panel (editor + study) */
-  .right{display:flex;flex-direction:column;gap:16px}
-  .panel .section-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-  .cards-list{display:flex;flex-direction:column;gap:10px;max-height:46vh;overflow:auto;padding-right:6px}
-  .card-row{display:flex;align-items:flex-start;gap:10px;padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03)}
-  .card-row .qa{flex:1}
-  .card-row .q{font-weight:600}
-  .card-row .a{font-size:13px;color:var(--muted);margin-top:6px}
-  .icon-btn{width:40px;height:40px;border-radius:10px;border:0;background:rgba(255,255,255,0.03);display:grid;place-items:center;cursor:pointer}
-  .danger{color:#ff6b6b}
+  /* card stage */
+  .stage { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; flex:1; }
 
-  /* Study area */
-  .study-area{display:flex;flex-direction:column;align-items:center;gap:12px;padding:24px;border-radius:16px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));border:1px solid rgba(255,255,255,0.03)}
-  .progress{display:flex;gap:12px;align-items:center}
-  .progress .bar{width:220px;height:8px;background:rgba(255,255,255,0.06);border-radius:999px;overflow:hidden}
-  .progress .fill{height:100%;background:linear-gradient(90deg,var(--accent),#a8f1e1);width:0%}
-  .score{font-weight:600;color:var(--muted);font-size:14px}
-
-  /* Card stack */
-  .stack{width:100%;max-width:420px;height:520px;position:relative;display:grid;place-items:center;perspective:1200px}
-  .card{
-    position:absolute;top:0;left:0;width:100%;height:100%;max-width:420px;border-radius:22px;padding:28px;display:flex;flex-direction:column;justify-content:space-between;align-items:center;box-shadow:0 30px 80px rgba(0,0,0,0.6);
-    transition:transform .35s cubic-bezier(.2,.9,.3,1),opacity .28s ease;
-    transform-origin:center center;background:linear-gradient(135deg,var(--accent),var(--accent-2));
-    user-select:text;touch-action:none;
+  .stack {
+    width:100%;
+    max-width:300px;
+    height:420px;
+    position:relative;
+    perspective:1200px;
+    display:grid;
+    place-items:center;
   }
-  .card.back{transform:translateY(18px) scale(.96);opacity:.85}
-  .card.back-2{transform:translateY(36px) scale(.92);opacity:.7}
-  /* inner 3d flip */
-  .card-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .45s cubic-bezier(.2,.9,.3,1)}
-  .card.is-flipped .card-inner{transform:rotateY(180deg)}
-  .front,.back-face{
-    position:absolute;inset:0;padding:28px;border-radius:18px;backface-visibility:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center
+
+  /* single card */
+  .card {
+    width:100%;
+    height:100%;
+    border-radius:18px;
+    position:absolute;
+    top:0;left:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    padding:28px;
+    background:linear-gradient(180deg, rgba(224,172,47,0.96), rgba(224,172,47,0.96)); /* mustard front */
+    color:#061014;
+    transform-origin:center center;
+    box-shadow: 0 30px 60px rgba(2,6,23,0.55);
+    transition:transform .36s cubic-bezier(.2,.9,.3,1),opacity .28s ease;
+    will-change:transform,opacity;
+    user-select:none;
+    -webkit-user-select:none;
+    touch-action:none;
+    border: 1px solid rgba(0,0,0,0.05);
   }
-  .front{color:#fff}
-  .back-face{transform:rotateY(180deg);background:linear-gradient(135deg,#fff 0%,#eafaf6 100%);color:#091217}
-  .card-label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:.9;font-weight:700}
-  .card-content{font-size:28px;font-weight:800;line-height:1.18;padding:0 12px}
-  .card-hint{font-size:13px;color:rgba(255,255,255,0.85);opacity:.94;margin-top:6px}
-  .card-footer{display:flex;gap:10px;width:100%;justify-content:center;align-items:center}
 
-  /* small controls */
-  .study-controls{display:flex;gap:12px;align-items:center}
-  .circle{width:56px;height:56px;border-radius:999px;border:0;display:grid;place-items:center;cursor:pointer;background:rgba(255,255,255,0.04)}
-  .circle.primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;box-shadow:0 10px 30px rgba(42,183,169,0.12)}
+  /* slight stack depth for next cards */
+  .card.next {
+    transform: translateY(18px) scale(.96);
+    opacity:.9;
+  }
+  .card.next-2 {
+    transform: translateY(36px) scale(.92);
+    opacity:.75;
+  }
 
-  /* Modal */
-  .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,8,0.6);display:none;align-items:flex-end;z-index:40}
-  .modal-backdrop.active{display:flex}
-  .sheet{width:100%;max-width:720px;margin:0 auto;border-radius:18px;padding:18px;background:linear-gradient(180deg,#0f1113,#050506);border:1px solid rgba(255,255,255,0.04)}
-  .form-row{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
-  input,textarea,select{padding:12px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff;font:inherit}
-  textarea{min-height:120px;resize:vertical}
-  label{font-size:12px;font-weight:700;opacity:.9}
-  .row{display:flex;gap:8px}
-  .small{font-size:13px;opacity:.85}
+  /* flip inner */
+  .card-inner {
+    width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .42s cubic-bezier(.2,.9,.3,1);
+  }
+  .card.flipped .card-inner{ transform: rotateY(180deg); }
 
-  /* utility */
-  .muted{opacity:.7;font-size:13px}
-  .center{display:grid;place-items:center}
-  .kbd{background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:8px;font-size:13px}
+  .face {
+    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;backface-visibility:hidden;border-radius:12px;
+  }
+  .front { padding-top:8px; text-align:center; }
+  .back { transform:rotateY(180deg); background:linear-gradient(180deg,#fcf6e6,#f6ecd2); color:#081017; padding:28px; text-align:center; }
 
-  /* scrollbar */
-  ::-webkit-scrollbar{height:10px;width:8px}
-  ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.06);border-radius:6px}
+  .label {font-size:12px;color:rgba(6,16,20,0.6);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+  .content {font-weight:700;font-size:20px;line-height:1.25; padding:0 6px}
+
+  /* controls row */
+  .controls {display:flex;align-items:center;justify-content:center;gap:14px;padding-top:4px}
+  .circle {
+    width:56px;height:56px;border-radius:999px;border:0;background:rgba(255,255,255,0.05);display:grid;place-items:center;color:var(--text);cursor:pointer;
+    transition:transform .12s ease,background .12s ease;
+  }
+  .circle.primary { background: linear-gradient(180deg,#0f1113,#141416); color:var(--accent); border:1px solid rgba(224,172,47,0.08); width:64px;height:64px }
+  .circle:hover{transform:translateY(-4px)}
+  .icon { width:22px;height:22px; display:inline-block; }
+
+  /* subtle footer hint */
+  .hint { font-size:12px;color:rgba(230,238,248,0.6); text-align:center; margin-top:2px; }
+
+  /* minimal modal */
+  .modal { position:fixed; inset:0; display:flex;align-items:center;justify-content:center;background:rgba(2,6,23,0.6); z-index:60; visibility:hidden; opacity:0; transition:opacity .18s;}
+  .modal.show{ visibility:visible; opacity:1; }
+  .sheet { width:92%; max-width:420px; background:var(--panel); border-radius:12px; padding:14px; border:1px solid rgba(255,255,255,0.03); box-shadow:0 30px 80px rgba(2,6,23,0.6) }
+  .form-row { display:flex;flex-direction:column; gap:8px; margin-bottom:10px; }
+  input, textarea { padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--text); font-size:14px }
+  button.ghost { background:transparent; color:var(--text); border:1px solid rgba(255,255,255,0.04); padding:8px 12px; border-radius:8px }
+  button.primary { background:var(--accent); color:#071017; padding:8px 12px; border-radius:8px; border:0; font-weight:600 }
+
+  /* responsiveness smaller phones */
+  @media (max-width:380px){
+    .phone { padding:16px }
+    .card { padding:20px }
+    .stack { height:380px }
+  }
 </style>
 </head>
 <body>
-  <div class="app">
-    <div class="shell">
-      <header class="appbar" role="banner" aria-label="Memora header">
-        <div class="brand">
-          <div class="logo" aria-hidden="true">M</div>
-          <div>
-            <h1>Memora</h1>
-            <div class="muted" style="font-size:13px">Remember more, faster</div>
-          </div>
-        </div>
-
-        <div class="header-actions">
-          <button id="new-deck" class="btn" aria-haspopup="dialog">+ New Deck</button>
-          <button id="open-menu" class="btn ghost" title="Menu" aria-label="Menu">Menu</button>
-        </div>
-      </header>
-
-      <div class="layout" role="main">
-        <!-- left: deck list -->
-        <aside class="panel" aria-label="Decks">
-          <div style="display:flex;align-items:center;justify-content:space-between">
-            <h2>My Decks</h2>
-            <div class="muted small">Tip: swipe cards left/right to mark</div>
-          </div>
-
-          <div id="decks" class="deck-list" aria-live="polite"></div>
-
-          <div style="margin-top:12px;display:flex;gap:8px">
-            <button id="import" class="btn ghost">Import</button>
-            <button id="export" class="btn ghost">Export</button>
-            <button id="clear-all" class="btn ghost danger" title="Clear all data">Reset</button>
-          </div>
-        </aside>
-
-        <!-- right: editor & study -->
-        <section class="right">
-          <!-- editor panel -->
-          <div class="panel" id="editor-panel">
-            <div class="section-title">
-              <div>
-                <div style="font-weight:700" id="deck-name">Select a deck</div>
-                <div class="muted small" id="deck-stats">—</div>
-              </div>
-              <div class="controls">
-                <button id="add-card" class="btn ghost" disabled>Add Card</button>
-                <button id="start-study" class="btn" disabled>Start Studying</button>
-              </div>
-            </div>
-
+  <div class="wrap">
+    <div class="phone" role="application" aria-label="Memora study">
+      <div class="app" id="app">
+        <header>
+          <div style="display:flex;gap:10px;align-items:center">
+            <button id="btnMenu" class="circle" title="Menu" aria-label="Menu" style="width:44px;height:44px;border-radius:10px;background:transparent"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6h.01"/><path d="M12 12h.01"/><path d="M12 18h.01"/></svg></button>
             <div>
-              <div class="section-title" style="margin-top:8px">
-                <div style="font-weight:700">Cards</div>
-                <div class="muted small">Manage your flashcards</div>
-              </div>
-
-              <div id="cards-list" class="cards-list">
-                <div class="empty center" id="cards-empty">
-                  <div style="font-weight:700">No cards yet</div>
-                  <div class="muted small">Add your first card to begin studying</div>
-                </div>
-              </div>
+              <div class="title" id="deckTitle">Flashcards</div>
+              <div class="small" id="deckSub">Tap to flip • Swipe to mark</div>
             </div>
           </div>
-
-          <!-- study panel -->
-          <div class="panel study-area" id="study-panel" aria-live="polite">
-            <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
-              <div class="score" id="study-header">Study</div>
-              <div class="muted small">Space to flip · ← prev · → next · Enter flip</div>
-            </div>
-
-            <div class="progress" aria-hidden="true">
-              <div class="score" id="progress-counter">0 / 0</div>
-              <div class="bar"><div class="fill" id="progress-fill"></div></div>
-              <div class="score" id="score-counter">✓ 0 · ✗ 0</div>
-            </div>
-
-            <div class="stack" id="stack" aria-live="polite" aria-label="Card stack (interactive)"></div>
-
-            <div class="study-controls" id="study-controls" style="opacity:.98">
-              <button id="prev" class="circle" title="Previous (←)" aria-label="Previous card">
-                <!-- left arrow -->
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-              </button>
-
-              <button id="mark-wrong" class="circle" title="Wrong" aria-label="Mark as wrong">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"></circle><path d="M9 9l6 6M15 9l-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-              </button>
-
-              <button id="flip" class="circle primary" title="Flip (Space/Enter)" aria-label="Flip card">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 5v14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-              </button>
-
-              <button id="mark-right" class="circle" title="Correct" aria-label="Mark as correct">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-              </button>
-
-              <button id="next" class="circle" title="Next (→)" aria-label="Next card">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-              </button>
-            </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button id="btnNewDeck" class="ghost">New</button>
+            <button id="btnEdit" class="ghost">Edit</button>
           </div>
-        </section>
+        </header>
+
+        <div class="stage">
+          <div class="stack" id="stack">
+            <!-- cards injected here -->
+          </div>
+
+          <div class="controls" aria-hidden="false">
+            <button id="prevBtn" class="circle" title="Previous"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+
+            <button id="markWrong" class="circle" title="Mark wrong" aria-label="Wrong">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15 9l-6 6"/><path d="M9 9l6 6"/></svg>
+            </button>
+
+            <button id="flipBtn" class="circle primary" title="Flip/Show answer">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+            </button>
+
+            <button id="markRight" class="circle" title="Mark correct" aria-label="Correct">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            </button>
+
+            <button id="nextBtn" class="circle" title="Next"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+
+          <div class="hint" id="progressText">0 / 0 • ✓ 0 · ✗ 0</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal templates -->
-  <div id="modal-backdrop" class="modal-backdrop" aria-hidden="true">
-    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="modal-title" style="width:95%;max-width:720px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-        <div id="modal-title" style="font-weight:700">Modal</div>
-        <div style="display:flex;gap:8px">
-          <button id="modal-cancel" class="icon-btn" title="Cancel">✕</button>
-        </div>
-      </div>
-      <div id="modal-body"></div>
+  <!-- Modal simple -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true">
+    <div class="sheet" role="document">
+      <div id="modalInner"></div>
     </div>
   </div>
 
 <script>
-(() => {
-  /* ---------- Utilities ---------- */
-  const uid = () => (crypto && crypto.randomUUID) ? crypto.randomUUID() : (Date.now().toString(36) + Math.random().toString(36).slice(2,8));
-  const $ = sel => document.querySelector(sel);
-  const $$ = sel => Array.from(document.querySelectorAll(sel));
-  const saveKey = 'memora.premium.v1';
+/* Minimal dark premium flashcards — single file
+   - Simple study: flip, swipe left (wrong), swipe right (correct)
+   - LocalStorage persistence
+   - Clean UI, subtle motion
+*/
 
-  /* ---------- State ---------- */
-  const state = {
-    decks: [],            // {id,name,icon,cards:[{q,a}],stats:{correct,incorrect}}
-    currentDeckId: null,
-    session: {cards:[], index:0, flipped:false}
+(function(){
+  const KEY = 'memora.dark.minimal.v1';
+
+  // state
+  let state = { decks: [], currentDeckId: null, session: { cards: [], index: 0, flipped: false } };
+
+  // select elements
+  const stack = document.getElementById('stack');
+  const deckTitle = document.getElementById('deckTitle');
+  const deckSub = document.getElementById('deckSub');
+  const flipBtn = document.getElementById('flipBtn');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const markRight = document.getElementById('markRight');
+  const markWrong = document.getElementById('markWrong');
+  const btnNewDeck = document.getElementById('btnNewDeck');
+  const btnEdit = document.getElementById('btnEdit');
+  const modal = document.getElementById('modal');
+  const modalInner = document.getElementById('modalInner');
+
+  // helpers
+  const uid = ()=> (Date.now().toString(36) + Math.random().toString(36).slice(2,8));
+  const save = ()=> localStorage.setItem(KEY, JSON.stringify(state));
+  const load = ()=> {
+    try { const raw = localStorage.getItem(KEY); if (raw) state = JSON.parse(raw); } catch(e){ console.warn(e); }
   };
 
-  /* ---------- DOM ---------- */
-  const el = {
-    decksList: $('#decks'),
-    deckName: $('#deck-name'),
-    deckStats: $('#deck-stats'),
-    addCardBtn: $('#add-card'),
-    startStudyBtn: $('#start-study'),
-    cardsList: $('#cards-list'),
-    cardsEmpty: $('#cards-empty'),
-    newDeckBtn: $('#new-deck'),
-    stack: $('#stack'),
-    progressFill: $('#progress-fill'),
-    progressCounter: $('#progress-counter'),
-    scoreCounter: $('#score-counter'),
-    prevBtn: $('#prev'),
-    nextBtn: $('#next'),
-    flipBtn: $('#flip'),
-    wrongBtn: $('#mark-wrong'),
-    rightBtn: $('#mark-right'),
-    modalBackdrop: $('#modal-backdrop'),
-    modalBody: $('#modal-body'),
-    modalTitle: $('#modal-title'),
-    modalCancel: $('#modal-cancel'),
-    importBtn: $('#import'),
-    exportBtn: $('#export'),
-    clearAllBtn: $('#clear-all'),
-    openMenuBtn: $('#open-menu'),
-    studyHeader: $('#study-header'),
-    addCardControl: $('#add-card'),
-    startStudyControl: $('#start-study')
-  };
-
-  /* ---------- Icons set (SVG markup) ---------- */
-  const ICONS = {
-    book:`<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 4h16v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-    atom:`<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="12" rx="8" ry="4.5" stroke="white" stroke-width="1.5"/><ellipse cx="12" cy="12" rx="4.5" ry="8" transform="rotate(60 12 12)" stroke="white" stroke-width="1.5"/><circle cx="12" cy="12" r="1.5" fill="white"/></svg>`,
-    brain:`<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3c-3 0-5 2-5 5v1" stroke="white" stroke-width="1.4"/><path d="M12 3c3 0 5 2 5 5v1" stroke="white" stroke-width="1.4"/><path d="M7 10v2a7 7 0 0 0 10 0v-2" stroke="white" stroke-width="1.4"/></svg>`,
-    globe:`<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="white" stroke-width="1.4"/><path d="M2 12h20M12 3v18" stroke="white" stroke-width="1.2"/></svg>`,
-    code:`<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M16 18l6-6-6-6" stroke="white" stroke-width="1.5" stroke-linecap="round"/><path d="M8 6L2 12l6 6" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>`
-  };
-
-  /* ---------- Persistence ---------- */
-  function load() {
-    try {
-      const raw = localStorage.getItem(saveKey);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (parsed && parsed.decks) state.decks = parsed.decks;
-      }
-    } catch (e) { console.warn('load failed', e) }
-  }
-  function persist() { localStorage.setItem(saveKey, JSON.stringify({decks:state.decks})); }
-
-  /* ---------- Initial sample (only if empty) ---------- */
-  function seedIfEmpty(){
-    if (state.decks.length) return;
-    state.decks.push({
-      id: uid(),
-      name: 'Biology — Cells',
-      icon: 'book',
-      cards: [
-        {q:'What is the basic unit of life?', a:'The cell.'},
-        {q:'Organelle that generates energy?', a:'Mitochondria.'},
-        {q:'Site of photosynthesis (plants)?', a:'Chloroplast.'}
-      ],
-      stats: {correct:0,incorrect:0}
-    });
-    state.decks.push({
-      id: uid(),
-      name: 'Spanish — Basics',
-      icon: 'globe',
-      cards: [
-        {q:'How to say "Hello" in Spanish?', a:'Hola'},
-        {q:'How to say "Thank you"?', a:'Gracias'}
-      ],
-      stats: {correct:0,incorrect:0}
-    });
-    persist();
-  }
-
-  /* ---------- Rendering Decks ---------- */
-  function renderDecks(){
-    el.decksList.innerHTML = '';
-    if (!state.decks.length) {
-      el.decksList.innerHTML = `<div class="empty"><div style="font-weight:700">No decks yet</div><div class="muted small">Create a deck to get started</div></div>`;
-      selectDeck(null);
-      return;
+  function ensureSample(){
+    if (!state.decks || !state.decks.length) {
+      state.decks = [{
+        id: uid(),
+        name: 'Sample deck',
+        cards: [
+          { q: 'Which amendment gave women the right to vote?', a: 'The 19th Amendment.' },
+          { q: 'What is 2 + 2?', a: '4' }
+        ],
+        stats: { correct:0, incorrect:0 }
+      }];
+      state.currentDeckId = state.decks[0].id;
+      save();
     }
-
-    state.decks.forEach(d=>{
-      const item = document.createElement('div');
-      item.className = 'deck-card';
-      item.setAttribute('tabindex',0);
-      item.innerHTML = `
-        <div class="deck-meta">
-          <div class="deck-left">
-            <div class="deck-icon" aria-hidden="true">${ICONS[d.icon]||ICONS.book}</div>
-            <div>
-              <div class="deck-title">${escapeHtml(d.name)}</div>
-              <div class="deck-sub">${d.cards.length} cards · Accuracy ${calcAccuracy(d)}%</div>
-            </div>
-          </div>
-          <div>
-            <button class="icon-btn" data-id="${d.id}" title="Edit deck">✎</button>
-          </div>
-        </div>
-      `;
-      // click opens deck
-      item.addEventListener('click', e => {
-        if (e.target.closest('.icon-btn')) return; // handled by edit
-        selectDeck(d.id);
-      });
-      // edit deck button
-      item.querySelector('.icon-btn').addEventListener('click', (ev)=>{
-        ev.stopPropagation();
-        showDeckEditor(d.id);
-      });
-      // keyboard open with Enter
-      item.addEventListener('keydown', (e)=>{
-        if (e.key==='Enter') selectDeck(d.id);
-      });
-
-      el.decksList.appendChild(item);
-    });
   }
 
-  function calcAccuracy(deck){
-    const total = (deck.stats?.correct || 0) + (deck.stats?.incorrect || 0);
-    if (!total) return '—';
-    return Math.round((deck.stats.correct/total)*100);
-  }
+  load();
+  ensureSample();
 
-  /* ---------- Deck selection & editor ---------- */
-  function selectDeck(id){
-    state.currentDeckId = id;
+  function currentDeck(){ return state.decks.find(d=>d.id === state.currentDeckId) || state.decks[0]; }
+
+  // session management
+  function startSession(){
     const deck = currentDeck();
-    if (!deck) {
-      el.deckName.textContent = 'Select a deck';
-      el.deckStats.textContent = '—';
-      el.cardsList.innerHTML = '';
-      el.cardsEmpty.style.display = 'block';
-      el.addCardBtn.disabled = true;
-      el.startStudyBtn.disabled = true;
-      return;
-    }
-
-    el.deckName.textContent = deck.name;
-    el.deckStats.textContent = `${deck.cards.length} cards · Accuracy ${calcAccuracy(deck)}%`;
-    el.addCardBtn.disabled = false;
-    el.startStudyBtn.disabled = deck.cards.length === 0;
-
-    // render card rows
-    renderCardsList(deck);
-  }
-
-  function currentDeck(){ return state.decks.find(d=>d.id===state.currentDeckId); }
-
-  function renderCardsList(deck){
-    el.cardsList.innerHTML = '';
-    if (!deck.cards.length) {
-      el.cardsList.appendChild(el.cardsEmpty);
-      el.cardsEmpty.style.display = 'flex';
-      return;
-    }
-    el.cardsEmpty.style.display = 'none';
-    deck.cards.forEach((c,idx)=>{
-      const row = document.createElement('div');
-      row.className = 'card-row';
-      row.innerHTML = `
-        <div class="qa">
-          <div class="q">${escapeHtml(c.q)}</div>
-          <div class="a">${escapeHtml(c.a)}</div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:8px">
-          <button class="icon-btn" data-edit="${idx}" title="Edit card">✎</button>
-          <button class="icon-btn danger" data-delete="${idx}" title="Delete card">🗑</button>
-        </div>
-      `;
-      row.querySelector('[data-edit]').addEventListener('click', ()=> openCardModal(deck.id,idx));
-      row.querySelector('[data-delete]').addEventListener('click', ()=> {
-        if (!confirm('Delete this card?')) return;
-        deck.cards.splice(idx,1); persist(); selectDeck(deck.id); renderDecks();
-      });
-      el.cardsList.appendChild(row);
-    });
-  }
-
-  /* ---------- Modals (simple focus trap) ---------- */
-  let lastActiveEl = null;
-  function openModal(title, bodyHtml, onOpen){
-    el.modalTitle.textContent = title;
-    el.modalBody.innerHTML = bodyHtml;
-    el.modalBackdrop.classList.add('active');
-    el.modalBackdrop.setAttribute('aria-hidden','false');
-    lastActiveEl = document.activeElement;
-    // focus first focusable element
-    setTimeout(()=>{
-      const first = el.modalBody.querySelector('input,textarea,button,select,[tabindex]');
-      if (first) first.focus();
-      if (typeof onOpen === 'function') onOpen();
-    },80);
-    trapFocus(el.modalBackdrop);
-  }
-  function closeModal(){
-    el.modalBackdrop.classList.remove('active');
-    el.modalBackdrop.setAttribute('aria-hidden','true');
-    if (lastActiveEl) lastActiveEl.focus();
-  }
-  el.modalCancel.addEventListener('click', closeModal);
-  el.modalBackdrop.addEventListener('click', (e)=> { if (e.target===el.modalBackdrop) closeModal(); });
-  document.addEventListener('keydown', (e)=> {
-    if (e.key==='Escape' && el.modalBackdrop.classList.contains('active')) closeModal();
-  });
-
-  function trapFocus(container){
-    // quick focus trap
-    const focusables = container.querySelectorAll('a,button,input,textarea,select,[tabindex]');
-    if (!focusables.length) return;
-    const first = focusables[0], last = focusables[focusables.length-1];
-    function handler(e){
-      if (e.key !== 'Tab') return;
-      if (e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
-      else if (!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
-    }
-    container.addEventListener('keydown', handler, {once:false});
-  }
-
-  /* ---------- Create/Edit Deck Modal ---------- */
-  function showCreateDeckModal(){
-    const body = `
-      <div class="form-row"><label>Deck name</label><input id="d-name" placeholder="Biology - Cells"></div>
-      <div class="form-row"><label>Icon</label>
-        <div class="row" style="gap:10px">
-          ${Object.keys(ICONS).map(k=>`<button class="icon-btn select-icon" data-icon="${k}" title="${k}">${ICONS[k]}</button>`).join('')}
-        </div>
-      </div>
-      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
-        <button id="create-cancel" class="btn ghost">Cancel</button>
-        <button id="create-confirm" class="btn">Create</button>
-      </div>
-    `;
-    openModal('New Deck', body, ()=>{
-      const btns = el.modalBody.querySelectorAll('.select-icon');
-      btns.forEach(b => b.addEventListener('click', (ev)=> {
-        btns.forEach(x=>x.style.outline='none');
-        ev.currentTarget.style.outline = '2px solid rgba(42,183,169,0.22)';
-        el.modalBody.querySelector('#d-name').focus();
-        el.modalBody.dataset.icon = ev.currentTarget.dataset.icon;
-      }));
-      el.modalBody.querySelector('#create-cancel').addEventListener('click', closeModal);
-      el.modalBody.querySelector('#create-confirm').addEventListener('click', ()=>{
-        const name = el.modalBody.querySelector('#d-name').value.trim();
-        const icon = el.modalBody.dataset.icon || 'book';
-        if (!name) { alert('Please provide a deck name'); return; }
-        const newDeck = {id:uid(), name, icon, cards:[], stats:{correct:0,incorrect:0}};
-        state.decks.push(newDeck); persist(); closeModal(); renderDecks(); selectDeck(newDeck.id);
-      });
-    });
-  }
-
-  function showDeckEditor(deckId){
-    const deck = state.decks.find(d => d.id===deckId);
-    if (!deck) return;
-    const body = `
-      <div style="display:flex;gap:10px;align-items:center">
-        <div style="width:46px;height:46px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center">${ICONS[deck.icon]}</div>
-        <div style="flex:1">
-          <div style="font-weight:700">${escapeHtml(deck.name)}</div>
-          <div class="muted small">${deck.cards.length} cards · Accuracy ${calcAccuracy(deck)}%</div>
-        </div>
-      </div>
-      <div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end">
-        <button id="rename" class="btn ghost">Rename</button>
-        <button id="delete-deck" class="btn ghost danger">Delete</button>
-      </div>
-    `;
-    openModal('Deck', body, ()=>{
-      el.modalBody.querySelector('#rename').addEventListener('click', ()=>{
-        const newName = prompt('New deck name', deck.name);
-        if (newName && newName.trim()){ deck.name = newName.trim(); persist(); renderDecks(); selectDeck(deck.id); closeModal(); }
-      });
-      el.modalBody.querySelector('#delete-deck').addEventListener('click', ()=>{
-        if (!confirm('Delete deck and all cards?')) return;
-        state.decks = state.decks.filter(d=>d.id!==deck.id); if (state.currentDeckId===deck.id) state.currentDeckId = null; persist(); renderDecks(); selectDeck(null); closeModal();
-      });
-    });
-  }
-
-  /* ---------- Card Modal ---------- */
-  function openCardModal(deckId, idx = null){
-    const deck = state.decks.find(d=>d.id===deckId);
-    if (!deck) return;
-    const isEdit = typeof idx === 'number';
-    const card = isEdit ? deck.cards[idx] : {q:'',a:''};
-    const body = `
-      <div class="form-row"><label>Question</label><input id="card-q" value="${escapeHtml(card.q)}"></div>
-      <div class="form-row"><label>Answer</label><textarea id="card-a">${escapeHtml(card.a)}</textarea></div>
-      <div style="display:flex;justify-content:flex-end;gap:8px">
-        <button id="card-cancel" class="btn ghost">Cancel</button>
-        <button id="card-save" class="btn">${isEdit ? 'Save' : 'Add'}</button>
-      </div>
-    `;
-    openModal(isEdit ? 'Edit Card' : 'Add Card', body, ()=>{
-      el.modalBody.querySelector('#card-cancel').addEventListener('click', closeModal);
-      el.modalBody.querySelector('#card-save').addEventListener('click', ()=>{
-        const q = el.modalBody.querySelector('#card-q').value.trim();
-        const a = el.modalBody.querySelector('#card-a').value.trim();
-        if (!q || !a) { alert('Both fields are required'); return; }
-        if (isEdit) deck.cards[idx] = {q,a};
-        else deck.cards.push({q,a});
-        persist(); selectDeck(deck.id); renderDecks(); closeModal();
-      });
-    });
-  }
-
-  /* ---------- Study Flow ---------- */
-  function startStudy(){
-    const deck = currentDeck();
-    if (!deck || deck.cards.length===0) { alert('Add cards first'); return; }
-    // shallow shuffle
-    const cards = deck.cards.slice().sort(()=>Math.random()-0.5);
-    state.session.cards = cards;
+    if(!deck || !deck.cards.length) return;
+    state.session.cards = deck.cards.slice().sort(()=>Math.random()-0.5);
     state.session.index = 0;
     state.session.flipped = false;
-    deck.stats = deck.stats || {correct:0,incorrect:0};
     renderStack();
-    updateProgressUI();
-    // update header
-    el.studyHeader.textContent = deck.name;
-    // focus for keyboard
-    el.flipBtn.focus();
+    updateProgress();
   }
 
   function renderStack(){
-    const stack = el.stack;
     stack.innerHTML = '';
-    const cards = state.session.cards;
-    if (!cards.length) {
-      stack.innerHTML = `<div class="muted">No cards to study</div>`;
+    const s = state.session;
+    const total = s.cards.length;
+    if (!total) {
+      stack.innerHTML = '<div class="card" style="display:grid;place-items:center; color:var(--muted); background:transparent; box-shadow:none">No cards</div>';
       return;
     }
-    const maxShow = Math.min(3, cards.length - state.session.index);
-    for (let i=0;i<maxShow;i++){
-      const c = cards[state.session.index + i];
-      const wrapper = document.createElement('div');
-      wrapper.className = 'card ' + (i===1 ? 'back' : i===2 ? 'back-2' : '');
-      wrapper.style.zIndex = (100 - i).toString();
-      // inner flip structure
-      wrapper.innerHTML = `
-        <div class="card-inner" aria-hidden="${i!==0}">
-          <div class="front">
-            <div class="card-label">Question</div>
-            <div class="card-content">${escapeHtml(c.q)}</div>
-            <div class="card-hint">${i===0 ? 'Tap / Space to flip · swipe left/right' : ''}</div>
+
+    // show up to 3 cards: top, next, next-2
+    for (let i=0;i<Math.min(3,total - s.index); i++){
+      const cardData = s.cards[s.index + i];
+      const el = document.createElement('div');
+      el.className = 'card' + (i===1? ' next' : i===2 ? ' next-2' : '') + (i===0 && s.flipped ? ' flipped' : '');
+      el.innerHTML = `
+        <div class="card-inner">
+          <div class="face front">
+            <div class="label">Question</div>
+            <div class="content">${escape(cardData.q)}</div>
           </div>
-          <div class="back-face">
-            <div class="card-label">Answer</div>
-            <div class="card-content" style="color:#08322f">${escapeHtml(c.a)}</div>
-            <div class="card-hint" style="color:rgba(0,0,0,0.6)">${i===0 ? 'Mark correct or incorrect' : ''}</div>
+          <div class="face back">
+            <div class="label">Answer</div>
+            <div class="content">${escape(cardData.a)}</div>
           </div>
         </div>
       `;
-      // attach interactions only to top card
-      if (i===0) attachCardInteractions(wrapper, c);
-      stack.appendChild(wrapper);
+      // interactions for top card only
+      if (i===0) attachCardInteractions(el, cardData);
+      stack.appendChild(el);
     }
   }
 
+  // Attach flip/swipe interactions (top card)
   function attachCardInteractions(cardEl, cardData){
-    // flipping
-    cardEl.addEventListener('click', (e)=>{
+    // flip on tap
+    cardEl.addEventListener('click', (e) => {
       if (isDragging) return;
-      toggleFlip(cardEl);
+      state.session.flipped = !state.session.flipped;
+      cardEl.classList.toggle('flipped', state.session.flipped);
     });
 
-    // keyboard flip when focused via flip button
-    function doFlip(){ toggleFlip(cardEl); }
-
-    // pointer swipe (drag)
-    let startX=0,startY=0,isDown=false, dx=0, isDragging=false, startTime=0;
+    // pointer drag for swipe
+    let startX=0, startY=0, dx=0, dy=0, dragging=false, isDraggingLocal=false;
     function onDown(e){
-      isDown = true; isDragging=false; dx=0; startTime = Date.now();
-      startX = e.clientX || e.touches?.[0]?.clientX;
-      startY = e.clientY || e.touches?.[0]?.clientY;
+      dragging=true; isDraggingLocal=false;
+      startX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+      startY = e.clientY || (e.touches && e.touches[0].clientY) || 0;
       cardEl.style.transition = 'none';
     }
     function onMove(e){
-      if (!isDown) return;
-      const x = e.clientX || e.touches?.[0]?.clientX;
-      const y = e.clientY || e.touches?.[0]?.clientY;
-      dx = x - startX;
-      const dy = Math.abs(y - startY);
-      if (Math.abs(dx) > 8 || dy > 8) isDragging = true;
-      if (isDragging){
-        cardEl.style.transform = `translateX(${dx}px) rotate(${dx/20}deg)`;
-        cardEl.style.opacity = `${Math.max(0.3,1 - Math.abs(dx)/700)}`;
+      if(!dragging) return;
+      const x = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+      const y = e.clientY || (e.touches && e.touches[0].clientY) || 0;
+      dx = x - startX; dy = y - startY;
+      if (Math.abs(dx) > 6 || Math.abs(dy) > 10) isDraggingLocal = true;
+      if (isDraggingLocal){
+        cardEl.style.transform = `translateX(${dx}px) rotate(${dx/18}deg)`;
+        cardEl.style.opacity = `${Math.max(0.35, 1 - Math.abs(dx)/600)}`;
       }
     }
-    function onUp(e){
-      if (!isDown) return;
-      isDown=false; cardEl.style.transition = '';
-      const elapsed = Date.now()-startTime;
-      // decide swipe
-      if (Math.abs(dx) > 120 || (Math.abs(dx) > 50 && elapsed < 250)){
-        if (dx>0) markAnswer(true);
-        else markAnswer(false);
+    function onUp(){
+      if(!dragging) return;
+      dragging=false;
+      cardEl.style.transition = '';
+      if (Math.abs(dx) > 120) {
+        // swipe decision
+        if (dx > 0) doMark(true, cardEl); else doMark(false, cardEl);
       } else {
-        // reset position
+        // reset
         cardEl.style.transform = '';
         cardEl.style.opacity = '';
       }
-      isDragging=false; dx=0;
+      dx=0; dy=0; isDraggingLocal=false;
     }
 
     cardEl.addEventListener('pointerdown', onDown);
     window.addEventListener('pointermove', onMove);
     window.addEventListener('pointerup', onUp);
     // touch fallback
-    cardEl.addEventListener('touchstart', onDown);
-    window.addEventListener('touchmove', onMove, {passive:false});
+    cardEl.addEventListener('touchstart', onDown, {passive:true});
+    window.addEventListener('touchmove', onMove, {passive:true});
     window.addEventListener('touchend', onUp);
 
-    // expose local dragging flag for global prevention
-    let isDraggingFlag = false;
-    Object.defineProperty(window, 'isDragging', { get: ()=>isDragging });
+    // expose dragging flag for outside
+    Object.defineProperty(window, 'isCardDragging', { get: ()=> isDraggingLocal });
 
-    // helper to mark answer
-    function markAnswer(isCorrect){
-      const deck = currentDeck();
-      if (!deck) return;
+    function doMark(isCorrect, el) {
       // animate out
-      cardEl.style.transition = 'transform .45s cubic-bezier(.2,.9,.3,1),opacity .3s ease';
-      cardEl.style.transform = `translateX(${isCorrect?800:-800}px) rotate(${isCorrect?12:-12}deg)`;
-      cardEl.style.opacity = '0';
+      el.style.transition = 'transform .45s cubic-bezier(.2,.9,.3,1),opacity .35s ease';
+      el.style.transform = `translateX(${isCorrect? 900 : -900}px) rotate(${isCorrect? 22 : -22}deg)`;
+      el.style.opacity = '0';
+      // update stats and advance
       setTimeout(()=>{
-        // record into deck stats
-        if (isCorrect) deck.stats.correct = (deck.stats.correct||0)+1;
-        else deck.stats.incorrect = (deck.stats.incorrect||0)+1;
-        persist();
-        // advance
+        const deck = currentDeck();
+        if (!deck.stats) deck.stats = { correct:0, incorrect:0 };
+        if (isCorrect) deck.stats.correct = (deck.stats.correct||0) + 1;
+        else deck.stats.incorrect = (deck.stats.incorrect||0) + 1;
+        save();
+
+        // advance index or end
         state.session.index++;
         state.session.flipped = false;
-        // if done
-        if (state.session.index >= state.session.cards.length){
-          // summary - show modal
-          const deckAccuracy = calcAccuracy(deck);
-          const summary = `<div style="padding:14px">
-            <div style="font-weight:700;margin-bottom:6px">Session complete</div>
-            <div class="muted small">Deck: ${escapeHtml(deck.name)}</div>
-            <div style="margin-top:12px">✓ ${deck.stats.correct || 0} correct · ✗ ${deck.stats.incorrect || 0}</div>
-            <div style="margin-top:8px">Accuracy: ${deckAccuracy}%</div>
-            <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:18px">
-              <button id="summary-close" class="btn">Close</button>
-            </div>
-          </div>`;
-          openModal('Well done', summary, ()=>{
-            el.modalBody.querySelector('#summary-close').addEventListener('click', ()=> { closeModal(); });
-          });
+        if (state.session.index >= state.session.cards.length) {
+          // finished session
+          renderStack();
+          updateProgress();
+          setTimeout(()=> {
+            const d = currentDeck();
+            alert(`Session complete\n\n✓ ${d.stats.correct||0} correct\n✗ ${d.stats.incorrect||0}`);
+          }, 80);
+        } else {
+          renderStack();
+          updateProgress();
         }
-        // re-render
-        renderStack();
-        renderDecks();
-        updateProgressUI();
       }, 360);
     }
-
-    // keyboard from flip button
-    el.flipBtn.onclick = ()=>toggleFlip(cardEl);
-    el.wrongBtn.onclick = ()=>markAnswer(false);
-    el.rightBtn.onclick = ()=>markAnswer(true);
-
-    // expose helper toggleFlip
-    function toggleFlip(elCard){
-      const inner = elCard.querySelector('.card-inner');
-      if (!inner) return;
-      state.session.flipped = !state.session.flipped;
-      if (state.session.flipped) elCard.classList.add('is-flipped');
-      else elCard.classList.remove('is-flipped');
-    }
   }
 
-  /* ---------- Navigation controls ---------- */
-  el.prevBtn.addEventListener('click', ()=>{
-    if (state.session.index>0){ state.session.index--; state.session.flipped=false; renderStack(); updateProgressUI(); }
-  });
-  el.nextBtn.addEventListener('click', ()=>{
-    if (state.session.index < state.session.cards.length - 1){ state.session.index++; state.session.flipped=false; renderStack(); updateProgressUI(); }
-  });
-  el.flipBtn.addEventListener('click', ()=>{
-    // flip top card if present
-    const top = el.stack.querySelector('.card');
-    if (top) top.dispatchEvent(new Event('click'));
-  });
+  function escape(s=''){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-  /* keyboard shortcuts */
-  document.addEventListener('keydown', (e)=>{
-    if (el.modalBackdrop.classList.contains('active')) return; // modal open
-    if (e.key==='ArrowLeft') el.prevBtn.click();
-    else if (e.key==='ArrowRight') el.nextBtn.click();
-    else if (e.key===' ' || e.key==='Enter') { e.preventDefault(); el.flipBtn.click(); }
-    else if (e.key==='r' && (e.ctrlKey || e.metaKey)) { // quick reset
-      if (confirm('Reset all data?')) { localStorage.removeItem(saveKey); location.reload(); }
-    }
-  });
-
-  /* ---------- Progress UI ---------- */
-  function updateProgressUI(){
-    const total = state.session.cards.length || 0;
-    const current = Math.min(total, state.session.index + 1);
-    el.progressCounter.textContent = total? `${current} / ${total}` : '0 / 0';
-    el.progressFill.style.width = total? `${Math.round((current/total)*100)}%` : '0%';
-    const deck = currentDeck();
-    el.scoreCounter.textContent = deck ? `✓ ${deck.stats.correct||0} · ✗ ${deck.stats.incorrect||0}` : '✓ 0 · ✗ 0';
+  // update progress/hint
+  function updateProgress(){
+    const d = currentDeck();
+    const s = state.session;
+    const total = s.cards.length || (d ? d.cards.length : 0);
+    const idx = total ? Math.min(total, s.index + 1) : 0;
+    const correct = d?.stats?.correct || 0;
+    const incorrect = d?.stats?.incorrect || 0;
+    const hint = `${idx} / ${total} • ✓ ${correct} · ✗ ${incorrect}`;
+    document.getElementById('progressText').textContent = hint;
   }
 
-  /* ---------- Add card and start study handlers ---------- */
-  el.addCardBtn.addEventListener('click', ()=>{
-    if (!state.currentDeckId) return;
-    openCardModal(state.currentDeckId);
-  });
-  el.startStudyBtn.addEventListener('click', ()=>startStudy());
+  // mark via buttons
+  function recordAnswer(correct){
+    // reuse top card element
+    const cardEl = stack.querySelector('.card');
+    if (!cardEl) return;
+    // simulate swipe animation then mark
+    cardEl.style.transition = 'transform .45s cubic-bezier(.2,.9,.3,1),opacity .35s ease';
+    cardEl.style.transform = `translateX(${correct? 800 : -800}px) rotate(${correct? 12 : -12}deg)`;
+    cardEl.style.opacity = '0';
+    setTimeout(()=>{
+      // update stats
+      const deck = currentDeck();
+      if (!deck.stats) deck.stats = { correct:0, incorrect:0 };
+      if (correct) deck.stats.correct = (deck.stats.correct||0) + 1;
+      else deck.stats.incorrect = (deck.stats.incorrect||0) + 1;
+      save();
 
-  /* ---------- New deck & other controls ---------- */
-  el.newDeckBtn.addEventListener('click', showCreateDeckModal);
-  el.importBtn.addEventListener('click', async ()=>{
-    const json = prompt('Paste exported deck JSON here');
-    if (!json) return;
-    try{
-      const parsed = JSON.parse(json);
-      if (!Array.isArray(parsed)) throw new Error('Invalid format');
-      parsed.forEach(d => {
-        d.id = uid();
-        state.decks.push(d);
-      });
-      persist(); renderDecks(); alert('Imported!');
-    }catch(e){ alert('Import failed: ' + (e.message || e)); }
-  });
-  el.exportBtn.addEventListener('click', ()=>{
-    const payload = JSON.stringify(state.decks, null, 2);
-    // present in modal for copy
-    openModal('Export Decks', `<pre style="white-space:pre-wrap;max-height:320px;overflow:auto;padding:8px;background:rgba(255,255,255,0.02);border-radius:8px">${escapeHtml(payload)}</pre>
-      <div style="display:flex;justify-content:flex-end;margin-top:8px"><button id="copy-export" class="btn">Copy</button></div>`, ()=>{
-        el.modalBody.querySelector('#copy-export').addEventListener('click', async ()=>{
-          try { await navigator.clipboard.writeText(payload); alert('Copied'); } catch(e){ alert('Copy failed'); }
-        });
-      });
-  });
-  el.clearAllBtn.addEventListener('click', ()=>{
-    if (!confirm('Clear all data (this cannot be undone)?')) return;
-    localStorage.removeItem(saveKey);
-    state.decks = []; state.currentDeckId = null; persist(); renderDecks(); selectDeck(null);
-  });
+      // advance
+      state.session.index++;
+      state.session.flipped = false;
+      if (state.session.index >= state.session.cards.length) {
+        renderStack(); updateProgress();
+        setTimeout(()=> { alert(`Session complete\n\n✓ ${deck.stats.correct||0} correct\n✗ ${deck.stats.incorrect||0}`); }, 80);
+      } else {
+        renderStack(); updateProgress();
+      }
+    }, 300);
+  }
 
-  el.openMenuBtn.addEventListener('click', ()=>{
-    const body = `<div style="display:grid;gap:8px">
-      <button id="about" class="btn ghost">About Memora</button>
-      <button id="theme" class="btn ghost">Toggle Theme (Demo)</button>
-    </div>`;
-    openModal('Menu', body, ()=>{
-      el.modalBody.querySelector('#about').addEventListener('click', ()=> { alert('Memora — Premium Flashcards\\nBuilt for speed and focus'); });
-      el.modalBody.querySelector('#theme').addEventListener('click', ()=> { alert('Theme toggle not implemented in demo'); });
+  // controls wiring
+  flipBtn.addEventListener('click', ()=>{
+    const top = stack.querySelector('.card');
+    if (!top) return;
+    state.session.flipped = !state.session.flipped;
+    top.classList.toggle('flipped', state.session.flipped);
+  });
+  prevBtn.addEventListener('click', ()=>{
+    if (state.session.index > 0) { state.session.index--; state.session.flipped=false; renderStack(); updateProgress(); }
+  });
+  nextBtn.addEventListener('click', ()=>{
+    if (state.session.index < (state.session.cards.length - 1)) { state.session.index++; state.session.flipped=false; renderStack(); updateProgress(); }
+  });
+  markRight.addEventListener('click', ()=> recordAnswer(true));
+  markWrong.addEventListener('click', ()=> recordAnswer(false));
+
+  // New & Edit deck (minimal modal)
+  document.getElementById('btnNewDeck').addEventListener('click', ()=> {
+    showModal(`<div style="font-weight:700;margin-bottom:8px">New deck</div>
+      <div class="form-row"><input id="newDeckName" placeholder="Deck name"></div>`, ()=>{
+      const name = document.getElementById('newDeckName').value.trim();
+      if (!name) { alert('Name required'); return; }
+      const deck = { id: uid(), name, cards: [], stats: { correct:0, incorrect:0 } };
+      state.decks.push(deck);
+      state.currentDeckId = deck.id;
+      save();
+      closeModal();
+      // auto-start with empty session (user can add cards later)
+      startSession();
+      updateDeckHeader();
     });
   });
 
-  /* ---------- Helper escapeHtml ---------- */
-  function escapeHtml(text){
-    if (text == null) return '';
-    return String(text).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
+  // Edit opens a tiny editor for adding a card
+  btnEdit.addEventListener('click', ()=> {
+    const d = currentDeck();
+    if (!d) return;
+    showModal(`<div style="font-weight:700;margin-bottom:8px">Add card — ${escape(d.name)}</div>
+      <div class="form-row"><input id="q" placeholder="Question"></div>
+      <div class="form-row"><textarea id="a" placeholder="Answer"></textarea></div>`, ()=>{
+      const q = document.getElementById('q').value.trim();
+      const a = document.getElementById('a').value.trim();
+      if (!q || !a) { alert('Both required'); return; }
+      d.cards.push({ q,a });
+      save();
+      closeModal();
+      startSession();
+      updateDeckHeader();
+    });
+  });
+
+  // simple modal helpers
+  function showModal(html, onSave){
+    modalInner.innerHTML = html + `<div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px">
+      <button class="ghost" id="mCancel">Cancel</button><button class="primary" id="mSave">Save</button></div>`;
+    modal.classList.add('show');
+    document.getElementById('mCancel').onclick = closeModal;
+    document.getElementById('mSave').onclick = ()=> onSave && onSave();
   }
+  function closeModal(){ modal.classList.remove('show'); modalInner.innerHTML = ''; }
 
-  /* ---------- Bootstrap ---------- */
-  load();
-  seedIfEmpty();
-  renderDecks();
-  // select first deck by default
-  if (state.decks.length) selectDeck(state.decks[0].id);
+  // keyboard
+  document.addEventListener('keydown', (e)=>{
+    // ignore when modal open
+    if (modal.classList.contains('show')) return;
+    if (e.key === 'ArrowLeft') prevBtn.click();
+    if (e.key === 'ArrowRight') nextBtn.click();
+    if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); flipBtn.click(); }
+    if (e.key === '1') markWrong.click();
+    if (e.key === '2') markRight.click();
+  });
 
-  // ensure UI updates on storage change (simple)
-  window.addEventListener('storage', ()=>{ load(); renderDecks(); selectDeck(state.decks[0]?.id || null); });
+  // initial render
+  updateDeckHeader();
+  startSession();
 
-  // expose minimal api for debugging
-  window.Memora = { state, persist, renderDecks, selectDeck };
+  function updateDeckHeader(){
+    const d = currentDeck();
+    deckTitle.textContent = d?.name || 'Flashcards';
+    const cards = d?.cards?.length || 0;
+    deckSub.textContent = `${cards} card${cards===1?'':'s'} • Tap to flip • Swipe to mark`;
+    updateProgress();
+  }
 
 })();
 </script>
