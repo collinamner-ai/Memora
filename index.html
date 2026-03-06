@@ -2,7 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#0F172A" />
+  <meta name="description" content="Memora - A beautiful flashcard learning app to remember more, faster" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Memora" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%233B82F6' width='180' height='180'/><text x='50%' y='50%' font-size='80' font-weight='bold' fill='white' text-anchor='middle' dominant-baseline='central' font-family='Outfit'>M</text></svg>" />
+  <link rel="manifest" href="manifest.json" />
   <title>Memora - Flashcard Learning</title>
 
   <!-- Premium Fonts -->
@@ -1015,7 +1023,7 @@
       if(decks.length === 0){
         decks.push({
           title:"How to Use Memora",
-          color: defaultColor,
+          color: #3B82F6,
           cards:[
             { q:"Welcome to Memora!", a:"This is a flashcard learning app. Each card has a question on the front and an answer on the back. Tap any card to flip it and reveal the answer." },
             { q:"How do I navigate cards?", a:"<b>Swipe left</b> to move to the next card.<br><b>Swipe right</b> to go back to the previous card.<br>You can also use the arrow buttons at the bottom." },
@@ -1050,6 +1058,11 @@
 
       setupRTEPlaceholders();
       closeModal(true);
+
+      // Register service worker for offline functionality
+      if('serviceWorker' in navigator){
+        navigator.serviceWorker.register('sw.js').catch(err => console.log('Service Worker registration failed:', err));
+      }
     });
 
     function haptic(){ if(navigator.vibrate) navigator.vibrate([10]); }
