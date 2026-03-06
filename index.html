@@ -311,7 +311,7 @@
       flex:1;
       aspect-ratio:1;
       max-width:56px;
-      border-radius:12px;
+      border-radius:999px;
       cursor:pointer;
       border:2px solid transparent;
       transition:var(--transition);
@@ -328,22 +328,9 @@
     .swatch::after{
       content:"";
       position:absolute; inset:2px;
-      border-radius:8px;
+      border-radius:999px;
       background:radial-gradient(120% 120% at 30% 30%, rgba(255,255,255,.22), transparent 65%);
       pointer-events:none;
-    }
-    
-    /* Gradient picker */
-    .swatch.gradient{
-      background:linear-gradient(135deg, #3B82F6 0%, #8B5CF6 25%, #EC4899 50%, #F59E0B 75%, #10B981 100%);
-      position:relative;
-    }
-    .swatch.gradient input[type="color"]{
-      position:absolute; 
-      inset:0;
-      opacity:0;
-      cursor:pointer;
-      border-radius:10px;
     }
 
     /* ============ CARDS ============ */
@@ -425,16 +412,12 @@
     .card-counter{
       position:absolute;
       top:12px; right:12px;
-      font-size:12px;
+      font-size:18px;
       font-weight:800;
-      background:rgba(0,0,0,.22);
-      padding:4px 8px;
-      border-radius:var(--radius-sm);
-      opacity:.95;
+      opacity:1;
     }
     .card-face.back .card-label,
     .card-face.back .card-counter{
-      background:rgba(15,23,42,.08);
       color:#0F172A;
       opacity:1;
     }
@@ -603,6 +586,13 @@
     }
     .deck-title-edit input{
       width:100%;
+      background:#FFFFFF;
+      color:#0F172A;
+      border:1px solid rgba(15,23,42,.12);
+    }
+    .deck-title-edit input:focus{
+      border-color:rgba(15,23,42,.25);
+      box-shadow:0 0 0 3px rgba(59,130,246,.08);
     }
 
     /* ============ FULLSCREEN POPUP EDITOR - PREMIUM ============ */
@@ -856,7 +846,7 @@
     </div>
 
     <div class="color-group">
-      <div class="color-label">Color</div>
+      <div class="color-label">Choose Card Colour</div>
       <div class="palette-wrap">
         <div class="color-palette" id="colorPalette"></div>
       </div>
@@ -946,7 +936,7 @@
     <div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Edit card">
       <div class="modal-top">
         <div class="modal-title">
-          <h3 id="modalTitle">Card 1</h3>
+          <h3 id="modalTitle">Q1</h3>
         </div>
         <button class="btn btn-circle danger" onclick="closeModal(true)" aria-label="Close editor panel">
           <svg><use href="#icon-x"/></svg>
@@ -986,10 +976,10 @@
     // modal state
     let editingCardIndex = null;
 
-    // 5 colors + gradient picker
+    // 5 colors + dark grey
     const deckColors = ["#3B82F6","#8B5CF6","#10B981","#F59E0B","#EF4444"];
     const defaultColor = deckColors[0];
-    let customColor = "#EC4899";
+    let customColor = "#4B5563";
 
     function save(){ localStorage.setItem("flashDecks", JSON.stringify(decks)); }
 
@@ -1018,11 +1008,7 @@
       setupColorPalette();
       renderDecks();
 
-      const goDecks = () => showScreen("deckScreen");
-      const splashTimer = setTimeout(goDecks, 4200);
-      const splash = document.getElementById("splash");
-      splash.addEventListener("click", ()=>{ clearTimeout(splashTimer); goDecks(); }, { once:true });
-      splash.addEventListener("touchstart", ()=>{ clearTimeout(splashTimer); goDecks(); }, { once:true, passive:true });
+      // Splash stays until button is pressed
 
       setupRTEPlaceholders();
       closeModal(true);
@@ -1049,28 +1035,21 @@
         palette.appendChild(sw);
       });
 
-      // Gradient/custom color picker
-      const gradient = document.createElement("div");
-      gradient.className = "swatch gradient";
-      gradient.id = "gradientSwatch";
-      gradient.title = "Custom color";
+      // Dark grey swatch
+      const darkGrey = document.createElement("div");
+      darkGrey.className = "swatch";
+      darkGrey.id = "darkGreySwatch";
+      darkGrey.style.background = customColor;
+      darkGrey.title = "Dark grey";
+      darkGrey.onclick = ()=>selectColor(customColor,true);
 
-      const input = document.createElement("input");
-      input.type="color";
-      input.value=customColor;
-      input.oninput = (e)=>{ customColor = e.target.value; selectColor(customColor,true); };
-      input.onclick = (e)=>e.stopPropagation();
-
-      gradient.appendChild(input);
-      gradient.onclick = ()=>selectColor(customColor,true);
-
-      palette.appendChild(gradient);
+      palette.appendChild(darkGrey);
       selectColor(defaultColor,false);
     }
 
     function selectColor(color,isCustom){
       document.querySelectorAll(".swatch").forEach(s=>s.classList.remove("selected"));
-      if(isCustom) document.getElementById("gradientSwatch").classList.add("selected");
+      if(isCustom) document.getElementById("darkGreySwatch").classList.add("selected");
       else {
         const el = document.querySelector('[data-color="'+color+'"]');
         if(el) el.classList.add("selected");
@@ -1079,7 +1058,7 @@
 
     function getSelectedColor(){
       const fixed = document.querySelector(".swatch.selected[data-color]");
-      const custom = document.querySelector("#gradientSwatch.selected");
+      const custom = document.querySelector("#darkGreySwatch.selected");
       if(fixed) return fixed.dataset.color;
       if(custom) return customColor;
       return defaultColor;
@@ -1415,7 +1394,7 @@
 
     function openModalForEdit(i){
       editingCardIndex = i;
-      document.getElementById("modalTitle").innerText = "Card " + (i+1);
+      document.getElementById("modalTitle").innerText = "Q" + (i+1);
       setRTEContent(document.getElementById("newQ"), currentDeck.cards[i].q || "");
       setRTEContent(document.getElementById("newA"), currentDeck.cards[i].a || "");
       openModal();
@@ -1453,7 +1432,7 @@
       haptic();
     }
 
-    /* -------- Formatting UI: active highlight + list icon toggles paragraph/list -------- */
+    /* -------- Formatting UI: active highlight + list icon stays as bullets -------- */
     const btnBold = () => document.getElementById("btnBold");
     const btnList = () => document.getElementById("btnList");
     const listIcon = () => document.getElementById("listIcon");
@@ -1501,14 +1480,8 @@
       const isList = document.queryCommandState("insertUnorderedList");
       btnList().classList.toggle("active", !!isList);
 
-      // icon swap: list -> paragraph when list is ON
-      if(isList){
-        listIcon().innerHTML = '<use href="#icon-paragraph"></use>';
-        btnList().title = "Paragraph";
-      } else {
-        listIcon().innerHTML = '<use href="#icon-list"></use>';
-        btnList().title = "Bullets";
-      }
+      // Keep bullets icon always - just change button color when active
+      // Icon never changes
     }
 
     /* -------- move/delete -------- */
