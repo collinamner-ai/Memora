@@ -1008,11 +1008,21 @@
       decks = JSON.parse(localStorage.getItem("flashDecks")) || [];
       if(decks.length === 0){
         decks.push({
-          title:"Welcome to Memora",
+          title:"How to Use Memora",
           color: defaultColor,
           cards:[
-            { q:"Swipe left or right", a:"Drag the card to move through the deck." },
-            { q:"Tap to flip", a:"<b>Tap</b> the card to reveal the answer." }
+            { q:"Welcome to Memora!", a:"This is a flashcard learning app. Each card has a question on the front and an answer on the back. Tap any card to flip it and reveal the answer." },
+            { q:"How do I navigate cards?", a:"<b>Swipe left</b> to move to the next card.<br><b>Swipe right</b> to go back to the previous card.<br>You can also use the arrow buttons at the bottom." },
+            { q:"How do I flip a card?", a:"<b>Tap</b> the card to flip it over and reveal the answer. Tap again to flip it back to the question." },
+            { q:"How do I create a new deck?", a:"Go to <b>Your decks</b> and enter a deck name in the text field. Choose a color for your deck, then tap <b>Create Deck</b>." },
+            { q:"How do I customize deck colors?", a:"When creating a deck, choose from 5 preset colors or select the dark grey swatch for a custom neutral option." },
+            { q:"How do I add cards to my deck?", a:"Open a deck, tap the <b>edit icon</b> (pencil) in the top right. Then tap <b>Add card</b> to create new flashcards." },
+            { q:"How do I edit a card?", a:"In edit mode, tap the <b>edit icon</b> next to any card to open the card editor. You can format text with <b>bold</b> and <b>bullet points</b>." },
+            { q:"How do I delete a card?", a:"In edit mode, tap the <b>red X button</b> next to a card. You'll be asked to confirm before it's deleted." },
+            { q:"How do I reorder cards?", a:"In edit mode, use the <b>up and down arrow buttons</b> next to each card to move it to a new position." },
+            { q:"How do I delete a deck?", a:"From <b>Your decks</b>, press and hold on a deck card for about 1 second. You'll be asked to confirm the deletion." },
+            { q:"How do I mark cards as reviewed?", a:"After studying a card, tap the green <b>check button</b> to mark it as reviewed. This helps track your progress." },
+            { q:"Ready to start learning?", a:"Go back to <b>Your decks</b> and create your first deck! Start with a topic you want to learn, add questions and answers, then practice by studying the cards." }
           ]
         });
         save();
