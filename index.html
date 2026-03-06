@@ -848,9 +848,7 @@
         <p class="tagline">Remember more, faster</p>
       </div>
 
-      <button class="btn btn-primary" onclick="zoomLogoAndStart()" style="margin-top: 16px; max-width: 280px; font-size: 15px;">
-        Let's do this
-      </button>
+
     </div>
   </div>
 
@@ -1000,7 +998,7 @@
     // 5 colors + dark grey
     const deckColors = ["#3B82F6","#8B5CF6","#10B981","#F59E0B","#EF4444"];
     const defaultColor = deckColors[0];
-    let customColor = "#7393B3";
+    let customColor = "#4B5563";
 
     function save(){ localStorage.setItem("flashDecks", JSON.stringify(decks)); }
 
@@ -1009,7 +1007,7 @@
       if(decks.length === 0){
         decks.push({
           title:"How to Use Memora",
-          color: #3B82F6,
+          color: defaultColor,
           cards:[
             { q:"Welcome to Memora!", a:"This is a flashcard learning app. Each card has a question on the front and an answer on the back. Tap any card to flip it and reveal the answer." },
             { q:"How do I navigate cards?", a:"<b>Swipe left</b> to move to the next card.<br><b>Swipe right</b> to go back to the previous card.<br>You can also use the arrow buttons at the bottom." },
@@ -1039,7 +1037,8 @@
       setupColorPalette();
       renderDecks();
 
-      // Splash stays until button is pressed
+      // Automatically start splash animation after 3.5 seconds
+      setTimeout(startSplashAnimation, 3500);
 
       setupRTEPlaceholders();
       closeModal(true);
@@ -1047,12 +1046,7 @@
 
     function haptic(){ if(navigator.vibrate) navigator.vibrate([10]); }
 
-    function startApp(){
-      showScreen("deckScreen");
-      haptic();
-    }
-
-    function zoomLogoAndStart(){
+    function startSplashAnimation(){
       const splashContainer = document.querySelector(".splash-container");
       const logoWrapper = document.querySelector(".splash-logo-wrapper");
       
