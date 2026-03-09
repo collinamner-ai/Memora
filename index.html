@@ -301,40 +301,6 @@
       z-index:2;
     }
 
-    .deck-pin-badge{
-      position:absolute;
-      bottom:10px; right:10px;
-      width:36px; height:36px;
-      border-radius:var(--radius-sm);
-      display:flex; align-items:center; justify-content:center;
-      font-size:16px;
-      background:rgba(59,130,246,.25);
-      border:1px solid rgba(59,130,246,.50);
-      backdrop-filter: blur(8px);
-      z-index:2;
-      cursor:pointer;
-      transition:var(--transition);
-      padding:0;
-      margin:0;
-      -webkit-appearance:none;
-      appearance:none;
-    }
-    .deck-pin-badge:active{
-      transform:scale(.95);
-      background:var(--primary);
-      border-color:var(--primary);
-    }
-    .deck-pin-badge svg{
-      width:18px;
-      height:18px;
-      stroke:currentColor;
-      stroke-width:2.5;
-      fill:none;
-      stroke-linecap:round;
-      stroke-linejoin:round;
-      color:#3B82F6;
-    }
-
     .input-group{display:flex; flex-direction:column; gap:12px; margin-bottom:8px}
     input[type="text"]{
       background:var(--bg-secondary);
@@ -1608,14 +1574,14 @@
         decks.push(createWelcomeDeckData());
         save();
       } else {
-        // Always ensure Welcome deck exists and has all 12 cards
+        // Always ensure Welcome deck exists and has all 20 cards
         const welcomeIndex = decks.findIndex(d => d.title === "How to Use Memora");
         if(welcomeIndex === -1){
           // Welcome deck doesn't exist, add it at the beginning
           decks.unshift(createWelcomeDeckData());
           save();
-        } else if(decks[welcomeIndex].cards.length !== 12 || !decks[welcomeIndex].pinned){
-          // Update Welcome deck if it's incomplete or not pinned
+        } else if(decks[welcomeIndex].cards.length !== 20){
+          // Update Welcome deck if it's incomplete
           decks[welcomeIndex] = createWelcomeDeckData();
           save();
         }
@@ -1626,20 +1592,26 @@
       return {
         title:"How to Use Memora",
         color: defaultColor,
-        pinned: true,
         cards:[
           { q:"Welcome to Memora!", a:"This is a flashcard learning app. Each card has a question on the front and an answer on the back. Tap any card to flip it and reveal the answer." },
           { q:"How do I navigate cards?", a:"<b>Swipe left</b> to move to the next card.<br><b>Swipe right</b> to go back to the previous card.<br>You can also use the arrow buttons at the bottom." },
           { q:"How do I flip a card?", a:"<b>Tap</b> the card to flip it over and reveal the answer. Tap again to flip it back to the question." },
           { q:"How do I create a new deck?", a:"Go to <b>Your decks</b> and enter a deck name in the text field. Choose a colour for your deck, then tap <b>Create Deck</b>." },
-          { q:"How do I customize deck colors?", a:"When creating a deck, choose from 5 preset colors or select the dark grey swatch for a custom neutral option." },
+          { q:"How do I customise deck colours?", a:"When creating a deck, choose from 5 preset colours or select the dark grey swatch for a custom neutral option." },
           { q:"How do I add cards to my deck?", a:"Open a deck, tap the <b>edit icon</b> (pencil) in the top right. Then tap <b>Add card</b> to create new flashcards." },
           { q:"How do I edit a card?", a:"In edit mode, tap the <b>edit icon</b> next to any card to open the card editor. You can format text with <b>bold</b> and <b>bullet points</b>." },
           { q:"How do I delete a card?", a:"In edit mode, tap the <b>red X button</b> next to a card. You'll be asked to confirm before it's deleted." },
           { q:"How do I reorder cards?", a:"In edit mode, use the <b>up and down arrow buttons</b> next to each card to move it to a new position." },
           { q:"How do I delete a deck?", a:"From <b>Your decks</b>, press and hold on a deck card for about 1 second. You'll be asked to confirm the deletion." },
           { q:"How do I mark cards as reviewed?", a:"After studying a card, tap the green <b>check button</b> to mark it as reviewed. This helps track your progress." },
-          { q:"Ready to start learning?", a:"Go back to <b>Your decks</b> and create your first deck! Start with a topic you want to learn, add questions and answers, then practice by studying the cards." }
+          { q:"What is Quiz Mode?", a:"Quiz Mode tests your knowledge with timed answer reveals. Open a deck and tap the <b>lightbulb icon</b> to start. Cards automatically flip after a delay you choose, so you can test yourself before seeing the answer." },
+          { q:"How do I start a quiz?", a:"Open a deck, then tap the <b>lightbulb icon</b> in the controls. Set your preferred <b>Answer Reveal</b> time using the +/− buttons (1-30 seconds), then tap <b>Start Quiz</b> to begin." },
+          { q:"How do I answer quiz questions?", a:"In Quiz Mode, read the question, think of your answer, then wait for the card to flip. When the answer appears, tap the <b>green tick</b> if you were correct, or the <b>red X</b> if you were incorrect. Your score is recorded automatically." },
+          { q:"What happens at the end of a quiz?", a:"After answering the last card, a results popup appears showing your percentage score and how many questions you got correct. Tap <b>Continue</b> to return to normal study mode. Your score is automatically saved." },
+          { q:"How do I view my quiz stats?", a:"Open a deck and tap the <b>chart icon</b> in the controls to view your quiz history. You'll see a line chart showing your score over time and a table with dates and scores. Stats are saved for each deck separately." },
+          { q:"What can I learn from the stats chart?", a:"The stats chart displays your quiz scores as a line over time. Watch your score rise as you improve! The chart is specific to the deck you're studying, so you can track progress for different topics independently." },
+          { q:"How do I reset my stats?", a:"In the Quiz Stats view, tap <b>Reset Statistics</b> at the bottom. You'll be asked to confirm. This removes all quiz history for that deck, so use it carefully!" },
+          { q:"Ready to start learning?", a:"Go back to <b>Your decks</b> and create your first deck! Start with a topic you want to learn, add questions and answers, then practice using both Study Mode and Quiz Mode to test yourself." }
         ]
       };
     }
@@ -1770,15 +1742,7 @@
       const deckList = document.getElementById("deckList");
       deckList.innerHTML = "";
 
-      // Sort decks: pinned first, then unpinned
-      const sortedDecks = decks.map((d,i) => ({...d, originalIndex: i})).sort((a,b) => {
-        if(a.pinned && !b.pinned) return -1;
-        if(!a.pinned && b.pinned) return 1;
-        return 0;
-      });
-
-      sortedDecks.forEach((deck)=>{
-        const i = deck.originalIndex;
+      decks.forEach((deck, i)=>{
         const card = document.createElement("div");
         card.className = "deck-card";
         card.style.background = deck.color;
@@ -1800,20 +1764,6 @@
         badge.style.background = isLightColor(deck.color) ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.22)";
         badge.style.borderColor = isLightColor(deck.color) ? "rgba(15,23,42,0.18)" : "rgba(255,255,255,0.18)";
         card.appendChild(badge);
-
-        // Pin badge - always visible for toggling
-        const pinBadge = document.createElement("button");
-        pinBadge.className = "deck-pin-badge";
-        pinBadge.innerHTML = '<svg><use href="#icon-pin"/></svg>';
-        if(deck.pinned){
-          pinBadge.style.background = "var(--primary)";
-          pinBadge.style.borderColor = "var(--primary)";
-        }
-        pinBadge.onclick = (e)=>{
-          e.stopPropagation();
-          togglePinDeck(i);
-        };
-        card.appendChild(pinBadge);
 
         let pressTimer;
         const handlePress = ()=>{
@@ -1837,24 +1787,11 @@
 
         card.addEventListener("click", (e)=>{
           if(pressTimer) clearTimeout(pressTimer);
-          // Only open if not clicking on pin badge or its children
-          const target = e.target;
-          const isClickOnPin = target.classList.contains("deck-pin-badge") || 
-                               target.closest(".deck-pin-badge");
-          if(!isClickOnPin){
-            openDeck(i);
-          }
+          openDeck(i);
         });
 
         deckList.appendChild(card);
       });
-    }
-
-    function togglePinDeck(i){
-      decks[i].pinned = !decks[i].pinned;
-      save();
-      renderDecks();
-      haptic();
     }
 
     function openDeck(i){
