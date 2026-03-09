@@ -18,6 +18,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
+  <!-- Chart.js for stats visualization -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
   <style>
     :root{
       --primary:#3B82F6;
@@ -298,6 +301,40 @@
       z-index:2;
     }
 
+    .deck-pin-badge{
+      position:absolute;
+      bottom:10px; right:10px;
+      width:36px; height:36px;
+      border-radius:var(--radius-sm);
+      display:flex; align-items:center; justify-content:center;
+      font-size:16px;
+      background:rgba(59,130,246,.25);
+      border:1px solid rgba(59,130,246,.50);
+      backdrop-filter: blur(8px);
+      z-index:2;
+      cursor:pointer;
+      transition:var(--transition);
+      padding:0;
+      margin:0;
+      -webkit-appearance:none;
+      appearance:none;
+    }
+    .deck-pin-badge:active{
+      transform:scale(.95);
+      background:var(--primary);
+      border-color:var(--primary);
+    }
+    .deck-pin-badge svg{
+      width:18px;
+      height:18px;
+      stroke:currentColor;
+      stroke-width:2.5;
+      fill:none;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+      color:#3B82F6;
+    }
+
     .input-group{display:flex; flex-direction:column; gap:12px; margin-bottom:8px}
     input[type="text"]{
       background:var(--bg-secondary);
@@ -525,6 +562,44 @@
     }
     .control-btn.primary svg{width:28px;height:28px}
 
+    /* ============ QUIZ CONTROLS ============ */
+    .quiz-controls{
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      margin-top:14px;
+    }
+    .quiz-control-btn{
+      width:60px;height:60px;
+      border-radius:999px;
+      border:2px solid var(--border);
+      cursor:pointer;
+      transition:var(--transition);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:var(--bg-tertiary);
+      color:white;
+      user-select:none;
+      touch-action:manipulation;
+      font-weight:700;
+    }
+    .quiz-control-btn.incorrect{
+      background:#EF4444;
+      border-color:#EF4444;
+    }
+    .quiz-control-btn.correct{
+      background:#10B981;
+      border-color:#10B981;
+    }
+    .quiz-control-btn:active{transform:scale(.92)}
+    .quiz-control-btn svg{
+      width:28px;height:28px;
+      stroke:currentColor;
+      stroke-width:2.5;
+      fill:none;
+    }
+
     /* ============ EDITOR SCREEN - PREMIUM ============ */
     .editor-container{
       flex:1;
@@ -623,12 +698,17 @@
     }
     .deck-title-edit input{
       width:100%;
-      background:#FFFFFF;
-      color:#0F172A;
-      border:1px solid rgba(15,23,42,.12);
+      background:var(--bg-secondary);
+      color:var(--text-primary);
+      border:1px solid rgba(255,255,255,.10);
+      font-family:'Poppins', sans-serif;
+      font-weight:500;
+      transition:var(--transition);
     }
     .deck-title-edit input:focus{
-      border-color:rgba(15,23,42,.25);
+      border-color:var(--primary);
+      background:#FFFFFF;
+      color:#0F172A;
       box-shadow:0 0 0 3px rgba(59,130,246,.08);
     }
 
@@ -692,6 +772,7 @@
       gap:8px;
       align-items:center;
       flex-wrap:wrap;
+      justify-content:flex-end;
     }
 
     /* SQUARE FORMATTING BUTTONS WITH ROUNDED CORNERS */
@@ -742,8 +823,8 @@
     }
 
     .rte{
-      background:rgba(15,23,42,.55);
-      border:1px solid rgba(255,255,255,.14);
+      background:var(--bg-secondary);
+      border:1px solid rgba(255,255,255,.10);
       border-radius:var(--radius-md);
       padding:12px 14px;
       min-height:120px;
@@ -757,22 +838,34 @@
       transition:var(--transition);
     }
 
-    /* ANSWER FIELD - WHITE WITH BLACK TEXT & INCREASED SIZE */
+    /* ANSWER FIELD - WHITE WITH BLACK TEXT WHEN FOCUSED & INCREASED SIZE */
     .rte.answer-field{
-      min-height:200px;
-      background:#FFFFFF;
-      color:#0F172A;
-      border:1px solid rgba(15,23,42,.12);
+      min-height:140px;
+      background:var(--bg-secondary);
+      color:var(--text-primary);
+      border:1px solid rgba(255,255,255,.10);
     }
 
     .rte.answer-field:focus{
-      border-color:rgba(15,23,42,.25);
-      box-shadow:0 0 0 3px rgba(59,130,246,.08);
+      background:#FFFFFF;
+      color:#0F172A;
+      border-color:var(--primary);
+      box-shadow:0 0 0 3px rgba(59,130,246,.12);
+    }
+
+    /* QUESTION FIELD - WHITE WITH BLACK TEXT WHEN FOCUSED */
+    #newQ:focus{
+      background:#FFFFFF;
+      color:#0F172A;
+      border-color:var(--primary);
+      box-shadow:0 0 0 3px rgba(59,130,246,.12);
     }
 
     .rte:focus{
+      background:rgba(15,23,42,.55);
       border-color:rgba(59,130,246,.85);
       box-shadow:0 0 0 3px rgba(59,130,246,.12);
+      color:var(--text-primary);
     }
     .rte ul{padding-left:22px}
     .rte li{margin:6px 0}
@@ -801,6 +894,286 @@
     }
     .btn-ghost:active{transform:scale(.99)}
 
+    /* ============ QUIZ MODE OVERLAY ============ */
+    .quiz-overlay{
+      position:absolute;
+      inset:0;
+      background:rgba(0,0,0,.60);
+      opacity:0;
+      pointer-events:none;
+      transition:var(--transition);
+    }
+    .quiz-overlay.active{opacity:1; pointer-events:auto}
+
+    .quiz-modal{
+      position:absolute;
+      inset:0;
+      background:linear-gradient(180deg, rgba(30,41,59,.98), rgba(15,23,42,.98));
+      transform:translateY(6px);
+      opacity:0;
+      pointer-events:none;
+      transition:var(--transition);
+      display:flex;
+      flex-direction:column;
+      padding:16px;
+      gap:16px;
+    }
+    .quiz-modal.active{
+      transform:translateY(0);
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .quiz-header{
+      font-size:24px;
+      font-weight:800;
+      font-family:'Outfit', sans-serif;
+      letter-spacing:-0.5px;
+      color:var(--text-primary);
+    }
+
+    .quiz-setting{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .quiz-setting-label{
+      font-size:14px;
+      font-weight:700;
+      color:var(--text-secondary);
+      font-family:'Poppins', sans-serif;
+    }
+    .quiz-slider-container{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .quiz-slider-container input[type="range"]{
+      flex:1;
+      height:6px;
+      border-radius:999px;
+      background:var(--bg-tertiary);
+      outline:none;
+      -webkit-appearance:none;
+      appearance:none;
+    }
+    .quiz-slider-container input[type="range"]::-webkit-slider-thumb{
+      -webkit-appearance:none;
+      appearance:none;
+      width:24px;
+      height:24px;
+      border-radius:999px;
+      background:var(--primary);
+      cursor:pointer;
+      box-shadow:0 2px 8px rgba(59,130,246,.4);
+    }
+    .quiz-slider-container input[type="range"]::-moz-range-thumb{
+      width:24px;
+      height:24px;
+      border-radius:999px;
+      background:var(--primary);
+      cursor:pointer;
+      border:none;
+      box-shadow:0 2px 8px rgba(59,130,246,.4);
+    }
+    .quiz-slider-value{
+      font-size:16px;
+      font-weight:800;
+      color:var(--text-primary);
+      min-width:50px;
+      text-align:center;
+      font-family:'Poppins', sans-serif;
+    }
+
+    .quiz-delay-input{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      justify-content:center;
+    }
+    .quiz-delay-btn{
+      width:44px;
+      height:44px;
+      border-radius:var(--radius-md);
+      border:1.5px solid rgba(255,255,255,.15);
+      background:rgba(51,65,85,.65);
+      color:var(--text-primary);
+      cursor:pointer;
+      font-weight:700;
+      font-size:20px;
+      transition:var(--transition);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      user-select:none;
+      font-family:'Poppins', sans-serif;
+    }
+    .quiz-delay-btn:active{transform:scale(.96); background:var(--primary); color:white}
+    
+    #revealDelayInput{
+      width:80px;
+      height:44px;
+      border:1.5px solid rgba(255,255,255,.15);
+      background:rgba(51,65,85,.65);
+      border-radius:var(--radius-md);
+      color:var(--text-primary);
+      font-size:20px;
+      font-weight:800;
+      text-align:center;
+      font-family:'Poppins', sans-serif;
+    }
+
+    .quiz-actions{
+      display:flex;
+      gap:10px;
+      margin-top:auto;
+    }
+    .btn-quiz-start{
+      width:100%;
+      background:var(--success);
+      color:white;
+      border:none;
+      padding:12px;
+      border-radius:var(--radius-md);
+      font-weight:700;
+      font-size:16px;
+      cursor:pointer;
+      transition:var(--transition);
+      font-family:'Poppins', sans-serif;
+    }
+    .btn-quiz-start:active{transform:scale(.98)}
+    .btn-quiz-cancel{
+      width:100%;
+      background:rgba(255,255,255,.06);
+      color:var(--text-primary);
+      border:1px solid rgba(255,255,255,.10);
+      padding:12px;
+      border-radius:var(--radius-md);
+      font-weight:700;
+      font-size:16px;
+      cursor:pointer;
+      transition:var(--transition);
+      font-family:'Poppins', sans-serif;
+    }
+    .btn-quiz-cancel:active{transform:scale(.98)}
+
+    /* ============ QUIZ RESULTS & STATS ============ */
+    .stats-modal{
+      position:absolute;
+      inset:0;
+      background:linear-gradient(180deg, rgba(30,41,59,.98), rgba(15,23,42,.98));
+      transform:translateY(6px);
+      opacity:0;
+      pointer-events:none;
+      transition:var(--transition);
+      display:flex;
+      flex-direction:column;
+      padding:16px;
+      gap:12px;
+      overflow-y:auto;
+    }
+    .stats-modal.active{
+      transform:translateY(0);
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .stats-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:8px;
+    }
+    .stats-title{
+      font-size:24px;
+      font-weight:800;
+      font-family:'Outfit', sans-serif;
+      letter-spacing:-0.5px;
+      color:var(--text-primary);
+    }
+    .stats-close-btn{
+      width:44px;height:44px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--bg-tertiary);
+      color:var(--text-primary);
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:var(--transition);
+    }
+    .stats-close-btn:active{background:var(--border)}
+    .stats-close-btn svg{
+      width:20px;height:20px;
+      stroke:currentColor;
+      stroke-width:2.5;
+    }
+
+    .stats-content{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      gap:20px;
+    }
+
+    .chart-container{
+      position:relative;
+      height:280px;
+      background:rgba(30,41,59,.35);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:var(--radius-lg);
+      padding:16px;
+    }
+
+    .stats-table{
+      width:100%;
+      border-collapse:collapse;
+      background:rgba(30,41,59,.35);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:var(--radius-lg);
+      overflow:hidden;
+    }
+    .stats-table th{
+      background:rgba(51,65,85,.65);
+      padding:12px;
+      text-align:left;
+      font-size:12px;
+      font-weight:800;
+      color:var(--text-secondary);
+      text-transform:uppercase;
+      letter-spacing:.6px;
+      font-family:'Outfit', sans-serif;
+    }
+    .stats-table td{
+      padding:12px;
+      border-top:1px solid rgba(255,255,255,.08);
+      font-size:14px;
+      color:var(--text-primary);
+      font-family:'Poppins', sans-serif;
+    }
+    .stats-table tr:last-child td{border-bottom:none}
+
+    .stats-actions{
+      display:flex;
+      gap:10px;
+      padding-bottom: max(60px, env(safe-area-inset-bottom));
+    }
+    .btn-reset-stats{
+      flex:1;
+      background:rgba(239,68,68,.20);
+      border:1px solid rgba(239,68,68,.35);
+      color:white;
+      padding:12px;
+      border-radius:var(--radius-md);
+      font-weight:700;
+      font-size:14px;
+      cursor:pointer;
+      transition:var(--transition);
+      font-family:'Poppins', sans-serif;
+    }
+    .btn-reset-stats:active{transform:scale(.98)}
+
     @media (min-width:600px){
       .screen{
         max-width:480px;
@@ -824,6 +1197,105 @@
     }
     .empty-icon{font-size:48px; opacity:.55}
     .empty-text{font-size:16px; font-weight:800; font-family:'Poppins', sans-serif}
+
+    /* ============ COACH MARKS - ONBOARDING ============ */
+    .coach-mark-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.70);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity 0.3s ease-out;
+      z-index:999;
+    }
+    .coach-mark-overlay.active{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .coach-mark-modal{
+      position:fixed;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%) scale(0.9);
+      opacity:0;
+      pointer-events:none;
+      transition:all 0.3s ease-out;
+      z-index:1000;
+    }
+    .coach-mark-modal.active{
+      transform:translate(-50%, -50%) scale(1);
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .coach-mark-content{
+      background:linear-gradient(135deg, rgba(30,41,59,.98), rgba(15,23,42,.98));
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:var(--radius-lg);
+      padding:28px;
+      max-width:320px;
+      backdrop-filter:blur(8px);
+      box-shadow:0 20px 60px rgba(0,0,0,.4);
+    }
+
+    .coach-mark-title{
+      font-size:20px;
+      font-weight:800;
+      font-family:'Outfit', sans-serif;
+      letter-spacing:-0.5px;
+      color:var(--text-primary);
+      margin-bottom:12px;
+    }
+
+    .coach-mark-text{
+      font-size:14px;
+      font-weight:500;
+      line-height:1.6;
+      color:var(--text-secondary);
+      margin-bottom:20px;
+    }
+
+    .coach-mark-checkbox{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:16px;
+      cursor:pointer;
+    }
+
+    .coach-mark-checkbox input[type="checkbox"]{
+      width:20px;
+      height:20px;
+      cursor:pointer;
+      accent-color:var(--primary);
+    }
+
+    .coach-mark-checkbox label{
+      font-size:13px;
+      font-weight:600;
+      color:var(--text-secondary);
+      cursor:pointer;
+      user-select:none;
+    }
+
+    .coach-mark-button{
+      width:100%;
+      background:var(--primary);
+      color:white;
+      border:none;
+      padding:12px;
+      border-radius:var(--radius-md);
+      font-weight:700;
+      font-size:14px;
+      cursor:pointer;
+      transition:var(--transition);
+      font-family:'Poppins', sans-serif;
+    }
+    .coach-mark-button:active{
+      transform:scale(.98);
+      background:var(--primary-dark);
+    }
   </style>
 </head>
 
@@ -839,8 +1311,11 @@
     <symbol id="icon-edit" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></symbol>
     <symbol id="icon-bold" viewBox="0 0 24 24"><path d="M6 4h7a4 4 0 0 1 0 8H6zM6 12h8a4 4 0 1 1 0 8H6z"/></symbol>
     <symbol id="icon-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></symbol>
+    <symbol id="icon-lightbulb" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V15a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7zM9 18h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-1zm3 3h0"/></symbol>
+    <symbol id="icon-stats" viewBox="0 0 24 24"><path d="M3 3v18a1 1 0 0 0 1 1h17M8 16v-5M12 16v-8M16 16v-3"/></symbol>
     <symbol id="icon-paragraph" viewBox="0 0 24 24"><path d="M13 4h5M13 8h5M13 12h5"/><path d="M6 4h5a4 4 0 0 1 0 8H9v8"/></symbol>
     <symbol id="icon-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="icon-pin" viewBox="0 0 24 24"><path d="M12 2L9 9H3v6h18v-6h-6L12 2Z"/></symbol>
   </svg>
 
   <!-- SPLASH - PREMIUM REDESIGN -->
@@ -924,7 +1399,11 @@
       </div>
     </div>
 
-    <div class="controls">
+    <div class="controls" id="normalControls">
+      <button class="control-btn" onclick="openQuizMode()" title="Quiz Mode" aria-label="Quiz Mode">
+        <svg><use href="#icon-lightbulb"/></svg>
+      </button>
+
       <button class="control-btn" onclick="prevCardWithAnimation()" title="Previous" aria-label="Previous">
         <svg><use href="#icon-arrow-left"/></svg>
       </button>
@@ -935,6 +1414,19 @@
 
       <button class="control-btn" onclick="nextCardWithAnimation()" title="Next" aria-label="Next">
         <svg><use href="#icon-arrow-right"/></svg>
+      </button>
+
+      <button class="control-btn" onclick="openStatsView()" title="View Stats" aria-label="View Stats">
+        <svg><use href="#icon-stats"/></svg>
+      </button>
+    </div>
+
+    <div class="quiz-controls" id="quizControls" style="display:none;">
+      <button class="quiz-control-btn incorrect" onclick="recordQuizAnswer(false)" title="Incorrect" aria-label="Incorrect">
+        <svg><use href="#icon-x"/></svg>
+      </button>
+      <button class="quiz-control-btn correct" onclick="recordQuizAnswer(true)" title="Correct" aria-label="Correct">
+        <svg><use href="#icon-check"/></svg>
       </button>
     </div>
 
@@ -978,28 +1470,88 @@
         </button>
       </div>
 
-      <div class="toolbar">
-        <button class="tool-btn" id="btnBold" onclick="toggleBold()" title="Bold">
-          <svg><use href="#icon-bold"/></svg>
-        </button>
-
-        <button class="tool-btn" id="btnList" onclick="toggleBullets()" title="Bullets / Paragraph">
-          <svg id="listIcon"><use href="#icon-list"/></svg>
-        </button>
-      </div>
-
       <div class="modal-body">
         <div class="field-label">Question</div>
         <div id="newQ" class="rte" contenteditable="true" spellcheck="true" data-placeholder="Question..."></div>
 
         <div class="field-label">Answer</div>
         <div id="newA" class="rte answer-field" contenteditable="true" spellcheck="true" data-placeholder="Answer..."></div>
+
+        <div class="toolbar">
+          <button class="tool-btn" id="btnBold" onclick="toggleBold()" title="Bold">
+            <svg><use href="#icon-bold"/></svg>
+          </button>
+
+          <button class="tool-btn" id="btnList" onclick="toggleBullets()" title="Bullets / Paragraph">
+            <svg id="listIcon"><use href="#icon-list"/></svg>
+          </button>
+        </div>
       </div>
 
       <div class="modal-actions">
         <button class="btn btn-ghost" onclick="closeModal(true)">Cancel</button>
         <button class="btn btn-primary" onclick="addOrSaveCard()">Save</button>
       </div>
+    </div>
+  </div>
+
+  <!-- QUIZ MODE OVERLAY -->
+  <div id="quizOverlay" class="quiz-overlay" onclick="closeQuizMode(true)"></div>
+  <div id="quizModal" class="quiz-modal" role="dialog" aria-modal="true" aria-label="Quiz settings">
+    <div class="quiz-header">Quiz Mode</div>
+    
+    <div class="quiz-setting">
+      <div class="quiz-setting-label">Answer Reveal (seconds)</div>
+      <div class="quiz-delay-input">
+        <button class="quiz-delay-btn" onclick="decreaseDelay()" title="Decrease">−</button>
+        <input type="text" id="revealDelayInput" value="5" readonly />
+        <button class="quiz-delay-btn" onclick="increaseDelay()" title="Increase">+</button>
+      </div>
+    </div>
+
+    <div style="flex:1;"></div>
+
+    <div class="quiz-actions">
+      <button class="btn-quiz-cancel" onclick="closeQuizMode(true)">Cancel</button>
+      <button class="btn-quiz-start" onclick="startQuiz()">Start Quiz</button>
+    </div>
+  </div>
+
+  <!-- STATS VIEW -->
+  <div id="statsOverlay" class="quiz-overlay" onclick="closeStatsView(true)"></div>
+  <div id="statsModal" class="stats-modal" role="dialog" aria-modal="true" aria-label="Quiz statistics">
+    <div class="stats-header">
+      <div class="stats-title">Quiz Statistics</div>
+      <button class="stats-close-btn" onclick="closeStatsView(true)" aria-label="Close stats">
+        <svg><use href="#icon-x"/></svg>
+      </button>
+    </div>
+
+    <div class="stats-content" id="statsContent">
+      <div style="text-align:center; color:var(--text-secondary); padding:40px 0;">
+        <div class="empty-icon">📊</div>
+        <div style="font-size:14px; margin-top:12px;">No quiz history yet. Start a quiz to see your progress!</div>
+      </div>
+    </div>
+
+    <div class="stats-actions" id="statsActions" style="display:none;">
+      <button class="btn-reset-stats" onclick="resetStats()">Reset Statistics</button>
+    </div>
+  </div>
+
+  <!-- COACH MARKS - ONBOARDING -->
+  <div id="coachMarkOverlay" class="coach-mark-overlay"></div>
+  <div id="coachMarkModal" class="coach-mark-modal">
+    <div class="coach-mark-content">
+      <div class="coach-mark-title">👋 Welcome!</div>
+      <div class="coach-mark-text">Start with the "How to Use Memora" deck to learn all the features and get the most out of your learning.</div>
+      
+      <div class="coach-mark-checkbox">
+        <input type="checkbox" id="coachMarkDontShow" />
+        <label for="coachMarkDontShow">Don't show again</label>
+      </div>
+
+      <button class="coach-mark-button" onclick="dismissCoachMark()" id="coachMarkBtn">Got it!</button>
     </div>
   </div>
 
@@ -1011,36 +1563,69 @@
     // modal state
     let editingCardIndex = null;
 
+    // quiz state
+    let quizMode = false;
+    let quizRevealDelay = 3;
+    let quizAnswers = [];
+    let quizAutoReveal = null;
+
+    // stats state
+    let quizStats = [];
+
     // 5 colors + dark grey
     const deckColors = ["#3B82F6","#8B5CF6","#10B981","#F59E0B","#EF4444"];
     const defaultColor = deckColors[0];
     let customColor = "#4B5563";
 
-    function save(){ localStorage.setItem("flashDecks", JSON.stringify(decks)); }
+    function save(){ 
+      localStorage.setItem("flashDecks", JSON.stringify(decks));
+      localStorage.setItem("quizStats", JSON.stringify(quizStats));
+    }
 
     function load(){
+      // Try to load from localStorage
       decks = JSON.parse(localStorage.getItem("flashDecks")) || [];
+      quizStats = JSON.parse(localStorage.getItem("quizStats")) || [];
+      
+      // If first time, create Welcome deck
       if(decks.length === 0){
-        decks.push({
-          title:"How to Use Memora",
-          color: defaultColor,
-          cards:[
-            { q:"Welcome to Memora!", a:"This is a flashcard learning app. Each card has a question on the front and an answer on the back. Tap any card to flip it and reveal the answer." },
-            { q:"How do I navigate cards?", a:"<b>Swipe left</b> to move to the next card.<br><b>Swipe right</b> to go back to the previous card.<br>You can also use the arrow buttons at the bottom." },
-            { q:"How do I flip a card?", a:"<b>Tap</b> the card to flip it over and reveal the answer. Tap again to flip it back to the question." },
-            { q:"How do I create a new deck?", a:"Go to <b>Your decks</b> and enter a deck name in the text field. Choose a colour for your deck, then tap <b>Create Deck</b>." },
-            { q:"How do I customize deck colors?", a:"When creating a deck, choose from 5 preset colors or select the dark grey swatch for a custom neutral option." },
-            { q:"How do I add cards to my deck?", a:"Open a deck, tap the <b>edit icon</b> (pencil) in the top right. Then tap <b>Add card</b> to create new flashcards." },
-            { q:"How do I edit a card?", a:"In edit mode, tap the <b>edit icon</b> next to any card to open the card editor. You can format text with <b>bold</b> and <b>bullet points</b>." },
-            { q:"How do I delete a card?", a:"In edit mode, tap the <b>red X button</b> next to a card. You'll be asked to confirm before it's deleted." },
-            { q:"How do I reorder cards?", a:"In edit mode, use the <b>up and down arrow buttons</b> next to each card to move it to a new position." },
-            { q:"How do I delete a deck?", a:"From <b>Your decks</b>, press and hold on a deck card for about 1 second. You'll be asked to confirm the deletion." },
-            { q:"How do I mark cards as reviewed?", a:"After studying a card, tap the green <b>check button</b> to mark it as reviewed. This helps track your progress." },
-            { q:"Ready to start learning?", a:"Go back to <b>Your decks</b> and create your first deck! Start with a topic you want to learn, add questions and answers, then practice by studying the cards." }
-          ]
-        });
+        decks.push(createWelcomeDeckData());
         save();
+      } else {
+        // Always ensure Welcome deck exists and has all 12 cards
+        const welcomeIndex = decks.findIndex(d => d.title === "How to Use Memora");
+        if(welcomeIndex === -1){
+          // Welcome deck doesn't exist, add it at the beginning
+          decks.unshift(createWelcomeDeckData());
+          save();
+        } else if(decks[welcomeIndex].cards.length !== 12 || !decks[welcomeIndex].pinned){
+          // Update Welcome deck if it's incomplete or not pinned
+          decks[welcomeIndex] = createWelcomeDeckData();
+          save();
+        }
       }
+    }
+
+    function createWelcomeDeckData(){
+      return {
+        title:"How to Use Memora",
+        color: defaultColor,
+        pinned: true,
+        cards:[
+          { q:"Welcome to Memora!", a:"This is a flashcard learning app. Each card has a question on the front and an answer on the back. Tap any card to flip it and reveal the answer." },
+          { q:"How do I navigate cards?", a:"<b>Swipe left</b> to move to the next card.<br><b>Swipe right</b> to go back to the previous card.<br>You can also use the arrow buttons at the bottom." },
+          { q:"How do I flip a card?", a:"<b>Tap</b> the card to flip it over and reveal the answer. Tap again to flip it back to the question." },
+          { q:"How do I create a new deck?", a:"Go to <b>Your decks</b> and enter a deck name in the text field. Choose a colour for your deck, then tap <b>Create Deck</b>." },
+          { q:"How do I customize deck colors?", a:"When creating a deck, choose from 5 preset colors or select the dark grey swatch for a custom neutral option." },
+          { q:"How do I add cards to my deck?", a:"Open a deck, tap the <b>edit icon</b> (pencil) in the top right. Then tap <b>Add card</b> to create new flashcards." },
+          { q:"How do I edit a card?", a:"In edit mode, tap the <b>edit icon</b> next to any card to open the card editor. You can format text with <b>bold</b> and <b>bullet points</b>." },
+          { q:"How do I delete a card?", a:"In edit mode, tap the <b>red X button</b> next to a card. You'll be asked to confirm before it's deleted." },
+          { q:"How do I reorder cards?", a:"In edit mode, use the <b>up and down arrow buttons</b> next to each card to move it to a new position." },
+          { q:"How do I delete a deck?", a:"From <b>Your decks</b>, press and hold on a deck card for about 1 second. You'll be asked to confirm the deletion." },
+          { q:"How do I mark cards as reviewed?", a:"After studying a card, tap the green <b>check button</b> to mark it as reviewed. This helps track your progress." },
+          { q:"Ready to start learning?", a:"Go back to <b>Your decks</b> and create your first deck! Start with a topic you want to learn, add questions and answers, then practice by studying the cards." }
+        ]
+      };
     }
 
     function showScreen(screenId){
@@ -1058,6 +1643,11 @@
 
       setupRTEPlaceholders();
       closeModal(true);
+      closeQuizMode(true);
+      closeStatsView(true);
+
+      // Setup reveal delay - no longer using slider
+      quizRevealDelay = 5;
 
       // Register service worker for offline functionality
       if('serviceWorker' in navigator){
@@ -1083,6 +1673,8 @@
       setTimeout(()=>{
         showScreen("deckScreen");
         haptic();
+        // Show coach marks after deck screen is visible
+        setTimeout(showCoachMarksIfNeeded, 500);
       }, 600);
     }
 
@@ -1162,7 +1754,15 @@
       const deckList = document.getElementById("deckList");
       deckList.innerHTML = "";
 
-      decks.forEach((deck,i)=>{
+      // Sort decks: pinned first, then unpinned
+      const sortedDecks = decks.map((d,i) => ({...d, originalIndex: i})).sort((a,b) => {
+        if(a.pinned && !b.pinned) return -1;
+        if(!a.pinned && b.pinned) return 1;
+        return 0;
+      });
+
+      sortedDecks.forEach((deck)=>{
+        const i = deck.originalIndex;
         const card = document.createElement("div");
         card.className = "deck-card";
         card.style.background = deck.color;
@@ -1176,6 +1776,7 @@
         titleDiv.innerText = deck.title;
         card.appendChild(titleDiv);
 
+        // Card count badge
         const badge = document.createElement("div");
         badge.className = "deck-count";
         badge.innerText = deck.cards.length;
@@ -1184,6 +1785,20 @@
         badge.style.borderColor = isLightColor(deck.color) ? "rgba(15,23,42,0.18)" : "rgba(255,255,255,0.18)";
         card.appendChild(badge);
 
+        // Pin badge - always visible for toggling
+        const pinBadge = document.createElement("button");
+        pinBadge.className = "deck-pin-badge";
+        pinBadge.innerHTML = '<svg><use href="#icon-pin"/></svg>';
+        if(deck.pinned){
+          pinBadge.style.background = "var(--primary)";
+          pinBadge.style.borderColor = "var(--primary)";
+        }
+        pinBadge.onclick = (e)=>{
+          e.stopPropagation();
+          togglePinDeck(i);
+        };
+        card.appendChild(pinBadge);
+
         let pressTimer;
         const handlePress = ()=>{
           pressTimer = setTimeout(()=>{
@@ -1191,7 +1806,7 @@
             if(confirm('Delete "'+deck.title+'"? This cannot be undone.')){
               decks.splice(i,1); save(); renderDecks();
             } else card.classList.remove("long-press");
-          },650);
+          },900);
         };
         const handleRelease = ()=>{
           clearTimeout(pressTimer);
@@ -1204,21 +1819,37 @@
         card.addEventListener("mouseleave", handleRelease);
         card.addEventListener("touchend", handleRelease);
 
-        card.addEventListener("click", ()=>{
+        card.addEventListener("click", (e)=>{
           if(pressTimer) clearTimeout(pressTimer);
-          openDeck(i);
+          // Only open if not clicking on pin badge or its children
+          const target = e.target;
+          const isClickOnPin = target.classList.contains("deck-pin-badge") || 
+                               target.closest(".deck-pin-badge");
+          if(!isClickOnPin){
+            openDeck(i);
+          }
         });
 
         deckList.appendChild(card);
       });
     }
 
+    function togglePinDeck(i){
+      decks[i].pinned = !decks[i].pinned;
+      save();
+      renderDecks();
+      haptic();
+    }
+
     function openDeck(i){
       currentDeck = decks[i];
       currentIndex = 0;
+      quizMode = false;
+      quizAnswers = [];
       document.getElementById("deckTitleDisplay").innerText = currentDeck.title;
       updateCardVisuals();
       updateCard();
+      updateControlsVisibility();
       showScreen("cardScreen");
       haptic();
     }
@@ -1260,6 +1891,21 @@
       document.getElementById("progress").innerText = counter;
       document.getElementById("counterFront").innerText = counter;
       document.getElementById("counterBack").innerText = counter;
+
+      // Clear quiz-related visuals
+      if(quizMode){
+        flashcard.classList.remove("flipped");
+      }
+    }
+
+    function updateControlsVisibility(){
+      if(quizMode){
+        document.getElementById("normalControls").style.display = "none";
+        document.getElementById("quizControls").style.display = "flex";
+      } else {
+        document.getElementById("normalControls").style.display = "flex";
+        document.getElementById("quizControls").style.display = "none";
+      }
     }
 
     /* -------- swipe -------- */
@@ -1274,6 +1920,7 @@
     function clamp(n,min,max){return Math.max(min,Math.min(max,n));}
 
     flashcardEl.addEventListener("pointerdown",(e)=>{
+      if(quizMode) return; // disable swipe in quiz mode
       pointerId = e.pointerId;
       flashcardEl.setPointerCapture(pointerId);
       startX = lastX = e.clientX;
@@ -1286,7 +1933,7 @@
     });
 
     flashcardEl.addEventListener("pointermove",(e)=>{
-      if(pointerId !== e.pointerId) return;
+      if(pointerId !== e.pointerId || quizMode) return;
       const dx = e.clientX - startX;
       const dy = e.clientY - startY;
       lastX = e.clientX;
@@ -1307,6 +1954,7 @@
     }, { passive:false });
 
     flashcardEl.addEventListener("pointerup",()=>{
+      if(quizMode) return;
       const dx = lastX - startX;
       const dt = Math.max(1, performance.now()-startT);
       const vx = dx/dt;
@@ -1323,7 +1971,7 @@
         }
       } else {
         if(!dragging){
-          flashcardEl.classList.toggle("flipped");
+          if(!quizMode) flashcardEl.classList.toggle("flipped");
           haptic();
         } else flashcardEl.style.transform="";
       }
@@ -1367,6 +2015,326 @@
 
       save();
       nextCardWithAnimation();
+    }
+
+    /* -------- QUIZ MODE -------- */
+    function openQuizMode(){
+      document.getElementById("quizOverlay").classList.add("active");
+      document.getElementById("quizModal").classList.add("active");
+      document.getElementById("revealDelayInput").value = quizRevealDelay;
+    }
+
+    function closeQuizMode(silent=false){
+      document.getElementById("quizOverlay").classList.remove("active");
+      document.getElementById("quizModal").classList.remove("active");
+      if(!silent) haptic();
+    }
+
+    function startQuiz(){
+      quizMode = true;
+      quizAnswers = new Array(currentDeck.cards.length).fill(null);
+      currentIndex = 0;
+      closeQuizMode(true);
+      updateControlsVisibility();
+      updateCard();
+      autoRevealAnswer();
+      haptic();
+    }
+
+    function autoRevealAnswer(){
+      if(!quizMode || !currentDeck || currentIndex >= currentDeck.cards.length) return;
+      
+      if(quizAutoReveal) clearTimeout(quizAutoReveal);
+      
+      quizAutoReveal = setTimeout(()=>{
+        if(quizMode){
+          flashcardEl.classList.add("flipped");
+          haptic();
+        }
+      }, quizRevealDelay * 1000);
+    }
+
+    function recordQuizAnswer(correct){
+      if(!quizMode || !currentDeck) return;
+      
+      if(quizAutoReveal) clearTimeout(quizAutoReveal);
+      
+      quizAnswers[currentIndex] = correct;
+      
+      // Move to next card or end quiz
+      if(currentIndex < currentDeck.cards.length - 1){
+        flashcardEl.classList.remove("exit-right");
+        flashcardEl.classList.add("exit-left");
+        setTimeout(()=>{
+          currentIndex++;
+          updateCard();
+          autoRevealAnswer();
+          haptic();
+        }, 260);
+      } else {
+        // Quiz complete
+        finishQuiz();
+      }
+    }
+
+    function finishQuiz(){
+      if(!quizMode || !currentDeck) return;
+      
+      if(quizAutoReveal) clearTimeout(quizAutoReveal);
+      
+      // Calculate score
+      const correct = quizAnswers.filter(a => a === true).length;
+      const total = quizAnswers.length;
+      const percentage = Math.round((correct / total) * 100);
+      
+      // Save stats
+      const now = new Date();
+      quizStats.push({
+        deckTitle: currentDeck.title,
+        date: now.toISOString(),
+        correct: correct,
+        total: total,
+        percentage: percentage
+      });
+      save();
+      
+      // Show results
+      showQuizResults(correct, total, percentage);
+    }
+
+    /* -------- STATS VIEW -------- */
+    function openStatsView(){
+      document.getElementById("statsOverlay").classList.add("active");
+      document.getElementById("statsModal").classList.add("active");
+      renderStatsView();
+    }
+
+    function closeStatsView(silent=false){
+      document.getElementById("statsOverlay").classList.remove("active");
+      document.getElementById("statsModal").classList.remove("active");
+      if(!silent) haptic();
+    }
+
+    function renderStatsView(){
+      if(!quizStats.length){
+        document.getElementById("statsContent").innerHTML = 
+          '<div style="text-align:center; color:var(--text-secondary); padding:40px 0;"><div class="empty-icon">📊</div><div style="font-size:14px; margin-top:12px;">No quiz history yet. Start a quiz to see your progress!</div></div>';
+        document.getElementById("statsActions").style.display = "none";
+        return;
+      }
+
+      // Filter to current deck
+      const deckStats = quizStats.filter(s => s.deckTitle === currentDeck.title);
+      
+      let html = '';
+      
+      if(deckStats.length > 0){
+        // Chart
+        html += '<div class="chart-container" id="chartContainer"></div>';
+        
+        // Table
+        html += '<table class="stats-table"><thead><tr><th>Date</th><th>Score</th><th>Correct</th></tr></thead><tbody>';
+        
+        deckStats.forEach(stat => {
+          const date = new Date(stat.date).toLocaleDateString();
+          html += `<tr><td>${date}</td><td>${stat.percentage}%</td><td>${stat.correct}/${stat.total}</td></tr>`;
+        });
+        
+        html += '</tbody></table>';
+      } else {
+        html = '<div style="text-align:center; color:var(--text-secondary); padding:40px 0;"><div class="empty-icon">📊</div><div style="font-size:14px; margin-top:12px;">No quizzes for this deck yet!</div></div>';
+      }
+      
+      document.getElementById("statsContent").innerHTML = html;
+      
+      if(deckStats.length > 0){
+        document.getElementById("statsActions").style.display = "flex";
+        renderChart(deckStats);
+      } else {
+        document.getElementById("statsActions").style.display = "none";
+      }
+    }
+
+    function renderChart(deckStats){
+      setTimeout(()=>{
+        const container = document.getElementById("chartContainer");
+        if(!container) return;
+        
+        const canvas = document.createElement("canvas");
+        container.appendChild(canvas);
+        
+        const ctx = canvas.getContext("2d");
+        const labels = deckStats.map(s => new Date(s.date).toLocaleDateString());
+        const data = deckStats.map(s => s.percentage);
+        
+        new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [{
+              label: "Score (%)",
+              data: data,
+              borderColor: "#3B82F6",
+              backgroundColor: "rgba(59,130,246,0.1)",
+              borderWidth: 2,
+              fill: true,
+              pointRadius: 4,
+              pointBackgroundColor: "#3B82F6",
+              pointBorderColor: "#fff",
+              pointBorderWidth: 2,
+              tension: 0.4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false }
+            },
+            scales: {
+              y: {
+                min: 0,
+                max: 100,
+                ticks: { color: "rgba(203,213,225,0.8)" },
+                grid: { color: "rgba(255,255,255,0.05)" }
+              },
+              x: {
+                ticks: { color: "rgba(203,213,225,0.8)" },
+                grid: { color: "rgba(255,255,255,0.05)" }
+              }
+            }
+          }
+        });
+      }, 100);
+    }
+
+    function resetStats(){
+      if(confirm("Reset all statistics for this deck? This cannot be undone.")){
+        quizStats = quizStats.filter(s => s.deckTitle !== currentDeck.title);
+        save();
+        renderStatsView();
+        haptic();
+      }
+    }
+
+    /* -------- QUIZ DELAY CONTROLS -------- */
+    function increaseDelay(){
+      if(quizRevealDelay < 30){
+        quizRevealDelay++;
+        document.getElementById("revealDelayInput").value = quizRevealDelay;
+      }
+    }
+
+    function decreaseDelay(){
+      if(quizRevealDelay > 1){
+        quizRevealDelay--;
+        document.getElementById("revealDelayInput").value = quizRevealDelay;
+      }
+    }
+
+    /* -------- COACH MARKS - ONBOARDING ============ */
+    function showCoachMarksIfNeeded(){
+      // Check if user has disabled coach marks
+      const coachMarkDisabled = localStorage.getItem("memora_coach_disabled") === "true";
+      if(coachMarkDisabled) return;
+
+      setTimeout(showCoachMark, 800);
+    }
+
+    function showCoachMark(){
+      const overlay = document.getElementById("coachMarkOverlay");
+      const modal = document.getElementById("coachMarkModal");
+
+      overlay.classList.add("active");
+      modal.classList.add("active");
+    }
+
+    function dismissCoachMark(){
+      const overlay = document.getElementById("coachMarkOverlay");
+      const modal = document.getElementById("coachMarkModal");
+      const dontShowAgain = document.getElementById("coachMarkDontShow").checked;
+
+      overlay.classList.remove("active");
+      modal.classList.remove("active");
+
+      if(dontShowAgain){
+        localStorage.setItem("memora_coach_disabled", "true");
+      }
+
+      haptic();
+    }
+
+    /* -------- QUIZ RESULTS POPUP ============ */
+    function showQuizResults(correct, total, percentage){
+      quizMode = false;
+      updateControlsVisibility();
+      
+      // Create modal overlay
+      const resultOverlay = document.createElement("div");
+      resultOverlay.style.cssText = `
+        position:fixed;
+        inset:0;
+        background:rgba(0,0,0,.60);
+        z-index:2000;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+      `;
+
+      // Create result modal
+      const resultModal = document.createElement("div");
+      resultModal.style.cssText = `
+        background:linear-gradient(135deg, rgba(30,41,59,.98), rgba(15,23,42,.98));
+        padding:32px;
+        border-radius:16px;
+        max-width:320px;
+        text-align:center;
+        animation:coachFadeIn 0.4s ease-out;
+        border:1px solid rgba(255,255,255,.10);
+      `;
+
+      const scoreColor = percentage >= 80 ? "#10B981" : percentage >= 50 ? "#F59E0B" : "#EF4444";
+      
+      resultModal.innerHTML = `
+        <div style="font-size:48px;margin-bottom:16px;">
+          ${percentage >= 80 ? "🎉" : percentage >= 50 ? "👍" : "💪"}
+        </div>
+        <div style="font-size:28px;font-weight:800;color:${scoreColor};margin-bottom:8px;font-family:'Poppins'">
+          ${percentage}%
+        </div>
+        <div style="font-size:16px;color:var(--text-secondary);margin-bottom:20px;font-weight:600">
+          ${correct} out of ${total} correct
+        </div>
+        <button id="quizContinueBtn" style="
+          width:100%;
+          background:var(--primary);
+          color:white;
+          border:none;
+          padding:12px;
+          border-radius:8px;
+          font-weight:700;
+          cursor:pointer;
+          font-size:14px;
+          font-family:'Poppins';
+          transition:all 0.2s;
+        ">
+          Continue
+        </button>
+      `;
+
+      resultOverlay.appendChild(resultModal);
+      document.body.appendChild(resultOverlay);
+
+      // Add click handler
+      document.getElementById("quizContinueBtn").addEventListener("click", ()=>{
+        resultOverlay.remove();
+        // Reset quiz state
+        currentIndex = 0;
+        quizAnswers = [];
+        updateCard();
+      });
+
+      haptic();
     }
 
     /* -------- editor -------- */
@@ -1581,6 +2549,7 @@
       // save any title edits already done
       save();
       currentDeck = null;
+      quizMode = false;
       renderDecks();
       showScreen("deckScreen");
     }
@@ -1628,7 +2597,7 @@
           const isTrulyEmpty = el.innerText.trim().length===0 && el.innerHTML.replaceAll("<br>","").trim()==="";
           if(isTrulyEmpty){
             el.setAttribute("data-empty","true");
-            el.style.color = el.classList.contains("answer-field") ? "rgba(15,23,42,0.70)" : "rgba(203,213,225,0.70)";
+            el.style.color = el.classList.contains("answer-field") ? "rgba(203,213,225,0.70)" : "rgba(203,213,225,0.70)";
             el.innerHTML = escapeHTML(placeholder);
           }
         };
