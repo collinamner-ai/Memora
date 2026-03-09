@@ -1195,7 +1195,23 @@
       gap:16px;
       color:var(--text-secondary);
     }
-    .empty-icon{font-size:48px; opacity:.55}
+    .empty-icon{
+      font-size:48px;
+      opacity:.55;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      height:48px;
+    }
+    .empty-icon svg{
+      width:48px;
+      height:48px;
+      stroke:currentColor;
+      stroke-width:2.5;
+      fill:none;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
     .empty-text{font-size:16px; font-weight:800; font-family:'Poppins', sans-serif}
 
     /* ============ COACH MARKS - ONBOARDING ============ */
@@ -1521,7 +1537,7 @@
   <div id="statsOverlay" class="quiz-overlay" onclick="closeStatsView(true)"></div>
   <div id="statsModal" class="stats-modal" role="dialog" aria-modal="true" aria-label="Quiz statistics">
     <div class="stats-header">
-      <div class="stats-title">Quiz Statistics</div>
+      <div class="stats-title">Quiz Stats</div>
       <button class="stats-close-btn" onclick="closeStatsView(true)" aria-label="Close stats">
         <svg><use href="#icon-x"/></svg>
       </button>
@@ -1529,7 +1545,7 @@
 
     <div class="stats-content" id="statsContent">
       <div style="text-align:center; color:var(--text-secondary); padding:40px 0;">
-        <div class="empty-icon">📊</div>
+        <div class="empty-icon"><svg><use href="#icon-stats"/></svg></div>
         <div style="font-size:14px; margin-top:12px;">No quiz history yet. Start a quiz to see your progress!</div>
       </div>
     </div>
@@ -2118,7 +2134,7 @@
     function renderStatsView(){
       if(!quizStats.length){
         document.getElementById("statsContent").innerHTML = 
-          '<div style="text-align:center; color:var(--text-secondary); padding:40px 0;"><div class="empty-icon">📊</div><div style="font-size:14px; margin-top:12px;">No quiz history yet. Start a quiz to see your progress!</div></div>';
+          '<div style="text-align:center; color:var(--text-secondary); padding:40px 0;"><div class="empty-icon"><svg><use href="#icon-stats"/></svg></div><div style="font-size:14px; margin-top:12px;">No quiz history yet. Start a quiz to see your progress!</div></div>';
         document.getElementById("statsActions").style.display = "none";
         return;
       }
@@ -2142,7 +2158,7 @@
         
         html += '</tbody></table>';
       } else {
-        html = '<div style="text-align:center; color:var(--text-secondary); padding:40px 0;"><div class="empty-icon">📊</div><div style="font-size:14px; margin-top:12px;">No quizzes for this deck yet!</div></div>';
+        html = '<div style="text-align:center; color:var(--text-secondary); padding:40px 0;"><div class="empty-icon"><svg><use href="#icon-stats"/></svg></div><div style="font-size:14px; margin-top:12px;">No quizzes for this deck yet!</div></div>';
       }
       
       document.getElementById("statsContent").innerHTML = html;
