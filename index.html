@@ -43,6 +43,7 @@
       --radius-lg:16px;
 
       --transition: all .28s cubic-bezier(.4,0,.2,1);
+      --popup-width:min(92vw, 420px);
     }
 
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -862,30 +863,41 @@
 
     /* ============ QUIZ MODE OVERLAY ============ */
     .quiz-overlay{
-      position:absolute;
+      position:fixed;
       inset:0;
-      background:rgba(0,0,0,.60);
+      background:rgba(0,0,0,.55);
       opacity:0;
       pointer-events:none;
       transition:var(--transition);
+      z-index:1200;
     }
-    .quiz-overlay.active{opacity:1; pointer-events:auto}
+    .quiz-overlay.active{
+      opacity:1;
+      pointer-events:auto;
+    }
 
     .quiz-modal{
-      position:absolute;
-      inset:0;
+      position:fixed;
+      top:50%;
+      left:50%;
+      width:var(--popup-width);
+      max-width:var(--popup-width);
       background:linear-gradient(180deg, rgba(30,41,59,.98), rgba(15,23,42,.98));
-      transform:translateY(6px);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:var(--radius-lg);
+      box-shadow:0 20px 60px rgba(0,0,0,.45);
+      transform:translate(-50%, -50%) scale(.96);
       opacity:0;
       pointer-events:none;
       transition:var(--transition);
       display:flex;
       flex-direction:column;
-      padding:16px;
-      gap:16px;
+      padding:24px;
+      gap:14px;
+      z-index:1201;
     }
     .quiz-modal.active{
-      transform:translateY(0);
+      transform:translate(-50%, -50%) scale(1);
       opacity:1;
       pointer-events:auto;
     }
@@ -896,6 +908,7 @@
       font-family:'Outfit', sans-serif;
       letter-spacing:-0.5px;
       color:var(--text-primary);
+      margin-bottom:2px;
     }
 
     .quiz-setting{
@@ -903,6 +916,10 @@
       flex-direction:column;
       gap:8px;
     }
+    .quiz-modal .quiz-setting{
+      margin-bottom:4px;
+    }
+
     .quiz-setting-label{
       font-size:14px;
       font-weight:700;
@@ -992,7 +1009,7 @@
     .quiz-actions{
       display:flex;
       gap:10px;
-      margin-top:auto;
+      margin-top:8px;
     }
     .btn-quiz-start{
       width:100%;
@@ -1216,7 +1233,8 @@
       border:1px solid rgba(255,255,255,.15);
       border-radius:var(--radius-lg);
       padding:28px;
-      max-width:320px;
+      width:var(--popup-width);
+      max-width:var(--popup-width);
       backdrop-filter:blur(8px);
       box-shadow:0 20px 60px rgba(0,0,0,.4);
     }
@@ -1320,8 +1338,6 @@
         <h1 class="splash-title">Memora</h1>
         <p class="tagline">Remember more, faster</p>
       </div>
-
-
     </div>
   </div>
 
@@ -1491,8 +1507,6 @@
       </div>
     </div>
 
-    <div style="flex:1;"></div>
-
     <div class="quiz-actions">
       <button class="btn-quiz-cancel" onclick="closeQuizMode(true)">Cancel</button>
       <button class="btn-quiz-start" onclick="startQuiz()">Start Quiz</button>
@@ -1547,7 +1561,7 @@
 
     // quiz state
     let quizMode = false;
-    let quizRevealDelay = 3;
+    let quizRevealDelay = 5;
     let quizAnswers = [];
     let quizAutoReveal = null;
 
@@ -1605,7 +1619,7 @@
           { q:"How do I delete a deck?", a:"From <b>Your decks</b>, press and hold on a deck card for about 1 second. You'll be asked to confirm the deletion." },
           { q:"How do I mark cards as reviewed?", a:"After studying a card, tap the green <b>check button</b> to mark it as reviewed. This helps track your progress." },
           { q:"What is Quiz Mode?", a:"Quiz Mode tests your knowledge with timed answer reveals. Open a deck and tap the <b>lightbulb icon</b> to start. Cards automatically flip after a delay you choose, so you can test yourself before seeing the answer." },
-          { q:"How do I start a quiz?", a:"Open a deck, then tap the <b>lightbulb icon</b> in the controls. Set your preferred <b>Answer Reveal</b> time using the +/− buttons (1-30 seconds), then tap <b>Start Quiz</b> to begin." },
+          { q:"How do I start a quiz?", a:"Open a deck, then tap the <b>lightbulb icon</b> in the controls. Set your preferred <b>Answer Reveal</b> time using the +/− buttons (1-90 seconds), then tap <b>Start Quiz</b> to begin." },
           { q:"How do I answer quiz questions?", a:"In Quiz Mode, read the question, think of your answer, then wait for the card to flip. When the answer appears, tap the <b>green tick</b> if you were correct, or the <b>red X</b> if you were incorrect. Your score is recorded automatically." },
           { q:"What happens at the end of a quiz?", a:"After answering the last card, a results popup appears showing your percentage score and how many questions you got correct. Tap <b>Continue</b> to return to normal study mode. Your score is automatically saved." },
           { q:"How do I view my quiz stats?", a:"Open a deck and tap the <b>chart icon</b> in the controls to view your quiz history. You'll see a line chart showing your score over time and a table with dates and scores. Stats are saved for each deck separately." },
@@ -1634,7 +1648,6 @@
       closeQuizMode(true);
       closeStatsView(true);
 
-      // Setup reveal delay - no longer using slider
       quizRevealDelay = 5;
 
       // Register service worker for offline functionality
@@ -2172,7 +2185,7 @@
 
     /* -------- QUIZ DELAY CONTROLS -------- */
     function increaseDelay(){
-      if(quizRevealDelay < 30){
+      if(quizRevealDelay < 90){
         quizRevealDelay++;
         document.getElementById("revealDelayInput").value = quizRevealDelay;
       }
@@ -2240,7 +2253,8 @@
         background:linear-gradient(135deg, rgba(30,41,59,.98), rgba(15,23,42,.98));
         padding:32px;
         border-radius:16px;
-        max-width:320px;
+        width:var(--popup-width);
+        max-width:var(--popup-width);
         text-align:center;
         animation:coachFadeIn 0.4s ease-out;
         border:1px solid rgba(255,255,255,.10);
