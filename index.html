@@ -4,14 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
   <meta name="theme-color" content="#0F172A" />
-  <meta name="description" content="Memora - A beautiful flashcard learning app to remember more, faster" />
+  <meta name="description" content="Deckly - A beautiful flashcard learning app to remember more, faster" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Memora" />
+  <meta name="apple-mobile-web-app-title" content="Deckly" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%233B82F6' width='180' height='180'/><text x='50%' y='50%' font-size='80' font-weight='bold' fill='white' text-anchor='middle' dominant-baseline='central' font-family='Outfit'>M</text></svg>" />
   <link rel="manifest" href="manifest.json" />
-  <title>Memora - Flashcard Learning</title>
+  <title>Deckly - Flashcard Learning</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -1270,7 +1270,7 @@
       </div>
       
       <div class="splash-content">
-        <h1 class="splash-title">Memora</h1>
+        <h1 class="splash-title">Deckly</h1>
         <p class="tagline">Remember more, faster</p>
       </div>
     </div>
@@ -1467,7 +1467,7 @@
   <div id="coachMarkModal" class="coach-mark-modal">
     <div class="coach-mark-content">
       <div class="coach-mark-title">👋 Welcome!</div>
-      <div class="coach-mark-text">Start with the "How to Use Memora" deck to learn all the features and get the most out of your learning.</div>
+      <div class="coach-mark-text">Start with the "How to Use Deckly" deck to learn all the features and get the most out of your learning.</div>
       
       <div class="coach-mark-checkbox">
         <input type="checkbox" id="coachMarkDontShow" />
@@ -1508,7 +1508,7 @@
         decks.push(createWelcomeDeckData());
         save();
       } else {
-        const welcomeIndex = decks.findIndex(d => d.title === "How to Use Memora");
+        const welcomeIndex = decks.findIndex(d => d.title === "How to Use Deckly");
         if(welcomeIndex === -1){
           decks.unshift(createWelcomeDeckData());
           save();
@@ -1521,10 +1521,10 @@
 
     function createWelcomeDeckData(){
       return {
-        title:"How to Use Memora",
+        title:"How to Use Deckly",
         color: defaultColor,
         cards:[
-          { q:"Welcome to Memora!", a:"This is a flashcard learning app. Each card has a question on the front and an answer on the back. Tap any card to flip it and reveal the answer." },
+          { q:"Welcome to Deckly!", a:"This is a flashcard learning app. Each card has a question on the front and an answer on the back. Tap any card to flip it and reveal the answer." },
           { q:"How do I navigate cards?", a:"<b>Swipe left</b> to move to the next card.<br><b>Swipe right</b> to go back to the previous card.<br>You can also use the arrow buttons at the bottom." },
           { q:"How do I flip a card?", a:"<b>Tap</b> the card to flip it over and reveal the answer. Tap again to flip it back to the question." },
           { q:"How do I create a new deck?", a:"Go to <b>Your decks</b> and enter a deck name in the text field. Choose a colour for your deck, then tap <b>Create Deck</b>." },
@@ -2094,7 +2094,7 @@
     }
 
     function showCoachMarksIfNeeded(){
-      const coachMarkDisabled = localStorage.getItem("memora_coach_disabled") === "true";
+      const coachMarkDisabled = localStorage.getItem("Deckly_coach_disabled") === "true";
       if(coachMarkDisabled) return;
 
       setTimeout(showCoachMark, 800);
@@ -2117,7 +2117,7 @@
       modal.classList.remove("active");
 
       if(dontShowAgain){
-        localStorage.setItem("memora_coach_disabled", "true");
+        localStorage.setItem("Deckly_coach_disabled", "true");
       }
 
       haptic();
